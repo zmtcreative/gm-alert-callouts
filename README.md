@@ -43,10 +43,12 @@ callouts](https://help.obsidian.md/Editing+and+formatting/Callouts).
   - [ ] Required space (`> [!info]title` should not be valid)
   - [ ] Default titles (capitalized type)
   - [ ] Nested callouts (requires whitespace before `>` to pass)
+  - [ ] Use `data-callout` to convey callout type instead of a class
 - [ ] Tests (and render) of forced open, closed by default callouts
 - [ ] Better README explaining the features
   - [ ] Closed-by-default and forced-open callouts
   - [ ] How to style callouts and add icon with CSS
+  - [ ] Explain differences between Obsidian implementation and this
 - [ ] Test suite from goldmark to make sure we didn't screw anything up
 - [ ] Integration test with Goldmark
 
