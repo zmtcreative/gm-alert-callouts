@@ -6,8 +6,8 @@ import (
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/util"
 
-	"localhost/staticnoise/goldmark-callout/details"
-	"localhost/staticnoise/goldmark-callout/summary"
+	"gitlab.com/staticnoise/goldmark-callout/details"
+	"gitlab.com/staticnoise/goldmark-callout/summary"
 )
 
 type callout struct{}

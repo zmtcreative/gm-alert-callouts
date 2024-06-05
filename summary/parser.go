@@ -5,7 +5,7 @@ import (
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/text"
 
-	"localhost/staticnoise/goldmark-callout/details"
+	"gitlab.com/staticnoise/goldmark-callout/details"
 )
 
 type calloutHeaderParser struct{}

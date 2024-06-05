@@ -1,4 +1,4 @@
-module localhost/staticnoise/goldmark-callout
+module gitlab.com/staticnoise/goldmark-callout
 
 go 1.17
 
