@@ -32,10 +32,6 @@ callouts](https://help.obsidian.md/Editing+and+formatting/Callouts).
 </details>
 ```
 
-> [!INFO]
-> GitHub also supports alerts, Obsidian extends the syntax for collapsible
-> alerts and alert titles. Check out the links above for more information.
-
 ## Goals
 
 - [x] Basic syntax
@@ -43,9 +39,14 @@ callouts](https://help.obsidian.md/Editing+and+formatting/Callouts).
 - [x] Arbitrary markdown in callout body
 - [ ] Commonmark-compliant parsing of blockquotes
   - Missing check for whispace before `>`
-- [ ] Nested callouts (requires whitespace before `>` to pass)
+- [ ] Parity with Obsidian
+  - [ ] Required space (`> [!info]title` should not be valid)
+  - [ ] Default titles (capitalized type)
+  - [ ] Nested callouts (requires whitespace before `>` to pass)
 - [ ] Tests (and render) of forced open, closed by default callouts
 - [ ] Better README explaining the features
+  - [ ] Closed-by-default and forced-open callouts
+  - [ ] How to style callouts and add icon with CSS
 - [ ] Test suite from goldmark to make sure we didn't screw anything up
 
 ## License
