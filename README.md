@@ -48,6 +48,7 @@ callouts](https://help.obsidian.md/Editing+and+formatting/Callouts).
   - [ ] Closed-by-default and forced-open callouts
   - [ ] How to style callouts and add icon with CSS
 - [ ] Test suite from goldmark to make sure we didn't screw anything up
+- [ ] Integration test with Goldmark
 
 ## License
 
