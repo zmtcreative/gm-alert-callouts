@@ -58,6 +58,27 @@ Under active development, many breaking changes all the time.
 </details>
 ```
 
+### Default title
+
+**Markdown**
+
+```markdown
+> [!warning]
+> The callout type with capitalized first letter is used as the the callout
+> title
+```
+
+**HTML**
+
+```html
+<details data-callout="warning">
+<summary>
+<p>Warning</p>
+</summary>
+<p>The callout type with capitalized first letter is used as the the callout title</p>
+</details>
+```
+
 ## Differences with Obsidian and GitHub syntax
 
 Obsidian and GitHub render callouts with a `div` elements. Obsidian uses
