@@ -89,20 +89,14 @@ over a few lines</p>
 </summary>
 </details>
 `},
-	{ /* TODO require space for parity with Obsidian */
+	{
 		desc: "No space between type and title",
 		md: `> [!info]asdf
 `,
-		html: `<details class="obsidian-callout-info">
-<summary>
-<p>asdf</p>
-</summary>
-</details>
+		html: `<blockquote>
+<p>[!info]asdf</p>
+</blockquote>
 `},
-	// 		html: `<blockquote>
-	// <p>[!info]asdf</p>
-	// </blockquote>
-	// `},
 	{
 		desc: "Callout without body",
 		md:   `> [!info] title`,
