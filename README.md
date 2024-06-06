@@ -71,7 +71,7 @@ Under active development, many breaking changes all the time.
 **HTML**
 
 ```html
-<details data-callout="warning">
+<details data-callout="warning" open>
 <summary>
 <p>Warning</p>
 </summary>
