@@ -74,8 +74,6 @@ func (b *calloutParser) Open(parent gast.Node, reader text.Reader, pc parser.Con
 	callout.SetAttributeString("open", len(open) != 0)
 
 	i := strings.Index(string(line), "]")
-	// here's the bug
-	// here we don't account for shifts in process
 	reader.Advance(i)
 
 	return callout, parser.HasChildren
