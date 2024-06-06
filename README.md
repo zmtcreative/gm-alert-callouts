@@ -80,10 +80,10 @@ be a single line of paragraph.
   - [x] Required space (`> [!info]title` should not be valid)
   - [ ] Default titles (capitalized type)
   - [x] Nested callouts (requires whitespace before `>` to pass)
-  - [ ] Use `data-callout` to convey callout type instead of a class
-- [ ] Tests (and render) of forced open, closed by default callouts
+  - [x] Use `data-callout` to convey callout type instead of a class
+- [x] Tests (and render) of closed by default callouts
 - [ ] Better README explaining the features
-  - [ ] Closed-by-default and forced-open callouts
+  - [x] Closed-by-default callouts
   - [ ] How to style callouts and add icon with CSS
   - [x] Explain differences between Obsidian implementation and this
 - [ ] Test suite from goldmark to make sure we didn't screw anything up
