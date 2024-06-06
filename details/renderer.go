@@ -36,7 +36,8 @@ func (r *CalloutHTMLRenderer) renderCallout(w util.BufWriter, source []byte, nod
 
 	start := fmt.Sprintf(`<details class="obsidian-callout-%s">
 `, calloutType)
-	end := "</details>"
+	end := `</details>
+`
 	if entering {
 		w.WriteString(start)
 	} else {
