@@ -3,8 +3,8 @@ package summary
 import (
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/parser"
-	"github.com/yuin/goldmark/util"
 	"github.com/yuin/goldmark/text"
+	"github.com/yuin/goldmark/util"
 
 	"gitlab.com/staticnoise/goldmark-callout/details"
 )
@@ -31,10 +31,10 @@ func (b *calloutHeaderParser) Open(parent gast.Node, reader text.Reader, pc pars
 	// ]
 	reader.Advance(1)
 
-  next := reader.Peek() 
-  if next == '-' {
-    reader.Advance(1)
-  }
+	next := reader.Peek()
+	if next == '-' {
+		reader.Advance(1)
+	}
 
 	_, segment := reader.Position()
 	line, _ := reader.PeekLine()
@@ -45,18 +45,22 @@ func (b *calloutHeaderParser) Open(parent gast.Node, reader text.Reader, pc pars
 	_, segment = reader.Position()
 	line, _ = reader.PeekLine()
 
+	// remove \n from the title of the callout
 	if len(line) > 0 && line[len(line)-1] == '\n' {
 		segment.Stop = segment.Stop - 1
 	}
 
-	segments := text.Segments{}
-	segments.Append(segment)
-
-	paragraph := gast.NewParagraph()
-	paragraph.SetLines(&segments)
-
 	callout := NewCalloutHeader()
-	callout.AppendChild(callout, paragraph)
+
+	if segment.Len() != 0 {
+		segments := text.Segments{}
+		segments.Append(segment)
+
+		paragraph := gast.NewParagraph()
+		paragraph.SetLines(&segments)
+
+		callout.AppendChild(callout, paragraph)
+	}
 
 	return callout, parser.NoChildren
 }

@@ -85,7 +85,6 @@ over a few lines</p>
 
 		html: `<details data-callout="info" open>
 <summary>
-<p></p>
 </summary>
 </details>
 `},
