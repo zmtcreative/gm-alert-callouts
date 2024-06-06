@@ -28,14 +28,20 @@ func (r *CalloutHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegiste
 }
 
 func (r *CalloutHTMLRenderer) renderCallout(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
-
 	var calloutType string = ""
 	if t, ok := node.AttributeString("kind"); ok {
 		calloutType = string(t.([]uint8))
 	}
 
-	start := fmt.Sprintf(`<details class="obsidian-callout-%s">
-`, calloutType)
+  open := " open"
+	if t, ok := node.AttributeString("closed"); ok {
+		if bool(t.(bool)) {
+      open = ""
+    }
+	}
+
+	start := fmt.Sprintf(`<details class="callout" data-callout="%s"%s>
+`, calloutType, open)
 	end := `</details>
 `
 	if entering {

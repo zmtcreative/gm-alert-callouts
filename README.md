@@ -12,6 +12,8 @@ Under active development, many breaking changes all the time.
 
 ## Example
 
+### Basic example
+
 **Markdown**
 
 ```markdown
@@ -24,7 +26,7 @@ Under active development, many breaking changes all the time.
 **HTML**
 
 ```html
-<details class="obsidian-callout-info">
+<details class="callout" data-callout="info" open>
 <summary>
 <p>Great new feature</p>
 </summary>
@@ -36,6 +38,38 @@ Under active development, many breaking changes all the time.
 </details>
 ```
 
+### Closed callout
+
+**Markdown**
+
+```markdown
+> [!info]- The dash after the callout type makes it closed
+> Which is useful for hiding details behind a dropdown
+```
+
+**HTML**
+
+```html
+<details class="callout" data-callout="info">
+<summary>
+<p>The dash after the callout type makes it closed</p>
+</summary>
+<p>Which is useful for hiding details behind a dropdown</p>
+</details>
+```
+
+## Differences with Obsidian and GitHub syntax
+
+Obsidian and GitHub render callouts with a `div` elements. Obsidian uses
+JavaScript for opening and closing of summaries. I decided to use tags `details`
+and `summary` to allow opening and closing the the tags without JavaScript.
+
+Obsidian allows arbitrary content in the callout title, including blockquotes,
+images, links, and another callouts. We don't allow this, callout title can only
+be a single line of paragraph.
+
+
+
 ## Goals
 
 - [x] Basic syntax
@@ -43,7 +77,7 @@ Under active development, many breaking changes all the time.
 - [x] Arbitrary markdown in callout body
 - [x] Commonmark-compliant parsing of blockquotes
 - [ ] Parity with Obsidian
-  - [ ] Required space (`> [!info]title` should not be valid)
+  - [x] Required space (`> [!info]title` should not be valid)
   - [ ] Default titles (capitalized type)
   - [x] Nested callouts (requires whitespace before `>` to pass)
   - [ ] Use `data-callout` to convey callout type instead of a class
@@ -51,7 +85,7 @@ Under active development, many breaking changes all the time.
 - [ ] Better README explaining the features
   - [ ] Closed-by-default and forced-open callouts
   - [ ] How to style callouts and add icon with CSS
-  - [ ] Explain differences between Obsidian implementation and this
+  - [x] Explain differences between Obsidian implementation and this
 - [ ] Test suite from goldmark to make sure we didn't screw anything up
 - [ ] Integration test with Goldmark
 

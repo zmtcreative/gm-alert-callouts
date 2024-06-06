@@ -31,6 +31,11 @@ func (b *calloutHeaderParser) Open(parent gast.Node, reader text.Reader, pc pars
 	// ]
 	reader.Advance(1)
 
+  next := reader.Peek() 
+  if next == '-' {
+    reader.Advance(1)
+  }
+
 	_, segment := reader.Position()
 	line, _ := reader.PeekLine()
 
