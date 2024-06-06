@@ -6,6 +6,10 @@ alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started
 or [Obsidian
 callouts](https://help.obsidian.md/Editing+and+formatting/Callouts).
 
+## State of the project
+
+Under active development, many breaking changes all the time.
+
 ## Example
 
 **Markdown**
