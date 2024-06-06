@@ -25,8 +25,8 @@ func (b *calloutParser) Trigger() []byte {
 var regex = regexp.MustCompile("\\[!(?P<kind>[\\w]+)\\](?P<closed>-{0,1})($|\\s+(?P<title>.*))")
 
 func (b *calloutParser) process(reader text.Reader) (bool, int) {
-  // This is slighlty modified code from https://github.com/yuin/goldmark.git
-  // Originally written by Yusuke Inuzuka, licensed under MIT License
+	// This is slighlty modified code from https://github.com/yuin/goldmark.git
+	// Originally written by Yusuke Inuzuka, licensed under MIT License
 
 	line, _ := reader.PeekLine()
 	w, pos := util.IndentWidth(line, reader.LineOffset())
@@ -83,7 +83,7 @@ func (b *calloutParser) Continue(node gast.Node, reader text.Reader, pc parser.C
 		return parser.Close
 	}
 
-  reader.Advance(advance_by)
+	reader.Advance(advance_by)
 
 	return parser.Continue | parser.HasChildren
 }

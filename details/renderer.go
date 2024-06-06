@@ -33,11 +33,11 @@ func (r *CalloutHTMLRenderer) renderCallout(w util.BufWriter, source []byte, nod
 		calloutType = string(t.([]uint8))
 	}
 
-  open := " open"
+	open := " open"
 	if t, ok := node.AttributeString("closed"); ok {
 		if bool(t.(bool)) {
-      open = ""
-    }
+			open = ""
+		}
 	}
 
 	start := fmt.Sprintf(`<details data-callout="%s"%s>
