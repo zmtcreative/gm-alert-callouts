@@ -37,12 +37,11 @@ callouts](https://help.obsidian.md/Editing+and+formatting/Callouts).
 - [x] Basic syntax
 - [x] Markdown in callout titles
 - [x] Arbitrary markdown in callout body
-- [ ] Commonmark-compliant parsing of blockquotes
-  - Missing check for whispace before `>`
+- [x] Commonmark-compliant parsing of blockquotes
 - [ ] Parity with Obsidian
   - [ ] Required space (`> [!info]title` should not be valid)
   - [ ] Default titles (capitalized type)
-  - [ ] Nested callouts (requires whitespace before `>` to pass)
+  - [x] Nested callouts (requires whitespace before `>` to pass)
   - [ ] Use `data-callout` to convey callout type instead of a class
 - [ ] Tests (and render) of forced open, closed by default callouts
 - [ ] Better README explaining the features

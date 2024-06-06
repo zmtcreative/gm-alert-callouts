@@ -138,7 +138,7 @@ over a few lines</p>
 		desc: "Nested callout",
 		md: `>[!info] title
 > > [!alert] does this work
-> > not yet`,
+> > oh yeah it does`,
 		html: `<details class="obsidian-callout-info">
 <summary>
 <p>title</p>
@@ -147,7 +147,7 @@ over a few lines</p>
 <summary>
 <p>does this work</p>
 </summary>
-<p>not yet</p>
+<p>oh yeah it does</p>
 </details>
 </details>`},
 	{
@@ -166,7 +166,57 @@ over a few lines</p>
 <li>feature two</li>
 </ul>
 </details>
-`},
+`}, {
+		desc: "Two nested callouts",
+		md: `>[!info] title
+> > [!alert] does this work
+> > > [!info] Yes it does`,
+		html: `<details class="obsidian-callout-info">
+<summary>
+<p>title</p>
+</summary>
+<details class="obsidian-callout-alert">
+<summary>
+<p>does this work</p>
+</summary>
+<details class="obsidian-callout-info">
+<summary>
+<p>Yes it does</p>
+</summary>
+</details>
+</details>
+</details>`},
+	{
+		desc: "Not a callout",
+		md: `[!info] title
+`,
+		html: `<p>[!info] title</p>
+`},{
+		desc: "Two nested callouts",
+		md: `>[!info] title
+> > [!alert] does this work
+> > text
+> >
+> > text
+> > - list
+> > - list
+> > `,
+		html: `<details class="obsidian-callout-info">
+<summary>
+<p>title</p>
+</summary>
+<details class="obsidian-callout-alert">
+<summary>
+<p>does this work</p>
+</summary>
+<p>text</p>
+<p>text</p>
+<ul>
+<li>list</li>
+<li>list</li>
+</ul>
+</details>
+</details>`},
 }
 
 func TestCallout(t *testing.T) {
