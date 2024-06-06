@@ -76,9 +76,9 @@ be a single line of paragraph.
 - [x] Markdown in callout titles
 - [x] Arbitrary markdown in callout body
 - [x] Commonmark-compliant parsing of blockquotes
-- [ ] Parity with Obsidian
+- [x] Parity with Obsidian
   - [x] Required space (`> [!info]title` should not be valid)
-  - [ ] Default titles (capitalized type)
+  - [x] Default titles (capitalized type)
   - [x] Nested callouts (requires whitespace before `>` to pass)
   - [x] Use `data-callout` to convey callout type instead of a class
 - [x] Tests (and render) of closed by default callouts

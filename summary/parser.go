@@ -56,10 +56,18 @@ func (b *calloutHeaderParser) Open(parent gast.Node, reader text.Reader, pc pars
 		segments := text.Segments{}
 		segments.Append(segment)
 
+		// This might be useful if we decide to not include <p> in summary
+		// paragraph := gast.NewTextBlock()
 		paragraph := gast.NewParagraph()
 		paragraph.SetLines(&segments)
 
 		callout.AppendChild(callout, paragraph)
+	} else {
+		var kind string = ""
+		if t, ok := parent.AttributeString("kind"); ok {
+			kind = string(t.([]uint8))
+		}
+		callout.SetAttributeString("kind", kind)
 	}
 
 	return callout, parser.NoChildren

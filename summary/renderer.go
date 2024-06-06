@@ -1,6 +1,8 @@
 package summary
 
 import (
+	"strings"
+
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
@@ -30,6 +32,16 @@ func (r *CalloutHeaderHTMLRenderer) renderCalloutHeader(w util.BufWriter, source
 	if entering {
 		w.WriteString(`<summary>
 `)
+		var kind string = ""
+		if t, ok := node.AttributeString("kind"); ok {
+			kind = string(t.(string))
+			kind = t.(string)
+
+			w.WriteString("<p>")
+			w.WriteString(strings.Title(kind))
+			w.WriteString("</p>\n")
+		}
+
 	} else {
 		w.WriteString(`</summary>
 `)

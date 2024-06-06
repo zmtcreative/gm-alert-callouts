@@ -85,6 +85,7 @@ over a few lines</p>
 
 		html: `<details data-callout="info" open>
 <summary>
+<p>Info</p>
 </summary>
 </details>
 `},
@@ -211,58 +212,58 @@ over a few lines</p>
 </details>
 </details>`}, {
 		desc: "Space before summary",
-		md: `>[!info]  title`,
+		md:   `>[!info]  title`,
 		html: `<details data-callout="info" open>
 <summary>
 <p>title</p>
 </summary>
-</details>`},{
+</details>`}, {
 		desc: "Two spaces before summary",
-		md: `>[!info]   title`,
+		md:   `>[!info]   title`,
 		html: `<details data-callout="info" open>
 <summary>
 <p>title</p>
 </summary>
-</details>`},{
+</details>`}, {
 		desc: "Three spaces before summary",
-		md: `>[!info]    title`,
+		md:   `>[!info]    title`,
 		html: `<details data-callout="info" open>
 <summary>
 <p>title</p>
 </summary>
-</details>`},{
+</details>`}, {
 		desc: "Four spaces before summary",
-		md: `>[!info]     title`,
+		md:   `>[!info]     title`,
 		html: `<details data-callout="info" open>
 <summary>
 <p>title</p>
 </summary>
 </details>`}, {
 		desc: "Syntax in summary",
-    md: `>[!info] Title with *some* syntax [and](http://example.com) links`,
+		md:   `>[!info] Title with *some* syntax [and](http://example.com) links`,
 		html: `<details data-callout="info" open>
 <summary>
 <p>Title with <em>some</em> syntax <a href="http://example.com">and</a> links</p>
 </summary>
-</details>`},{
+</details>`}, {
 		desc: "Closed by default callout",
-    md: `>[!info]- I am closed`,
+		md:   `>[!info]- I am closed`,
 		html: `<details data-callout="info">
 <summary>
 <p>I am closed</p>
 </summary>
-</details>`},{
+</details>`}, {
 		desc: "Closed by default callout",
-    md: `>[!info]- I am closed
+		md: `>[!info]- I am closed
 > And have some content`,
 		html: `<details data-callout="info">
 <summary>
 <p>I am closed</p>
 </summary>
 <p>And have some content</p>
-</details>`},{
+</details>`}, {
 		desc: "README II",
-    md: `> [!info]- The dash after the callout type makes it closed
+		md: `> [!info]- The dash after the callout type makes it closed
 > Which is useful for hiding details behind a dropdown
 `,
 		html: `<details data-callout="info">
