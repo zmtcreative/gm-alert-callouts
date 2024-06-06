@@ -42,7 +42,7 @@ var cases = [...]TestCase{
 	{
 		desc: "Callout",
 		md:   "> [!info] This is a callout",
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p>This is a callout</p>
 </summary>
@@ -53,7 +53,7 @@ var cases = [...]TestCase{
 		md: `> [!info] This is a callout
 > Paragraph
 > over a few lines`,
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p>This is a callout</p>
 </summary>
@@ -70,7 +70,7 @@ over a few lines</p>
 > second paragraph with *some* syntax
 `,
 
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p>This is a callout</p>
 </summary>
@@ -83,7 +83,7 @@ over a few lines</p>
 		desc: "Callout without tilte and body",
 		md:   `> [!info]`,
 
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p></p>
 </summary>
@@ -100,7 +100,7 @@ over a few lines</p>
 	{
 		desc: "Callout without body",
 		md:   `> [!info] title`,
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p>title</p>
 </summary>
@@ -110,7 +110,7 @@ over a few lines</p>
 		desc: "Callout with list",
 		md: `> [!info] title
 > - item`,
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p>title</p>
 </summary>
@@ -122,7 +122,7 @@ over a few lines</p>
 	{
 		desc: "Callout without space before type",
 		md:   `>[!info] title`,
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p>title</p>
 </summary>
@@ -133,11 +133,11 @@ over a few lines</p>
 		md: `>[!info] title
 > > [!alert] does this work
 > > oh yeah it does`,
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p>title</p>
 </summary>
-<details class="callout" data-callout="alert" open>
+<details data-callout="alert" open>
 <summary>
 <p>does this work</p>
 </summary>
@@ -150,7 +150,7 @@ over a few lines</p>
 > With lots of possibilities:
 > - feature one
 > - feature two`,
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p>Great new feature</p>
 </summary>
@@ -165,15 +165,15 @@ over a few lines</p>
 		md: `>[!info] title
 > > [!alert] does this work
 > > > [!info] Yes it does`,
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p>title</p>
 </summary>
-<details class="callout" data-callout="alert" open>
+<details data-callout="alert" open>
 <summary>
 <p>does this work</p>
 </summary>
-<details class="callout" data-callout="info" open>
+<details data-callout="info" open>
 <summary>
 <p>Yes it does</p>
 </summary>
@@ -195,11 +195,11 @@ over a few lines</p>
 > > - list
 > > - list
 > > `,
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p>title</p>
 </summary>
-<details class="callout" data-callout="alert" open>
+<details data-callout="alert" open>
 <summary>
 <p>does this work</p>
 </summary>
@@ -213,42 +213,42 @@ over a few lines</p>
 </details>`}, {
 		desc: "Space before summary",
 		md: `>[!info]  title`,
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p>title</p>
 </summary>
 </details>`},{
 		desc: "Two spaces before summary",
 		md: `>[!info]   title`,
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p>title</p>
 </summary>
 </details>`},{
 		desc: "Three spaces before summary",
 		md: `>[!info]    title`,
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p>title</p>
 </summary>
 </details>`},{
 		desc: "Four spaces before summary",
 		md: `>[!info]     title`,
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p>title</p>
 </summary>
 </details>`}, {
 		desc: "Syntax in summary",
     md: `>[!info] Title with *some* syntax [and](http://example.com) links`,
-		html: `<details class="callout" data-callout="info" open>
+		html: `<details data-callout="info" open>
 <summary>
 <p>Title with <em>some</em> syntax <a href="http://example.com">and</a> links</p>
 </summary>
 </details>`},{
 		desc: "Closed by default callout",
     md: `>[!info]- I am closed`,
-		html: `<details class="callout" data-callout="info">
+		html: `<details data-callout="info">
 <summary>
 <p>I am closed</p>
 </summary>
@@ -256,7 +256,7 @@ over a few lines</p>
 		desc: "Closed by default callout",
     md: `>[!info]- I am closed
 > And have some content`,
-		html: `<details class="callout" data-callout="info">
+		html: `<details data-callout="info">
 <summary>
 <p>I am closed</p>
 </summary>
@@ -266,7 +266,7 @@ over a few lines</p>
     md: `> [!info]- The dash after the callout type makes it closed
 > Which is useful for hiding details behind a dropdown
 `,
-		html: `<details class="callout" data-callout="info">
+		html: `<details data-callout="info">
 <summary>
 <p>The dash after the callout type makes it closed</p>
 </summary>

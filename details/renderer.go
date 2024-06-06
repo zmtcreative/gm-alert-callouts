@@ -40,7 +40,7 @@ func (r *CalloutHTMLRenderer) renderCallout(w util.BufWriter, source []byte, nod
     }
 	}
 
-	start := fmt.Sprintf(`<details class="callout" data-callout="%s"%s>
+	start := fmt.Sprintf(`<details data-callout="%s"%s>
 `, calloutType, open)
 	end := `</details>
 `

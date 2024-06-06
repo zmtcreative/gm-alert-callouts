@@ -26,7 +26,7 @@ Under active development, many breaking changes all the time.
 **HTML**
 
 ```html
-<details class="callout" data-callout="info" open>
+<details data-callout="info" open>
 <summary>
 <p>Great new feature</p>
 </summary>
@@ -50,7 +50,7 @@ Under active development, many breaking changes all the time.
 **HTML**
 
 ```html
-<details class="callout" data-callout="info">
+<details data-callout="info">
 <summary>
 <p>The dash after the callout type makes it closed</p>
 </summary>
