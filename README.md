@@ -79,6 +79,10 @@ Under active development, many breaking changes all the time.
 </details>
 ```
 
+### Styling with CSS
+
+For example, see https://codepen.io/staticnoise/pen/JjqJmmE.
+
 ## Differences with Obsidian and GitHub syntax
 
 Obsidian and GitHub render callouts with a `div` elements. Obsidian uses
@@ -88,27 +92,6 @@ and `summary` to allow opening and closing the the tags without JavaScript.
 Obsidian allows arbitrary content in the callout title, including blockquotes,
 images, links, and another callouts. We don't allow this, callout title can only
 be a single line of paragraph.
-
-
-
-## Goals
-
-- [x] Basic syntax
-- [x] Markdown in callout titles
-- [x] Arbitrary markdown in callout body
-- [x] Commonmark-compliant parsing of blockquotes
-- [x] Parity with Obsidian
-  - [x] Required space (`> [!info]title` should not be valid)
-  - [x] Default titles (capitalized type)
-  - [x] Nested callouts (requires whitespace before `>` to pass)
-  - [x] Use `data-callout` to convey callout type instead of a class
-- [x] Tests (and render) of closed by default callouts
-- [ ] Better README explaining the features
-  - [x] Closed-by-default callouts
-  - [ ] How to style callouts and add icon with CSS
-  - [x] Explain differences between Obsidian implementation and this
-- [ ] Test suite from goldmark to make sure we didn't screw anything up
-- [ ] Integration test with Goldmark
 
 ## License
 

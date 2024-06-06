@@ -1,0 +1,98 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Callout example</title>
+    <style>
+      :root {
+        --callout-note-rgb: 0, 176, 255;
+        --callout-success-rgb: 0, 200, 83;
+        --callout-warning-rgb: 255, 145, 0;
+        --callout-error-rgb: 255, 0, 0;
+        --callout-quote-rgb: 158, 158, 158;
+      }
+
+      details[data-callout=summary],
+      details[data-callout=todo],
+      details[data-callout=question] {
+        --callout-color: var(--callout-note-rgb);
+      }
+
+      details[data-callout=info],
+      details[data-callout=success] {
+        --callout-color: var(--callout-success-rgb)
+      }
+
+      details[data-callout=attention],
+      details[data-callout=danger] {
+        --callout-color: var(--callout-warning-rgb);
+      }
+
+      details[data-callout=bug],
+      details[data-callout=failure] {
+        --callout-color: var(--callout-error-rgb);
+      }
+
+      details[data-callout=note],
+      details[data-callout=quote] {
+        --callout-color: var(--callout-quote-rgb);
+      }
+
+
+      details {
+        background: rgba(var(--callout-color), 0.3);
+
+        /* disable margin-collapse on inner elements to create 
+         * space between inner elements and the border */
+        overflow: auto;
+      }
+
+      summary {
+        overflow: auto;
+        background: rgba(var(--callout-color), 0.3);
+        padding: 0.5rem;
+      }
+
+      summary p {
+        display: inline;
+      }
+
+      details * {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        max-width: 100%;
+      }
+
+      details summary * {
+        padding: 0;
+      }
+
+      /* other styling for the demo */
+
+      body {
+        max-width: 50rem;
+        margin: 0 auto;
+        margin-top: 2rem;
+      }
+
+      details {
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <details data-callout="info">
+      <summary>
+        <p>The dash after the callout type makes it closed</p>
+      </summary>
+      <p>Which is useful for hiding details behind a dropdown, especially if there's a lot of them</p>
+      <p>Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.</p>
+    </details>
+        <details data-callout="attention" open>
+      <summary>
+        <p>Without a dash, callout is opened by default</p>
+      </summary>
+      <p>For information you want the reasers to see right away</p>
+    </details>
+  </body>
+</html>
