@@ -185,7 +185,7 @@ over a few lines</p>
 		md: `[!info] title
 `,
 		html: `<p>[!info] title</p>
-`},{
+`}, {
 		desc: "Two nested callouts",
 		md: `>[!info] title
 > > [!alert] does this work
@@ -210,6 +210,34 @@ over a few lines</p>
 <li>list</li>
 </ul>
 </details>
+</details>`}, {
+		desc: "Space before summary",
+		md: `>[!info]  title`,
+		html: `<details class="obsidian-callout-info">
+<summary>
+<p>title</p>
+</summary>
+</details>`},{
+		desc: "Two spaces before summary",
+		md: `>[!info]   title`,
+		html: `<details class="obsidian-callout-info">
+<summary>
+<p>title</p>
+</summary>
+</details>`},{
+		desc: "Three spaces before summary",
+		md: `>[!info]    title`,
+		html: `<details class="obsidian-callout-info">
+<summary>
+<p>title</p>
+</summary>
+</details>`},{
+		desc: "Four spaces before summary",
+		md: `>[!info]     title`,
+		html: `<details class="obsidian-callout-info">
+<summary>
+<pre><code>title</code></pre>
+</summary>
 </details>`},
 }
 

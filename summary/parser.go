@@ -3,6 +3,7 @@ package summary
 import (
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/util"
 	"github.com/yuin/goldmark/text"
 
 	"gitlab.com/staticnoise/goldmark-callout/details"
@@ -33,10 +34,8 @@ func (b *calloutHeaderParser) Open(parent gast.Node, reader text.Reader, pc pars
 	_, segment := reader.Position()
 	line, _ := reader.PeekLine()
 
-	// should be more generic to cover \t
-	if len(line) > 0 && (line[0] == ' ' || line[0] == '\t') {
-		reader.Advance(1)
-	}
+	w, _ := util.IndentWidth(line, reader.LineOffset())
+	reader.Advance(w)
 
 	_, segment = reader.Position()
 	line, _ = reader.PeekLine()
