@@ -44,7 +44,7 @@ var cases = [...]TestCase{
 		md:   "> [!info] This is a callout",
 		html: `<details data-callout="info" open>
 <summary>
-<p>This is a callout</p>
+This is a callout
 </summary>
 </details>
 `},
@@ -55,7 +55,7 @@ var cases = [...]TestCase{
 > over a few lines`,
 		html: `<details data-callout="info" open>
 <summary>
-<p>This is a callout</p>
+This is a callout
 </summary>
 <p>Paragraph
 over a few lines</p>
@@ -72,7 +72,7 @@ over a few lines</p>
 
 		html: `<details data-callout="info" open>
 <summary>
-<p>This is a callout</p>
+This is a callout
 </summary>
 <p>paragraph
 over a few lines</p>
@@ -85,7 +85,7 @@ over a few lines</p>
 
 		html: `<details data-callout="info" open>
 <summary>
-<p>Info</p>
+Info
 </summary>
 </details>
 `},
@@ -102,7 +102,7 @@ over a few lines</p>
 		md:   `> [!info] title`,
 		html: `<details data-callout="info" open>
 <summary>
-<p>title</p>
+title
 </summary>
 </details>
 `},
@@ -112,7 +112,7 @@ over a few lines</p>
 > - item`,
 		html: `<details data-callout="info" open>
 <summary>
-<p>title</p>
+title
 </summary>
 <ul>
 <li>item</li>
@@ -124,7 +124,7 @@ over a few lines</p>
 		md:   `>[!info] title`,
 		html: `<details data-callout="info" open>
 <summary>
-<p>title</p>
+title
 </summary>
 </details>
 `},
@@ -135,11 +135,11 @@ over a few lines</p>
 > > oh yeah it does`,
 		html: `<details data-callout="info" open>
 <summary>
-<p>title</p>
+title
 </summary>
 <details data-callout="alert" open>
 <summary>
-<p>does this work</p>
+does this work
 </summary>
 <p>oh yeah it does</p>
 </details>
@@ -152,7 +152,7 @@ over a few lines</p>
 > - feature two`,
 		html: `<details data-callout="info" open>
 <summary>
-<p>Great new feature</p>
+Great new feature
 </summary>
 <p>With lots of possibilities:</p>
 <ul>
@@ -167,15 +167,15 @@ over a few lines</p>
 > > > [!info] Yes it does`,
 		html: `<details data-callout="info" open>
 <summary>
-<p>title</p>
+title
 </summary>
 <details data-callout="alert" open>
 <summary>
-<p>does this work</p>
+does this work
 </summary>
 <details data-callout="info" open>
 <summary>
-<p>Yes it does</p>
+Yes it does
 </summary>
 </details>
 </details>
@@ -197,11 +197,11 @@ over a few lines</p>
 > > `,
 		html: `<details data-callout="info" open>
 <summary>
-<p>title</p>
+title
 </summary>
 <details data-callout="alert" open>
 <summary>
-<p>does this work</p>
+does this work
 </summary>
 <p>text</p>
 <p>text</p>
@@ -215,42 +215,42 @@ over a few lines</p>
 		md:   `>[!info]  title`,
 		html: `<details data-callout="info" open>
 <summary>
-<p>title</p>
+title
 </summary>
 </details>`}, {
 		desc: "Two spaces before summary",
 		md:   `>[!info]   title`,
 		html: `<details data-callout="info" open>
 <summary>
-<p>title</p>
+title
 </summary>
 </details>`}, {
 		desc: "Three spaces before summary",
 		md:   `>[!info]    title`,
 		html: `<details data-callout="info" open>
 <summary>
-<p>title</p>
+title
 </summary>
 </details>`}, {
 		desc: "Four spaces before summary",
 		md:   `>[!info]     title`,
 		html: `<details data-callout="info" open>
 <summary>
-<p>title</p>
+title
 </summary>
 </details>`}, {
 		desc: "Syntax in summary",
 		md:   `>[!info] Title with *some* syntax [and](http://example.com) links`,
 		html: `<details data-callout="info" open>
 <summary>
-<p>Title with <em>some</em> syntax <a href="http://example.com">and</a> links</p>
+Title with <em>some</em> syntax <a href="http://example.com">and</a> links
 </summary>
 </details>`}, {
 		desc: "Closed by default callout",
 		md:   `>[!info]- I am closed`,
 		html: `<details data-callout="info">
 <summary>
-<p>I am closed</p>
+I am closed
 </summary>
 </details>`}, {
 		desc: "Closed by default callout",
@@ -258,7 +258,7 @@ over a few lines</p>
 > And have some content`,
 		html: `<details data-callout="info">
 <summary>
-<p>I am closed</p>
+I am closed
 </summary>
 <p>And have some content</p>
 </details>`}, {
@@ -268,7 +268,7 @@ over a few lines</p>
 `,
 		html: `<details data-callout="info">
 <summary>
-<p>The dash after the callout type makes it closed</p>
+The dash after the callout type makes it closed
 </summary>
 <p>Which is useful for hiding details behind a dropdown</p>
 </details>`},

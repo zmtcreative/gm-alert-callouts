@@ -56,9 +56,7 @@ func (b *calloutHeaderParser) Open(parent gast.Node, reader text.Reader, pc pars
 		segments := text.Segments{}
 		segments.Append(segment)
 
-		// This might be useful if we decide to not include <p> in summary
-		// paragraph := gast.NewTextBlock()
-		paragraph := gast.NewParagraph()
+		paragraph := gast.NewTextBlock()
 		paragraph.SetLines(&segments)
 
 		callout.AppendChild(callout, paragraph)

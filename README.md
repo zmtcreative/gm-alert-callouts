@@ -28,7 +28,7 @@ Under active development, many breaking changes all the time.
 ```html
 <details data-callout="info" open>
 <summary>
-<p>Great new feature</p>
+Great new feature
 </summary>
 <p>With lots of possibilities:</p>
 <ul>
@@ -52,7 +52,7 @@ Under active development, many breaking changes all the time.
 ```html
 <details data-callout="info">
 <summary>
-<p>The dash after the callout type makes it closed</p>
+The dash after the callout type makes it closed
 </summary>
 <p>Which is useful for hiding details behind a dropdown</p>
 </details>
@@ -73,7 +73,7 @@ Under active development, many breaking changes all the time.
 ```html
 <details data-callout="warning" open>
 <summary>
-<p>Warning</p>
+Warning
 </summary>
 <p>The callout type with capitalized first letter is used as the the callout title</p>
 </details>
