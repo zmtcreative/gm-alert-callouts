@@ -358,6 +358,37 @@ Without a dash, callout is opened by default
 <p>For information you want the reasers to see right away</p>
 </div>
 </details>
+`}, {desc: "text before callout type",
+		md: `> abcd [!info]- This is not a callout
+`,
+		html: `<blockquote>
+<p>abcd [!info]- This is not a callout</p>
+</blockquote>
+`},{desc: "space before a callout type",
+		md: `>  [!info]- This is not a callout
+`,
+		html: `<blockquote>
+<p>[!info]- This is not a callout</p>
+</blockquote>
+`}, {desc: "2 spaces before a callout type",
+		md: `>   [!info]- This is not a callout
+`,
+		html: `<blockquote>
+<p>[!info]- This is not a callout</p>
+</blockquote>
+`},{desc: "3 spaces before a callout type",
+		md: `>    [!info]- This is not a callout
+`,
+		html: `<blockquote>
+<p>[!info]- This is not a callout</p>
+</blockquote>
+`},{desc: "4 spaces before a callout type",
+		md: `>     [!info]- This is not a callout
+`,
+		html: `<blockquote>
+<pre><code>[!info]- This is not a callout
+</code></pre>
+</blockquote>
 `},
 }
 

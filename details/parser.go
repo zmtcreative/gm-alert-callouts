@@ -22,7 +22,7 @@ func (b *calloutParser) Trigger() []byte {
 	return []byte{'>'}
 }
 
-var regex = regexp.MustCompile("\\[!(?P<kind>[\\w]+)\\](?P<closed>-{0,1})($|\\s+(?P<title>.*))")
+var regex = regexp.MustCompile("^\\[!(?P<kind>[\\w]+)\\](?P<closed>-{0,1})($|\\s+(?P<title>.*))")
 
 func (b *calloutParser) process(reader text.Reader) (bool, int) {
 	// This is slighlty modified code from https://github.com/yuin/goldmark.git
@@ -36,7 +36,7 @@ func (b *calloutParser) process(reader text.Reader) (bool, int) {
 
 	advance_by := 1
 
-	if pos >= len(line) || line[pos+advance_by] == '\n' {
+	if pos + advance_by >= len(line) || line[pos+advance_by] == '\n' {
 		return true, advance_by
 	}
 	if line[pos+advance_by] == ' ' || line[pos+advance_by] == '\t' {
@@ -52,16 +52,26 @@ func (b *calloutParser) process(reader text.Reader) (bool, int) {
 
 func (b *calloutParser) Open(parent gast.Node, reader text.Reader, pc parser.Context) (gast.Node, parser.State) {
 
-	line, _ := reader.PeekLine()
-	match := regex.FindSubmatch(line)
-
-	if !regex.Match(line) {
-		return nil, parser.NoChildren
-	}
-	ok, _ := b.process(reader)
+  // check if we are inside of a block quote
+	ok, advance_by := b.process(reader)
 	if !ok {
 		return nil, parser.NoChildren
 	}
+
+	line, _ := reader.PeekLine()
+
+  // empty blockquote
+  if len(line) <= advance_by {
+    return nil, parser.NoChildren
+  }
+
+  // right after `>` and up to one space
+  subline := line[advance_by:]
+	if !regex.Match(subline) {
+		return nil, parser.NoChildren
+	}
+
+	match := regex.FindSubmatch(subline)
 
 	kind := match[1]
 	closed := match[2]
