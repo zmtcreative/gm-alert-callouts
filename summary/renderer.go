@@ -39,7 +39,7 @@ func (r *CalloutHeaderHTMLRenderer) renderCalloutHeader(w util.BufWriter, source
 		}
 
 	} else {
-		w.WriteString("\n</summary>\n")
+		w.WriteString("\n</summary>\n<div class=\"callout-content\">\n")
 	}
 	return gast.WalkContinue, nil
 }

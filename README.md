@@ -30,11 +30,13 @@ Under active development, many breaking changes all the time.
 <summary>
 Great new feature
 </summary>
+<div class="callout-content">
 <p>With lots of possibilities:</p>
 <ul>
 <li>feature one</li>
 <li>feature two</li>
 </ul>
+</div>
 </details>
 ```
 
@@ -54,7 +56,9 @@ Great new feature
 <summary>
 The dash after the callout type makes it closed
 </summary>
+<div class="callout-content">
 <p>Which is useful for hiding details behind a dropdown</p>
+</div>
 </details>
 ```
 
@@ -75,7 +79,10 @@ The dash after the callout type makes it closed
 <summary>
 Warning
 </summary>
-<p>The callout type with capitalized first letter is used as the the callout title</p>
+<div class="callout-content">
+<p>The callout type with capitalized first letter is used as the the callout
+title</p>
+</div>
 </details>
 ```
 

@@ -42,12 +42,11 @@ func (r *CalloutHTMLRenderer) renderCallout(w util.BufWriter, source []byte, nod
 
 	start := fmt.Sprintf(`<details data-callout="%s"%s>
 `, calloutType, open)
-	end := `</details>
-`
+
 	if entering {
 		w.WriteString(start)
 	} else {
-		w.WriteString(end)
+		w.WriteString("</div>\n</details>\n")
 	}
 	return gast.WalkContinue, nil
 }
