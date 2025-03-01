@@ -40,331 +40,66 @@ var cases = [...]TestCase{
 </blockquote>
 `},
 	{
-		desc: "Callout",
-		md:   "> [!info] This is a callout",
-		html: `<details data-callout="info" open>
-<summary>
-This is a callout
-</summary>
-<div class="callout-content">
-</div>
-</details>
-`},
-	{
 		desc: "Callout with a paragraph",
-		md: `> [!info] This is a callout
+		md: `> [!note]
 > Paragraph
 > over a few lines`,
-		html: `<details data-callout="info" open>
-<summary>
-This is a callout
-</summary>
-<div class="callout-content">
-<p>Paragraph
+		html: `<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p>Paragraph
 over a few lines</p>
-</div>
-</details>
-`},
+</div>`},
 	{
 		desc: "Callout with two paragraphs",
-		md: `> [!info] This is a callout
+		md: `> [!InFo]
 > paragraph
 > over a few lines
 >
 > second paragraph with *some* syntax
 `,
 
-		html: `<details data-callout="info" open>
-<summary>
-This is a callout
-</summary>
-<div class="callout-content">
-<p>paragraph
+		html: `<div class="markdown-alert markdown-alert-info"><p class="markdown-alert-title">Info</p><p>paragraph
 over a few lines</p>
 <p>second paragraph with <em>some</em> syntax</p>
-</div>
-</details>
-`},
-	{ /* This could be improved so strip out the empty par */
-		desc: "Callout without tilte and body",
-		md:   `> [!info]`,
-
-		html: `<details data-callout="info" open>
-<summary>
-Info
-</summary>
-<div class="callout-content">
-</div>
-</details>
-`},
-	{
-		desc: "No space between type and title",
-		md: `> [!info]asdf
-`,
-		html: `<blockquote>
-<p>[!info]asdf</p>
-</blockquote>
-`},
+</div>`},
 	{
 		desc: "Callout without body",
 		md:   `> [!info] title`,
-		html: `<details data-callout="info" open>
-<summary>
-title
-</summary>
-<div class="callout-content">
-</div>
-</details>
-`},
+		html: `<div class="markdown-alert markdown-alert-info"><p class="markdown-alert-title">title</p></div>`},
 	{
 		desc: "Callout with list",
-		md: `> [!info] title
+		md: `> [!info]
 > - item`,
-		html: `<details data-callout="info" open>
-<summary>
-title
-</summary>
-<div class="callout-content">
-<ul>
+		html: `<div class="markdown-alert markdown-alert-info"><p class="markdown-alert-title">Info</p><ul>
 <li>item</li>
 </ul>
-</div>
-</details>
-`},
-	{
-		desc: "Callout without space before type",
-		md:   `>[!info] title`,
-		html: `<details data-callout="info" open>
-<summary>
-title
-</summary>
-<div class="callout-content">
-</div>
-</details>
-`},
-	{
-		desc: "Nested callout",
-		md: `>[!info] title
-> > [!alert] does this work
-> > oh yeah it does`,
-		html: `<details data-callout="info" open>
-<summary>
-title
-</summary>
-<div class="callout-content">
-<details data-callout="alert" open>
-<summary>
-does this work
-</summary>
-<div class="callout-content">
-<p>oh yeah it does</p>
-</div>
-</details>
-</div>
-</details>`},
+</div>`},
 	{
 		desc: "README example",
-		md: `> [!info] Great new feature
+		md: `> [!info]
 > With lots of possibilities:
 > - feature one
 > - feature two`,
-		html: `<details data-callout="info" open>
-<summary>
-Great new feature
-</summary>
-<div class="callout-content">
-<p>With lots of possibilities:</p>
+		html: `<div class="markdown-alert markdown-alert-info"><p class="markdown-alert-title">Info</p><p>With lots of possibilities:</p>
 <ul>
 <li>feature one</li>
 <li>feature two</li>
 </ul>
-</div>
-</details>
-`}, {
-		desc: "Two nested callouts",
-		md: `>[!info] title
-> > [!alert] does this work
-> > > [!info] Yes it does`,
-		html: `<details data-callout="info" open>
-<summary>
-title
-</summary>
-<div class="callout-content">
-<details data-callout="alert" open>
-<summary>
-does this work
-</summary>
-<div class="callout-content">
-<details data-callout="info" open>
-<summary>
-Yes it does
-</summary>
-<div class="callout-content">
-</div>
-</details>
-</div>
-</details>
-</div>
-</details>`},
+</div>`},
 	{
 		desc: "Not a callout",
 		md: `[!info] title
 `,
 		html: `<p>[!info] title</p>
 `}, {
-		desc: "Two nested callouts",
-		md: `>[!info] title
-> > [!alert] does this work
-> > text
-> >
-> > text
-> > - list
-> > - list
-> > `,
-		html: `<details data-callout="info" open>
-<summary>
-title
-</summary>
-<div class="callout-content">
-<details data-callout="alert" open>
-<summary>
-does this work
-</summary>
-<div class="callout-content">
-<p>text</p>
-<p>text</p>
-<ul>
-<li>list</li>
-<li>list</li>
-</ul>
-</div>
-</details>
-</div>
-</details>`}, {
-		desc: "Space before summary",
-		md:   `>[!info]  title`,
-		html: `<details data-callout="info" open>
-<summary>
-title
-</summary>
-<div class="callout-content">
-</div>
-</details>`}, {
-		desc: "Two spaces before summary",
-		md:   `>[!info]   title`,
-		html: `<details data-callout="info" open>
-<summary>
-title
-</summary>
-<div class="callout-content">
-</div>
-</details>`}, {
-		desc: "Three spaces before summary",
-		md:   `>[!info]    title`,
-		html: `<details data-callout="info" open>
-<summary>
-title
-</summary>
-<div class="callout-content">
-</div>
-</details>`}, {
-		desc: "Four spaces before summary",
-		md:   `>[!info]     title`,
-		html: `<details data-callout="info" open>
-<summary>
-title
-</summary>
-<div class="callout-content">
-</div>
-</details>`}, {
 		desc: "Syntax in summary",
 		md:   `>[!info] Title with *some* syntax [and](http://example.com) links`,
-		html: `<details data-callout="info" open>
-<summary>
-Title with <em>some</em> syntax <a href="http://example.com">and</a> links
-</summary>
-<div class="callout-content">
-</div>
-</details>`}, {
-		desc: "Closed by default callout",
-		md:   `>[!info]- I am closed`,
-		html: `<details data-callout="info">
-<summary>
-I am closed
-</summary>
-<div class="callout-content">
-</div>
-</details>`}, {
-		desc: "Closed by default callout",
-		md: `>[!info]- I am closed
-> And have some content`,
-		html: `<details data-callout="info">
-<summary>
-I am closed
-</summary>
-<div class="callout-content">
-<p>And have some content</p>
-</div>
-</details>`}, {
-		desc: "README II",
-		md: `> [!info]- The dash after the callout type makes it closed
-> Which is useful for hiding details behind a dropdown
-`,
-		html: `<details data-callout="info">
-<summary>
-The dash after the callout type makes it closed
-</summary>
-<div class="callout-content">
-<p>Which is useful for hiding details behind a dropdown</p>
-</div>
-</details>`}, {
-		desc: "README III",
-		md: `> [!warning]
-> The callout type with capitalized first letter is used as the the callout
-> title
-`,
-		html: `<details data-callout="warning" open>
-<summary>
-Warning
-</summary>
-<div class="callout-content">
-<p>The callout type with capitalized first letter is used as the the callout
-title</p>
-</div>
-</details>
-`},		{desc: "example",
-		md: `> [!info]- The dash after the callout type makes it closed
-> Which is useful for hiding details behind a dropdown, especially if there's a lot of them
->
-> Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.
-
-> [!attention] Without a dash, callout is opened by default
-> For information you want the reasers to see right away
-`,
-		html: `<details data-callout="info">
-<summary>
-The dash after the callout type makes it closed
-</summary>
-<div class="callout-content">
-<p>Which is useful for hiding details behind a dropdown, especially if there's a lot of them</p>
-<p>Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.</p>
-</div>
-</details>
-<details data-callout="attention" open>
-<summary>
-Without a dash, callout is opened by default
-</summary>
-<div class="callout-content">
-<p>For information you want the reasers to see right away</p>
-</div>
-</details>
-`}, {desc: "text before callout type",
+		html: `<div class="markdown-alert markdown-alert-info"><p class="markdown-alert-title">Title with <em>some</em> syntax <a href="http://example.com">and</a> links</p></div>`}, {
+		desc: "text before callout type",
 		md: `> abcd [!info]- This is not a callout
 `,
 		html: `<blockquote>
 <p>abcd [!info]- This is not a callout</p>
 </blockquote>
-`},{desc: "space before a callout type",
+`}, {desc: "space before a callout type",
 		md: `>  [!info]- This is not a callout
 `,
 		html: `<blockquote>
@@ -376,13 +111,13 @@ Without a dash, callout is opened by default
 		html: `<blockquote>
 <p>[!info]- This is not a callout</p>
 </blockquote>
-`},{desc: "3 spaces before a callout type",
+`}, {desc: "3 spaces before a callout type",
 		md: `>    [!info]- This is not a callout
 `,
 		html: `<blockquote>
 <p>[!info]- This is not a callout</p>
 </blockquote>
-`},{desc: "4 spaces before a callout type",
+`}, {desc: "4 spaces before a callout type",
 		md: `>     [!info]- This is not a callout
 `,
 		html: `<blockquote>
