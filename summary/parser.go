@@ -6,25 +6,25 @@ import (
 	"github.com/yuin/goldmark/text"
 	"github.com/yuin/goldmark/util"
 
-	"gitlab.com/staticnoise/goldmark-callout/details"
+	"github.com/thiagokokada/goldmark-gh-alerts/details"
 )
 
-type calloutHeaderParser struct{}
+type alertHeaderParser struct{}
 
-var defaultCalloutHeaderParser = &calloutHeaderParser{}
+var defaultAlertsHeaderParser = &alertHeaderParser{}
 
-func NewCalloutHeaderParser() parser.BlockParser {
-	return defaultCalloutHeaderParser
+func NewAlertsHeaderParser() parser.BlockParser {
+	return defaultAlertsHeaderParser
 }
 
-func (b *calloutHeaderParser) Trigger() []byte {
-	// end of Callout begining
+func (b *alertHeaderParser) Trigger() []byte {
+	// end of Alerts begining
 	return []byte{']'}
 }
 
-func (b *calloutHeaderParser) Open(parent gast.Node, reader text.Reader, pc parser.Context) (gast.Node, parser.State) {
-	// this is always the first child of KindCallout
-	if parent.ChildCount() != 0 || parent.Kind() != details.KindCallout {
+func (b *alertHeaderParser) Open(parent gast.Node, reader text.Reader, pc parser.Context) (gast.Node, parser.State) {
+	// this is always the first child of KindAlerts
+	if parent.ChildCount() != 0 || parent.Kind() != details.KindAlerts {
 		return nil, parser.NoChildren
 	}
 
@@ -45,12 +45,12 @@ func (b *calloutHeaderParser) Open(parent gast.Node, reader text.Reader, pc pars
 	_, segment = reader.Position()
 	line, _ = reader.PeekLine()
 
-	// remove \n from the title of the callout
+	// remove \n from the title of the alert
 	if len(line) > 0 && line[len(line)-1] == '\n' {
 		segment.Stop = segment.Stop - 1
 	}
 
-	callout := NewCalloutHeader()
+	alert := NewAlertsHeader()
 
 	if segment.Len() != 0 {
 		segments := text.Segments{}
@@ -59,30 +59,30 @@ func (b *calloutHeaderParser) Open(parent gast.Node, reader text.Reader, pc pars
 		paragraph := gast.NewTextBlock()
 		paragraph.SetLines(&segments)
 
-		callout.AppendChild(callout, paragraph)
+		alert.AppendChild(alert, paragraph)
 	} else {
 		var kind string = ""
 		if t, ok := parent.AttributeString("kind"); ok {
 			kind = string(t.([]uint8))
 		}
-		callout.SetAttributeString("kind", kind)
+		alert.SetAttributeString("kind", kind)
 	}
 
-	return callout, parser.NoChildren
+	return alert, parser.NoChildren
 }
 
-func (b *calloutHeaderParser) Continue(node gast.Node, reader text.Reader, pc parser.Context) parser.State {
+func (b *alertHeaderParser) Continue(node gast.Node, reader text.Reader, pc parser.Context) parser.State {
 	return parser.Close
 }
 
-func (b *calloutHeaderParser) Close(node gast.Node, reader text.Reader, pc parser.Context) {
+func (b *alertHeaderParser) Close(node gast.Node, reader text.Reader, pc parser.Context) {
 	// nothing to do
 }
 
-func (b *calloutHeaderParser) CanInterruptParagraph() bool {
+func (b *alertHeaderParser) CanInterruptParagraph() bool {
 	return false
 }
 
-func (b *calloutHeaderParser) CanAcceptIndentedLine() bool {
+func (b *alertHeaderParser) CanAcceptIndentedLine() bool {
 	return true
 }

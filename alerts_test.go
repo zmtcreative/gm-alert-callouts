@@ -1,4 +1,4 @@
-package callout
+package alerts
 
 import (
 	"testing"
@@ -9,7 +9,7 @@ import (
 
 var markdown = goldmark.New(
 	goldmark.WithExtensions(
-		CalloutExtention,
+		GhAlertsExtension,
 	),
 )
 
@@ -40,7 +40,7 @@ var cases = [...]TestCase{
 </blockquote>
 `},
 	{
-		desc: "Callout with a paragraph",
+		desc: "Alerts with a paragraph",
 		md: `> [!note]
 > Paragraph
 > over a few lines`,
@@ -48,7 +48,7 @@ var cases = [...]TestCase{
 over a few lines</p>
 </div>`},
 	{
-		desc: "Callout with two paragraphs",
+		desc: "Alerts with two paragraphs",
 		md: `> [!InFo]
 > paragraph
 > over a few lines
@@ -61,11 +61,11 @@ over a few lines</p>
 <p>second paragraph with <em>some</em> syntax</p>
 </div>`},
 	{
-		desc: "Callout without body",
+		desc: "Alerts without body",
 		md:   `> [!info] title`,
 		html: `<div class="markdown-alert markdown-alert-info"><p class="markdown-alert-title">title</p></div>`},
 	{
-		desc: "Callout with list",
+		desc: "Alerts with list",
 		md: `> [!info]
 > - item`,
 		html: `<div class="markdown-alert markdown-alert-info"><p class="markdown-alert-title">Info</p><ul>
@@ -85,7 +85,7 @@ over a few lines</p>
 </ul>
 </div>`},
 	{
-		desc: "Not a callout",
+		desc: "Not a alert",
 		md: `[!info] title
 `,
 		html: `<p>[!info] title</p>
@@ -93,41 +93,41 @@ over a few lines</p>
 		desc: "Syntax in summary",
 		md:   `>[!info] Title with *some* syntax [and](http://example.com) links`,
 		html: `<div class="markdown-alert markdown-alert-info"><p class="markdown-alert-title">Title with <em>some</em> syntax <a href="http://example.com">and</a> links</p></div>`}, {
-		desc: "text before callout type",
-		md: `> abcd [!info]- This is not a callout
+		desc: "text before alert type",
+		md: `> abcd [!info]- This is not a alert
 `,
 		html: `<blockquote>
-<p>abcd [!info]- This is not a callout</p>
+<p>abcd [!info]- This is not a alert</p>
 </blockquote>
-`}, {desc: "space before a callout type",
-		md: `>  [!info]- This is not a callout
+`}, {desc: "space before a alert type",
+		md: `>  [!info]- This is not a alert
 `,
 		html: `<blockquote>
-<p>[!info]- This is not a callout</p>
+<p>[!info]- This is not a alert</p>
 </blockquote>
-`}, {desc: "2 spaces before a callout type",
-		md: `>   [!info]- This is not a callout
+`}, {desc: "2 spaces before a alert type",
+		md: `>   [!info]- This is not a alert
 `,
 		html: `<blockquote>
-<p>[!info]- This is not a callout</p>
+<p>[!info]- This is not a alert</p>
 </blockquote>
-`}, {desc: "3 spaces before a callout type",
-		md: `>    [!info]- This is not a callout
+`}, {desc: "3 spaces before a alert type",
+		md: `>    [!info]- This is not a alert
 `,
 		html: `<blockquote>
-<p>[!info]- This is not a callout</p>
+<p>[!info]- This is not a alert</p>
 </blockquote>
-`}, {desc: "4 spaces before a callout type",
-		md: `>     [!info]- This is not a callout
+`}, {desc: "4 spaces before a alert type",
+		md: `>     [!info]- This is not a alert
 `,
 		html: `<blockquote>
-<pre><code>[!info]- This is not a callout
+<pre><code>[!info]- This is not a alert
 </code></pre>
 </blockquote>
 `},
 }
 
-func TestCallout(t *testing.T) {
+func TestAlerts(t *testing.T) {
 	for i, c := range cases {
 		testutil.DoTestCase(markdown, testutil.MarkdownTestCase{
 			No:          i,

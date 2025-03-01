@@ -4,20 +4,20 @@ import (
 	gast "github.com/yuin/goldmark/ast"
 )
 
-type CalloutHeader struct {
+type AlertsHeader struct {
 	gast.BaseBlock
 }
 
-func (n *CalloutHeader) Dump(source []byte, level int) {
+func (n *AlertsHeader) Dump(source []byte, level int) {
 	gast.DumpHelper(n, source, level, nil, nil)
 }
 
-var KindCalloutHeader = gast.NewNodeKind("CalloutHeader")
+var KindAlertsHeader = gast.NewNodeKind("AlertsHeader")
 
-func (n *CalloutHeader) Kind() gast.NodeKind {
-	return KindCalloutHeader
+func (n *AlertsHeader) Kind() gast.NodeKind {
+	return KindAlertsHeader
 }
 
-func NewCalloutHeader() *CalloutHeader {
-	return &CalloutHeader{}
+func NewAlertsHeader() *AlertsHeader {
+	return &AlertsHeader{}
 }

@@ -9,12 +9,12 @@ import (
 	"github.com/yuin/goldmark/util"
 )
 
-type CalloutHeaderHTMLRenderer struct {
+type AlertsHeaderHTMLRenderer struct {
 	html.Config
 }
 
-func NewCalloutHeaderHTMLRenderer(opts ...html.Option) renderer.NodeRenderer {
-	r := &CalloutHeaderHTMLRenderer{
+func NewAlertsHeaderHTMLRenderer(opts ...html.Option) renderer.NodeRenderer {
+	r := &AlertsHeaderHTMLRenderer{
 		Config: html.NewConfig(),
 	}
 	for _, opt := range opts {
@@ -23,11 +23,11 @@ func NewCalloutHeaderHTMLRenderer(opts ...html.Option) renderer.NodeRenderer {
 	return r
 }
 
-func (r *CalloutHeaderHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
-	reg.Register(KindCalloutHeader, r.renderCalloutHeader)
+func (r *AlertsHeaderHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
+	reg.Register(KindAlertsHeader, r.renderAlertsHeader)
 }
 
-func (r *CalloutHeaderHTMLRenderer) renderCalloutHeader(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
+func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
 	if entering {
 		w.WriteString(`<p class="markdown-alert-title">`)
 		var kind string = ""

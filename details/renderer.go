@@ -11,12 +11,12 @@ import (
 	"fmt"
 )
 
-type CalloutHTMLRenderer struct {
+type AlertsHTMLRenderer struct {
 	html.Config
 }
 
-func NewCalloutHTMLRenderer(opts ...html.Option) renderer.NodeRenderer {
-	r := &CalloutHTMLRenderer{
+func NewAlertsHTMLRenderer(opts ...html.Option) renderer.NodeRenderer {
+	r := &AlertsHTMLRenderer{
 		Config: html.NewConfig(),
 	}
 	for _, opt := range opts {
@@ -25,17 +25,17 @@ func NewCalloutHTMLRenderer(opts ...html.Option) renderer.NodeRenderer {
 	return r
 }
 
-func (r *CalloutHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
-	reg.Register(KindCallout, r.renderCallout)
+func (r *AlertsHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
+	reg.Register(KindAlerts, r.renderAlerts)
 }
 
-func (r *CalloutHTMLRenderer) renderCallout(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
-	calloutType := ""
+func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
+	alertType := ""
 	if t, ok := node.AttributeString("kind"); ok {
-		calloutType = strings.ToLower(string(t.([]uint8)))
+		alertType = strings.ToLower(string(t.([]uint8)))
 	}
 
-	start := fmt.Sprintf(`<div class="markdown-alert markdown-alert-%s">`, calloutType)
+	start := fmt.Sprintf(`<div class="markdown-alert markdown-alert-%s">`, alertType)
 
 	if entering {
 		w.WriteString(start)

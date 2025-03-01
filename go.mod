@@ -1,4 +1,4 @@
-module gitlab.com/staticnoise/goldmark-callout
+module github.com/thiagokokada/goldmark-gh-alerts
 
 go 1.17
 

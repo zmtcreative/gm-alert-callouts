@@ -10,21 +10,21 @@ import (
 	"strings"
 )
 
-type calloutParser struct{}
+type alertParser struct{}
 
-var defaultCalloutParser = &calloutParser{}
+var defaultAlertsParser = &alertParser{}
 
-func NewCalloutParser() parser.BlockParser {
-	return defaultCalloutParser
+func NewAlertsParser() parser.BlockParser {
+	return defaultAlertsParser
 }
 
-func (b *calloutParser) Trigger() []byte {
+func (b *alertParser) Trigger() []byte {
 	return []byte{'>'}
 }
 
 var regex = regexp.MustCompile("^\\[!(?P<kind>[\\w]+)\\](?P<closed>-{0,1})($|\\s+(?P<title>.*))")
 
-func (b *calloutParser) process(reader text.Reader) (bool, int) {
+func (b *alertParser) process(reader text.Reader) (bool, int) {
 	// This is slighlty modified code from https://github.com/yuin/goldmark.git
 	// Originally written by Yusuke Inuzuka, licensed under MIT License
 
@@ -50,7 +50,7 @@ func (b *calloutParser) process(reader text.Reader) (bool, int) {
 	return true, advance_by
 }
 
-func (b *calloutParser) Open(parent gast.Node, reader text.Reader, pc parser.Context) (gast.Node, parser.State) {
+func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Context) (gast.Node, parser.State) {
 
   // check if we are inside of a block quote
 	ok, advance_by := b.process(reader)
@@ -76,18 +76,18 @@ func (b *calloutParser) Open(parent gast.Node, reader text.Reader, pc parser.Con
 	kind := match[1]
 	closed := match[2]
 
-	callout := NewCallout()
+	alert := NewAlerts()
 
-	callout.SetAttributeString("kind", kind)
-	callout.SetAttributeString("closed", len(closed) != 0)
+	alert.SetAttributeString("kind", kind)
+	alert.SetAttributeString("closed", len(closed) != 0)
 
 	i := strings.Index(string(line), "]")
 	reader.Advance(i)
 
-	return callout, parser.HasChildren
+	return alert, parser.HasChildren
 }
 
-func (b *calloutParser) Continue(node gast.Node, reader text.Reader, pc parser.Context) parser.State {
+func (b *alertParser) Continue(node gast.Node, reader text.Reader, pc parser.Context) parser.State {
 	ok, advance_by := b.process(reader)
 	if !ok {
 		return parser.Close
@@ -98,14 +98,14 @@ func (b *calloutParser) Continue(node gast.Node, reader text.Reader, pc parser.C
 	return parser.Continue | parser.HasChildren
 }
 
-func (b *calloutParser) Close(node gast.Node, reader text.Reader, pc parser.Context) {
+func (b *alertParser) Close(node gast.Node, reader text.Reader, pc parser.Context) {
 	// nothing to do
 }
 
-func (b *calloutParser) CanInterruptParagraph() bool {
+func (b *alertParser) CanInterruptParagraph() bool {
 	return true
 }
 
-func (b *calloutParser) CanAcceptIndentedLine() bool {
+func (b *alertParser) CanAcceptIndentedLine() bool {
 	return false
 }
