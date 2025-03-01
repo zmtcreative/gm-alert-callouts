@@ -28,18 +28,17 @@ func (r *CalloutHeaderHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncR
 }
 
 func (r *CalloutHeaderHTMLRenderer) renderCalloutHeader(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
-
 	if entering {
-		w.WriteString("<summary>\n")
+		w.WriteString(`<p class="markdown-alert-title">`)
 		var kind string = ""
 		if t, ok := node.AttributeString("kind"); ok {
 			kind = string(t.(string))
 			kind = t.(string)
-			w.WriteString(strings.Title(kind))
+			w.WriteString(strings.Title(strings.ToLower(kind)))
 		}
 
 	} else {
-		w.WriteString("\n</summary>\n<div class=\"callout-content\">\n")
+		w.WriteString(`</p>`)
 	}
 	return gast.WalkContinue, nil
 }

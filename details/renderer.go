@@ -1,6 +1,8 @@
 package details
 
 import (
+	"strings"
+
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
@@ -30,23 +32,15 @@ func (r *CalloutHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegiste
 func (r *CalloutHTMLRenderer) renderCallout(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
 	var calloutType string = ""
 	if t, ok := node.AttributeString("kind"); ok {
-		calloutType = string(t.([]uint8))
+		calloutType = strings.ToLower(string(t.([]uint8)))
 	}
 
-	open := " open"
-	if t, ok := node.AttributeString("closed"); ok {
-		if bool(t.(bool)) {
-			open = ""
-		}
-	}
-
-	start := fmt.Sprintf(`<details data-callout="%s"%s>
-`, calloutType, open)
+	start := fmt.Sprintf(`<div class="markdown-alert markdown-alert-%s">`, calloutType)
 
 	if entering {
 		w.WriteString(start)
 	} else {
-		w.WriteString("</div>\n</details>\n")
+		w.WriteString("</div>\n")
 	}
 	return gast.WalkContinue, nil
 }
