@@ -30,7 +30,7 @@ func (r *CalloutHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegiste
 }
 
 func (r *CalloutHTMLRenderer) renderCallout(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
-	var calloutType string = ""
+	calloutType := ""
 	if t, ok := node.AttributeString("kind"); ok {
 		calloutType = strings.ToLower(string(t.([]uint8)))
 	}
