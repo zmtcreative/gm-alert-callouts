@@ -2,13 +2,16 @@
 
 goldmark-callout is an extension for the
 [goldmark](http://github.com/yuin/goldmark) that allows you to use [GitHub
-alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts)
-or [Obsidian
-callouts](https://help.obsidian.md/Editing+and+formatting/Callouts).
+alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts).
+
+A hard fork of
+[staticnoise/goldmark-callout](https://gitlab.com/staticnoise/goldmark-callout).
 
 ## State of the project
 
-Under active development, many breaking changes all the time.
+This is most to be used by
+[thiagokokada/gh-gfm-preview](https://github.com/thiagokokada/gh-gfm-preview/),
+so it is not really for general usage.
 
 ## Example
 
@@ -17,88 +20,21 @@ Under active development, many breaking changes all the time.
 **Markdown**
 
 ```markdown
-> [!info] Great new feature
-> With lots of possibilities:
-> - feature one
-> - feature two
+> [!NOTE]
+> Useful information that users should know, even when skimming content.
 ```
 
 **HTML**
 
 ```html
-<details data-callout="info" open>
-<summary>
-Great new feature
-</summary>
-<div class="callout-content">
-<p>With lots of possibilities:</p>
-<ul>
-<li>feature one</li>
-<li>feature two</li>
-</ul>
+<div class="markdown-alert markdown-alert-note">
+  <p class="markdown-alert-title">
+    <svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>
+    Note
+  </p>
+  <p>Useful information that users should know, even when skimming content.</p>
 </div>
-</details>
 ```
-
-### Closed callout
-
-**Markdown**
-
-```markdown
-> [!info]- The dash after the callout type makes it closed
-> Which is useful for hiding details behind a dropdown
-```
-
-**HTML**
-
-```html
-<details data-callout="info">
-<summary>
-The dash after the callout type makes it closed
-</summary>
-<div class="callout-content">
-<p>Which is useful for hiding details behind a dropdown</p>
-</div>
-</details>
-```
-
-### Default title
-
-**Markdown**
-
-```markdown
-> [!warning]
-> The callout type with capitalized first letter is used as the the callout
-> title
-```
-
-**HTML**
-
-```html
-<details data-callout="warning" open>
-<summary>
-Warning
-</summary>
-<div class="callout-content">
-<p>The callout type with capitalized first letter is used as the the callout
-title</p>
-</div>
-</details>
-```
-
-### Styling with CSS
-
-For example, see https://codepen.io/staticnoise/pen/JjqJmmE.
-
-## Differences with Obsidian and GitHub syntax
-
-Obsidian and GitHub render callouts with a `div` elements. Obsidian uses
-JavaScript for opening and closing of summaries. I decided to use tags `details`
-and `summary` to allow opening and closing the the tags without JavaScript.
-
-Obsidian allows arbitrary content in the callout title, including blockquotes,
-images, links, and another callouts. We don't allow this, callout title can only
-be a single line of paragraph.
 
 ## License
 
@@ -106,6 +42,7 @@ be a single line of paragraph.
 MIT License
 
 Copyright (c) 2024 Adam Chovanec
+Copyright (c) 2025 Thiago Kenji Okada
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
