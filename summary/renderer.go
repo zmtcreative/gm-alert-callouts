@@ -51,7 +51,7 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 			if ok {
 				w.WriteString(icon)
 			}
-			w.WriteString(strings.Title(kind))
+			w.WriteString(strings.ToTitle(kind))
 		}
 	} else {
 		w.WriteString(`</p>`)
