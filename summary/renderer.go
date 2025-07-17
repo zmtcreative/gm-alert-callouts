@@ -7,6 +7,8 @@ import (
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
 	"github.com/yuin/goldmark/util"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 type Icons map[string]string
@@ -43,6 +45,7 @@ func (r *AlertsHeaderHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRe
 
 func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
 	if entering {
+		caser := cases.Title(language.English, cases.Compact)
 		w.WriteString(`<p class="markdown-alert-title">`)
 		var kind string = ""
 		if t, ok := node.AttributeString("kind"); ok {
@@ -51,7 +54,7 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 			if ok {
 				w.WriteString(icon)
 			}
-			w.WriteString(strings.ToTitle(kind))
+			w.WriteString(caser.String(kind))
 		}
 	} else {
 		w.WriteString(`</p>`)
