@@ -35,7 +35,7 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 		alertType = strings.ToLower(string(t.([]uint8)))
 	}
 
-	start := fmt.Sprintf(`<div class="markdown-alert markdown-alert-%s">`, alertType)
+	start := fmt.Sprintf(`<div class="markdown-alert markdown-alert-%s" data-callout="%s">`, alertType, alertType)
 
 	if entering {
 		w.WriteString(start)
