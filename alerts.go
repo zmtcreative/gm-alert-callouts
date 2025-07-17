@@ -6,8 +6,8 @@ import (
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/util"
 
-	"github.com/thiagokokada/goldmark-gh-alerts/details"
-	"github.com/thiagokokada/goldmark-gh-alerts/summary"
+	"github.com/ZMT-Creative/goldmark-gh-alerts/details"
+	"github.com/ZMT-Creative/goldmark-gh-alerts/summary"
 )
 
 type GhAlerts struct {

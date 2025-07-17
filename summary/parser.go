@@ -6,7 +6,7 @@ import (
 	"github.com/yuin/goldmark/text"
 	"github.com/yuin/goldmark/util"
 
-	"github.com/thiagokokada/goldmark-gh-alerts/details"
+	"github.com/ZMT-Creative/goldmark-gh-alerts/details"
 )
 
 type alertHeaderParser struct{}
