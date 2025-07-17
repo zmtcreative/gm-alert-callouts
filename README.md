@@ -4,14 +4,10 @@ goldmark-gh-callout is an extension for the
 [goldmark](http://github.com/yuin/goldmark) that allows you to use [GitHub
 alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts).
 
-A hard fork of
-[staticnoise/goldmark-callout](https://gitlab.com/staticnoise/goldmark-callout).
+This is a fork of
+[thiagokokada/goldmark-gh-alerts](https://github.com/thiagokokada/goldmark-gh-alerts).
 
 ## State of the project
-
-This is mostly created to be used by
-[thiagokokada/gh-gfm-preview](https://github.com/thiagokokada/gh-gfm-preview/),
-so it is not really meant for general usage.
 
 If you want to use it in your own project feel free, but I recommend either
 pinning a commit or forking since the API is not guarantee to be stable.
@@ -58,6 +54,7 @@ MIT License
 
 Copyright (c) 2024 Adam Chovanec
 Copyright (c) 2025 Thiago Kenji Okada
+Copyright (c) 2025 ZMT Creative LLC
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
