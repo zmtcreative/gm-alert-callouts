@@ -1,6 +1,6 @@
 # goldmark-gh-alerts
 
-goldmark-gh-callout is an extension for the
+goldmark-gh-alerts is an extension for the
 [goldmark](http://github.com/yuin/goldmark) that allows you to use [GitHub
 alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts).
 
