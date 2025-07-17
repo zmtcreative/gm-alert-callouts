@@ -46,7 +46,7 @@ var cases = [...]TestCase{
 		md: `> [!note]
 > Paragraph
 > over a few lines`,
-		html: `<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg></svg>Note</p><p>Paragraph
+		html: `<div class="markdown-alert markdown-alert-note" data-callout="note"><p class="markdown-alert-title"><svg></svg>Note</p><p>Paragraph
 over a few lines</p>
 </div>`},
 	{
@@ -58,19 +58,19 @@ over a few lines</p>
 > second paragraph with *some* syntax
 `,
 
-		html: `<div class="markdown-alert markdown-alert-info"><p class="markdown-alert-title">Info</p><p>paragraph
+		html: `<div class="markdown-alert markdown-alert-info" data-callout="info"><p class="markdown-alert-title">Info</p><p>paragraph
 over a few lines</p>
 <p>second paragraph with <em>some</em> syntax</p>
 </div>`},
 	{
 		desc: "Alerts without body",
 		md:   `> [!info] title`,
-		html: `<div class="markdown-alert markdown-alert-info"><p class="markdown-alert-title">title</p></div>`},
+		html: `<div class="markdown-alert markdown-alert-info" data-callout="info"><p class="markdown-alert-title">title</p></div>`},
 	{
 		desc: "Alerts with list",
 		md: `> [!info]
 > - item`,
-		html: `<div class="markdown-alert markdown-alert-info"><p class="markdown-alert-title">Info</p><ul>
+		html: `<div class="markdown-alert markdown-alert-info" data-callout="info"><p class="markdown-alert-title">Info</p><ul>
 <li>item</li>
 </ul>
 </div>`},
@@ -80,7 +80,7 @@ over a few lines</p>
 > With lots of possibilities:
 > - feature one
 > - feature two`,
-		html: `<div class="markdown-alert markdown-alert-info"><p class="markdown-alert-title">Info</p><p>With lots of possibilities:</p>
+		html: `<div class="markdown-alert markdown-alert-info" data-callout="info"><p class="markdown-alert-title">Info</p><p>With lots of possibilities:</p>
 <ul>
 <li>feature one</li>
 <li>feature two</li>
@@ -94,7 +94,7 @@ over a few lines</p>
 `}, {
 		desc: "Syntax in summary",
 		md:   `>[!info] Title with *some* syntax [and](http://example.com) links`,
-		html: `<div class="markdown-alert markdown-alert-info"><p class="markdown-alert-title">Title with <em>some</em> syntax <a href="http://example.com">and</a> links</p></div>`}, {
+		html: `<div class="markdown-alert markdown-alert-info" data-callout="info"><p class="markdown-alert-title">Title with <em>some</em> syntax <a href="http://example.com">and</a> links</p></div>`}, {
 		desc: "text before alert type",
 		md: `> abcd [!info]- This is not a alert
 `,
