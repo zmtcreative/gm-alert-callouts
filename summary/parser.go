@@ -59,7 +59,20 @@ func (b *alertHeaderParser) Open(parent gast.Node, reader text.Reader, pc parser
 		paragraph := gast.NewTextBlock()
 		paragraph.SetLines(&segments)
 
-		alert.AppendChild(alert, paragraph)
+		// alert.AppendChild(alert, paragraph)
+
+		var kind string = ""
+		if t, ok := parent.AttributeString("alertkind"); ok {
+			kind = string(t.([]uint8))
+			alert.SetAttributeString("alertkind", kind)
+			// fmt.Printf("Sum:Parser:If:Kind = %s\n", kind)
+		}
+		var title string = ""
+		if t, ok := parent.AttributeString("title"); ok {
+			title = string(t.([]uint8))
+			alert.SetAttributeString("title", title)
+			// fmt.Printf("Sum:Parser:If:Title = %s\n", title)
+		}
 	} else {
 		var kind string = ""
 		if t, ok := parent.AttributeString("kind"); ok {
