@@ -48,19 +48,17 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 		caser := cases.Title(language.English, cases.Compact)
 		w.WriteString(`<p class="markdown-alert-title">`)
 		var kind string = ""
+
 		if t, ok := node.AttributeString("kind"); ok {
 			kind = strings.ToLower(t.(string))
 			icon, ok := r.Icons[kind]
 			if ok {
 				w.WriteString(icon)
 			}
-			if t, ok := node.AttributeString("title"); ok {
-				title = string(t.(string))
-				w.WriteString(title)
-				// fmt.Printf("Render:Title: %s\n", title)
+			if _, ok := node.AttributeString("title"); ok {
+				// do nothing
 			} else {
 				w.WriteString(caser.String(kind))
-				// fmt.Printf("Render:Kind: %s\n", kind)
 			}
 		}
 	} else {

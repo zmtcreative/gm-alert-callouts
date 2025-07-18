@@ -50,6 +50,8 @@ func (b *alertHeaderParser) Open(parent gast.Node, reader text.Reader, pc parser
 		segment.Stop = segment.Stop - 1
 	}
 
+	var titleLine string = string(line)
+
 	alert := NewAlertsHeader()
 
 	if segment.Len() != 0 {
@@ -59,26 +61,20 @@ func (b *alertHeaderParser) Open(parent gast.Node, reader text.Reader, pc parser
 		paragraph := gast.NewTextBlock()
 		paragraph.SetLines(&segments)
 
-		// alert.AppendChild(alert, paragraph)
+		alert.AppendChild(alert, paragraph)
 
 		var kind string = ""
-		if t, ok := parent.AttributeString("alertkind"); ok {
+		if t, ok := parent.AttributeString("kind"); ok {
 			kind = string(t.([]uint8))
-			alert.SetAttributeString("alertkind", kind)
-			// fmt.Printf("Sum:Parser:If:Kind = %s\n", kind)
+			alert.SetAttributeString("kind", kind)
 		}
-		var title string = ""
-		if t, ok := parent.AttributeString("title"); ok {
-			title = string(t.([]uint8))
-			alert.SetAttributeString("title", title)
-			// fmt.Printf("Sum:Parser:If:Title = %s\n", title)
-		}
+		alert.SetAttributeString("title", titleLine)
 	} else {
 		var kind string = ""
 		if t, ok := parent.AttributeString("kind"); ok {
 			kind = string(t.([]uint8))
+			alert.SetAttributeString("kind", kind)
 		}
-		alert.SetAttributeString("kind", kind)
 	}
 
 	return alert, parser.NoChildren
