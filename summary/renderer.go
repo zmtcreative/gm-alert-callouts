@@ -46,7 +46,7 @@ func (r *AlertsHeaderHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRe
 func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
 	if entering {
 		caser := cases.Title(language.English, cases.Compact)
-		w.WriteString(`<p class="markdown-alert-title">`)
+		w.WriteString(`<p class="gh-alert-title">`)
 		var kind string = ""
 
 		if t, ok := node.AttributeString("kind"); ok {
