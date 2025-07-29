@@ -60,18 +60,17 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 
 	line, _ := reader.PeekLine()
 
-  // empty blockquote
-  if len(line) <= advance_by {
-    return nil, parser.NoChildren
-  }
-
-  // right after `>` and up to one space
-  subline := line[advance_by:]
-	if !regex.Match(subline) {
+	// empty blockquote
+	if len(line) <= advance_by {
 		return nil, parser.NoChildren
 	}
 
-	match := regex.FindSubmatch(subline)
+  // right after `>` and up to one space
+    subline := line[advance_by:]
+    match := regex.FindSubmatch(subline)
+    if match == nil {
+        return nil, parser.NoChildren
+    }
 
 	kind := match[1]
 	closed := match[2]

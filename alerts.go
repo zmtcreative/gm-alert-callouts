@@ -6,6 +6,7 @@ import (
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/util"
 
+	"github.com/ZMT-Creative/goldmark-gh-alerts/body"
 	"github.com/ZMT-Creative/goldmark-gh-alerts/details"
 	"github.com/ZMT-Creative/goldmark-gh-alerts/summary"
 )
@@ -29,6 +30,7 @@ func (e *GhAlerts) Extend(m goldmark.Markdown) {
 		renderer.WithNodeRenderers(
 			util.Prioritized(details.NewAlertsHTMLRenderer(), 0),
 			util.Prioritized(summary.NewAlertsHeaderHTMLRendererWithIcons(e.Icons), 0),
+            util.Prioritized(body.NewAlertsBodyHTMLRenderer(), 0),
 		),
 	)
 }

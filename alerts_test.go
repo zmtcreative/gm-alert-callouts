@@ -46,9 +46,9 @@ var cases = [...]TestCase{
 		md: `> [!note]
 > Paragraph
 > over a few lines`,
-		html: `<div class="markdown-alert markdown-alert-note" data-callout="note"><p class="markdown-alert-title"><svg></svg>Note</p><p>Paragraph
+		html: `<div class="gh-alert gh-alert-note" data-callout="note"><p class="gh-alert-title"><svg></svg>Note</p><div class="gh-alert-body"><p>Paragraph
 over a few lines</p>
-</div>`},
+</div></div>`},
 	{
 		desc: "Alerts with two paragraphs",
 		md: `> [!InFo]
@@ -58,34 +58,34 @@ over a few lines</p>
 > second paragraph with *some* syntax
 `,
 
-		html: `<div class="markdown-alert markdown-alert-info" data-callout="info"><p class="markdown-alert-title">Info</p><p>paragraph
+		html: `<div class="gh-alert gh-alert-info" data-callout="info"><p class="gh-alert-title">Info</p><div class="gh-alert-body"><p>paragraph
 over a few lines</p>
 <p>second paragraph with <em>some</em> syntax</p>
-</div>`},
+</div></div>`},
 	{
 		desc: "Alerts without body",
 		md:   `> [!info] title`,
-		html: `<div class="markdown-alert markdown-alert-info" data-callout="info"><p class="markdown-alert-title">title</p></div>`},
+		html: `<div class="gh-alert gh-alert-info" data-callout="info"><p class="gh-alert-title">title</p></div>`},
 	{
 		desc: "Alerts with list",
 		md: `> [!info]
 > - item`,
-		html: `<div class="markdown-alert markdown-alert-info" data-callout="info"><p class="markdown-alert-title">Info</p><ul>
+		html: `<div class="gh-alert gh-alert-info" data-callout="info"><p class="gh-alert-title">Info</p><div class="gh-alert-body"><ul>
 <li>item</li>
 </ul>
-</div>`},
+</div></div>`},
 	{
 		desc: "README example",
 		md: `> [!info]
 > With lots of possibilities:
 > - feature one
 > - feature two`,
-		html: `<div class="markdown-alert markdown-alert-info" data-callout="info"><p class="markdown-alert-title">Info</p><p>With lots of possibilities:</p>
+		html: `<div class="gh-alert gh-alert-info" data-callout="info"><p class="gh-alert-title">Info</p><div class="gh-alert-body"><p>With lots of possibilities:</p>
 <ul>
 <li>feature one</li>
 <li>feature two</li>
 </ul>
-</div>`},
+</div></div>`},
 	{
 		desc: "Not a alert",
 		md: `[!info] title
@@ -94,7 +94,7 @@ over a few lines</p>
 `}, {
 		desc: "Syntax in summary",
 		md:   `>[!info] Title with *some* syntax [and](http://example.com) links`,
-		html: `<div class="markdown-alert markdown-alert-info" data-callout="info"><p class="markdown-alert-title">Title with <em>some</em> syntax <a href="http://example.com">and</a> links</p></div>`}, {
+		html: `<div class="gh-alert gh-alert-info" data-callout="info"><p class="gh-alert-title">Title with <em>some</em> syntax <a href="http://example.com">and</a> links</p></div>`}, {
 		desc: "text before alert type",
 		md: `> abcd [!info]- This is not a alert
 `,
