@@ -17,17 +17,19 @@ type Icons map[string]string
 type AlertsHeaderHTMLRenderer struct {
 	html.Config
 	Icons
+	titleCaser cases.Caser
 }
 
 func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, opts ...html.Option) renderer.NodeRenderer {
-	r := &AlertsHeaderHTMLRenderer{
-		Config: html.NewConfig(),
-		Icons:  icons,
-	}
-	for _, opt := range opts {
-		opt.SetHTMLOption(&r.Config)
-	}
-	return r
+    r := &AlertsHeaderHTMLRenderer{
+        Config:    html.NewConfig(),
+        Icons:     icons,
+        titleCaser: cases.Title(language.English, cases.Compact),
+    }
+    for _, opt := range opts {
+        opt.SetHTMLOption(&r.Config)
+    }
+    return r
 }
 
 func NewAlertsHeaderHTMLRenderer(opts ...html.Option) renderer.NodeRenderer {
@@ -45,25 +47,24 @@ func (r *AlertsHeaderHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRe
 }
 
 func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
-	if entering {
-		caser := cases.Title(language.English, cases.Compact)
-		w.WriteString(`<p class="gh-alert-title">`)
-		var kind string = ""
+    if entering {
+        w.WriteString(`<div class="gh-alert-title"><p>`)
+        var kind string = ""
 
-		if t, ok := node.AttributeString("kind"); ok {
-			kind = strings.ToLower(t.(string))
-			icon, ok := r.Icons[kind]
-			if ok {
-				w.WriteString(icon)
-			}
-			if _, ok := node.AttributeString("title"); ok {
-				// do nothing
-			} else {
-				w.WriteString(caser.String(kind))
-			}
-		}
-	} else {
-		w.WriteString(`</p>`)
-	}
-	return gast.WalkContinue, nil
+        if t, ok := node.AttributeString("kind"); ok {
+            kind = strings.ToLower(t.(string))
+            icon, ok := r.Icons[kind]
+            if ok {
+                w.WriteString(icon)
+            }
+            if _, ok := node.AttributeString("title"); ok {
+                // do nothing
+            } else {
+                w.WriteString(r.titleCaser.String(kind))
+            }
+        }
+    } else {
+        w.WriteString(`</p></div>`)
+    }
+    return gast.WalkContinue, nil
 }

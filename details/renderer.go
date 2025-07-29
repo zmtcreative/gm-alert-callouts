@@ -3,7 +3,6 @@ package details
 import (
 	"strings"
 
-	"github.com/ZMT-Creative/goldmark-gh-alerts/body"
 	"github.com/ZMT-Creative/goldmark-gh-alerts/kinds"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
@@ -34,40 +33,15 @@ func (r *AlertsHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegister
 func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
     alertType := ""
     if t, ok := node.AttributeString("kind"); ok {
-        alertType = strings.ToLower(string(t.([]uint8)))
+        if typeBytes, isBytes := t.([]uint8); isBytes {
+            alertType = strings.ToLower(string(typeBytes))
+        } else if typeStr, isStr := t.(string); isStr {
+            alertType = strings.ToLower(typeStr)
+        }
     }
 
     if entering {
-        start := fmt.Sprintf(`<div class="gh-alert gh-alert-%s" data-callout="%s">`, alertType, alertType)
-        w.WriteString(start)
-
-        // Find the header and wrap subsequent children in a body node
-        var header gast.Node
-        var bodyChildren []gast.Node
-        for c := node.FirstChild(); c != nil; {
-            next := c.NextSibling()
-            if c.Kind() == kinds.KindAlertsHeader {
-                header = c
-            } else {
-                bodyChildren = append(bodyChildren, c)
-            }
-            c = next
-        }
-
-        // Re-parent children
-        node.RemoveChildren(node)
-        if header != nil {
-            node.AppendChild(node, header)
-        }
-
-        if len(bodyChildren) > 0 {
-            bodyNode := body.NewAlertsBody()
-            for _, child := range bodyChildren {
-                bodyNode.AppendChild(bodyNode, child)
-            }
-            node.AppendChild(node, bodyNode)
-        }
-
+        fmt.Fprintf(w, `<div class="gh-alert gh-alert-%s" data-callout="%s">`, alertType, alertType)
     } else {
         w.WriteString("</div>\n")
     }

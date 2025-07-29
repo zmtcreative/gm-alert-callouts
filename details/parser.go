@@ -1,6 +1,8 @@
 package details
 
 import (
+	"github.com/ZMT-Creative/goldmark-gh-alerts/body"
+	"github.com/ZMT-Creative/goldmark-gh-alerts/kinds"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/text"
@@ -25,35 +27,35 @@ func (b *alertParser) Trigger() []byte {
 var regex = regexp.MustCompile(`^\[!(?P<kind>[\w]+)\](?P<closed>-{0,1})($|\s+(?P<title>.*))`)
 
 func (b *alertParser) process(reader text.Reader) (bool, int) {
-	// This is slighlty modified code from https://github.com/yuin/goldmark.git
-	// Originally written by Yusuke Inuzuka, licensed under MIT License
+    // This is slightly modified code from https://github.com/yuin/goldmark.git
+    // Originally written by Yusuke Inuzuka, licensed under MIT License
 
-	line, _ := reader.PeekLine()
-	w, pos := util.IndentWidth(line, reader.LineOffset())
-	if w > 3 || pos >= len(line) || line[pos] != '>' {
-		return false, 0
-	}
+    line, _ := reader.PeekLine()
+    w, pos := util.IndentWidth(line, reader.LineOffset())
+    if w > 3 || pos >= len(line) || line[pos] != '>' {
+        return false, 0
+    }
 
-	advance_by := 1
+    advanceBy := 1
 
-	if pos + advance_by >= len(line) || line[pos+advance_by] == '\n' {
-		return true, advance_by
-	}
-	if line[pos+advance_by] == ' ' || line[pos+advance_by] == '\t' {
-		advance_by++
-	}
+    if pos+advanceBy >= len(line) || line[pos+advanceBy] == '\n' {
+        return true, advanceBy
+    }
+    if line[pos+advanceBy] == ' ' || line[pos+advanceBy] == '\t' {
+        advanceBy++
+    }
 
-	if line[pos+advance_by-1] == '\t' {
-		reader.SetPadding(2)
-	}
+    if line[pos+advanceBy-1] == '\t' {
+        reader.SetPadding(2)
+    }
 
-	return true, advance_by
+    return true, advanceBy
 }
 
 func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Context) (gast.Node, parser.State) {
 
   // check if we are inside of a block quote
-	ok, advance_by := b.process(reader)
+	ok, advanceBy := b.process(reader)
 	if !ok {
 		return nil, parser.NoChildren
 	}
@@ -61,12 +63,12 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 	line, _ := reader.PeekLine()
 
 	// empty blockquote
-	if len(line) <= advance_by {
+	if len(line) <= advanceBy {
 		return nil, parser.NoChildren
 	}
 
   // right after `>` and up to one space
-    subline := line[advance_by:]
+    subline := line[advanceBy:]
     match := regex.FindSubmatch(subline)
     if match == nil {
         return nil, parser.NoChildren
@@ -87,18 +89,44 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 }
 
 func (b *alertParser) Continue(node gast.Node, reader text.Reader, pc parser.Context) parser.State {
-	ok, advance_by := b.process(reader)
+	ok, advanceBy := b.process(reader)
 	if !ok {
 		return parser.Close
 	}
 
-	reader.Advance(advance_by)
+	reader.Advance(advanceBy)
 
 	return parser.Continue | parser.HasChildren
 }
 
 func (b *alertParser) Close(node gast.Node, reader text.Reader, pc parser.Context) {
-	// nothing to do
+    // Restructure nodes to have a proper AlertsHeader and AlertsBody hierarchy
+    var header gast.Node
+    var bodyChildren []gast.Node
+
+    for c := node.FirstChild(); c != nil; {
+        next := c.NextSibling()
+        if c.Kind() == kinds.KindAlertsHeader {
+            header = c
+        } else {
+            bodyChildren = append(bodyChildren, c)
+        }
+        c = next
+    }
+
+    // Re-parent children
+    node.RemoveChildren(node)
+    if header != nil {
+        node.AppendChild(node, header)
+    }
+
+    if len(bodyChildren) > 0 {
+        bodyNode := body.NewAlertsBody()
+        for _, child := range bodyChildren {
+            bodyNode.AppendChild(bodyNode, child)
+        }
+        node.AppendChild(node, bodyNode)
+    }
 }
 
 func (b *alertParser) CanInterruptParagraph() bool {
