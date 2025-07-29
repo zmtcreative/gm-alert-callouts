@@ -6,7 +6,7 @@ import (
 	"github.com/yuin/goldmark/text"
 	"github.com/yuin/goldmark/util"
 
-	"github.com/ZMT-Creative/goldmark-gh-alerts/details"
+	"github.com/ZMT-Creative/goldmark-gh-alerts/kinds"
 )
 
 type alertHeaderParser struct{}
@@ -24,7 +24,7 @@ func (b *alertHeaderParser) Trigger() []byte {
 
 func (b *alertHeaderParser) Open(parent gast.Node, reader text.Reader, pc parser.Context) (gast.Node, parser.State) {
 	// this is always the first child of KindAlerts
-	if parent.ChildCount() != 0 || parent.Kind() != details.KindAlerts {
+	if parent.ChildCount() != 0 || parent.Kind() != kinds.KindAlerts {
 		return nil, parser.NoChildren
 	}
 

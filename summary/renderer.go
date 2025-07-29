@@ -3,6 +3,7 @@ package summary
 import (
 	"strings"
 
+	"github.com/ZMT-Creative/goldmark-gh-alerts/kinds"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
@@ -40,7 +41,7 @@ func NewAlertsHeaderHTMLRenderer(opts ...html.Option) renderer.NodeRenderer {
 }
 
 func (r *AlertsHeaderHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
-	reg.Register(KindAlertsHeader, r.renderAlertsHeader)
+	reg.Register(kinds.KindAlertsHeader, r.renderAlertsHeader)
 }
 
 func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
