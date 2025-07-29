@@ -48,7 +48,7 @@ func (r *AlertsHeaderHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRe
 
 func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
     if entering {
-        w.WriteString(`<p class="gh-alert-title">`)
+        w.WriteString(`<div class="gh-alert-title"><p>`)
         var kind string = ""
 
         if t, ok := node.AttributeString("kind"); ok {
@@ -64,7 +64,7 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
             }
         }
     } else {
-        w.WriteString(`</p>`)
+        w.WriteString(`</p></div>`)
     }
     return gast.WalkContinue, nil
 }
