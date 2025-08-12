@@ -1,0 +1,144 @@
+:root {
+  --bg-color: #ffffff;
+  --bg-color-rgb: #2e3440;
+  --text-color: #2e3440;
+  --text-color-rgb: #2e3440;
+  --header-bg-color: #f8f9fa;
+  --border-color: #d8dee9;
+  --inline-code-bg: rgba(0, 0, 0, 0.05);
+  --codeblock-opacity: 0.025;
+  --line-height-tight: 1.3;
+  --callout-border-width: 1px;
+  --callout-border-opacity: 1;
+  --callout-background-opacity: 0.025;
+  --callout-padding: 12px 12px 12px 24px;
+  --callout-radius: 10px;
+  --callout-title-weight: 700;
+  --callout-default: 8, 109, 221;
+  --callout-info: 8, 109, 221;
+  --callout-note: 8, 109, 221;
+  --callout-todo: 8, 109, 221;
+  --callout-bug: 233, 49, 71;
+  --callout-error: 233, 49, 71;
+  --callout-caution: 233, 49, 71;
+  --callout-danger: 233, 49, 71;
+  --callout-fail: 233, 49, 71;
+  --callout-success: 8, 185, 78;
+  --callout-example: 120, 82, 238;
+  --callout-important: 127, 0, 255;
+  --callout-summary: 0, 191, 188;
+  --callout-tip: 0, 191, 188;
+  --callout-question: 236, 117, 0;
+  --callout-warning: 236, 117, 0;
+  --callout-quote: 158, 158, 158;
+  --callout-cite: 158, 158, 158;
+  --css-color-white: 255, 255, 255;
+  --css-color-black: 0, 0, 0;
+}
+
+.gh-alert {
+  overflow: hidden;
+  border-style: solid;
+  border-color: rgba(var(--callout-color), var(--callout-border-opacity));
+  border-width: var(--callout-border-width);
+  border-radius: var(--callout-radius);
+  border-left: calc(var(--callout-radius) * 1.25) solid rgb(var(--callout-color));
+  margin: 1em 0;
+  mix-blend-mode: var(--callout-blend-mode);
+  background-color: rgba(var(--callout-color), var(--callout-background-opacity));
+  padding: var(--callout-padding);
+  --callout-color: var(--callout-info);
+}
+.gh-alert[data-callout] {
+  --callout-color: var(--callout-default);
+}
+.gh-alert[data-callout=info] {
+  --callout-color: var(--callout-info);
+}
+.gh-alert[data-callout=note] {
+  --callout-color: var(--callout-note);
+}
+.gh-alert[data-callout=todo] {
+  --callout-color: var(--callout-todo);
+}
+.gh-alert[data-callout=bug] {
+  --callout-color: var(--callout-bug);
+}
+.gh-alert[data-callout=error] {
+  --callout-color: var(--callout-error);
+}
+.gh-alert[data-callout=caution] {
+  --callout-color: var(--callout-caution);
+}
+.gh-alert[data-callout=danger] {
+  --callout-color: var(--callout-danger);
+}
+.gh-alert[data-callout=failure],
+.gh-alert[data-callout=fail] {
+  --callout-color: var(--callout-fail);
+}
+.gh-alert[data-callout=done],
+.gh-alert[data-callout=check],
+.gh-alert[data-callout=success] {
+  --callout-color: var(--callout-success);
+}
+.gh-alert[data-callout=example] {
+  --callout-color: var(--callout-example);
+}
+.gh-alert[data-callout=important] {
+  --callout-color: var(--callout-important);
+}
+.gh-alert[data-callout=summary],
+.gh-alert[data-callout=tldr],
+.gh-alert[data-callout=scroll],
+.gh-alert[data-callout=history],
+.gh-alert[data-callout=abstract] {
+  --callout-color: var(--callout-summary);
+}
+.gh-alert[data-callout=tip],
+.gh-alert[data-callout=hint] {
+  --callout-color: var(--callout-tip);
+}
+.gh-alert[data-callout=help],
+.gh-alert[data-callout=faq],
+.gh-alert[data-callout=question] {
+  --callout-color: var(--callout-question);
+}
+.gh-alert[data-callout=warn],
+.gh-alert[data-callout=attention],
+.gh-alert[data-callout=warning] {
+  --callout-color: var(--callout-warning);
+}
+.gh-alert[data-callout=quote] {
+  --callout-color: var(--callout-quote);
+}
+.gh-alert[data-callout=cite] {
+  --callout-color: var(--callout-cite);
+}
+.gh-alert .gh-alert-title {
+  padding: var(--callout-title-padding);
+  display: inline-block;
+  gap: 4px;
+  font-size: var(--callout-title-size);
+  color: rgb(var(--callout-color));
+  line-height: var(--line-height-tight);
+  font-weight: var(--callout-title-weight);
+}
+.gh-alert .gh-alert-title p {
+  display: inline-block;
+  margin: 0;
+  margin-bottom: 0.25em;
+  font-size: 1.2em;
+  font-weight: var(--callout-title-weight);
+}
+.gh-alert .gh-alert-title svg.lucide {
+  flex: 0 0 auto;
+  display: inline-block;
+  margin-bottom: -0.25em;
+  align-items: center;
+  margin-right: 0.2em;
+}
+.gh-alert p:not(:first-child) {
+  padding: var(--callout-content-padding);
+  background-color: var(--callout-content-background);
+}
