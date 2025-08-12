@@ -55,6 +55,19 @@ var markdown = goldmark.New(
 </div>
 ```
 
+### More Detailed Example
+
+A more detailed code example is located in the `code-examples` folder. If you are on Windows you can
+run the `run-ghalerts.ps1` script which will generate the HTML output of sample GitHub Alerts markdown
+text. This will write the output to `example.html` and then start the default web browser to view it.
+
+If you are on MacOS or Linux, just do the following in the `code-examples` folder:
+
+```sh
+go run ./ghalerts.go > example.html
+open example.html
+```
+
 ## License
 
 ```
