@@ -9,7 +9,7 @@ This is a fork of:
 
 ## Changes from Original Extension
 
-This modified version of the Github Alerts extension adds `<div>` wrappers around the alert **Title** text and the alert **Body** text. This allows more detailed styling with CSS.
+This modified version of the GitHub Alerts extension adds `<div>` wrappers around the alert **Title** text and the alert **Body** text. This allows more detailed styling with CSS. A new `code-examples` folder containing a more detailed usage example has also been added (see [More Detailed Example](#more-detailed-example) below).
 
 ## State of the project
 
