@@ -56,6 +56,16 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
             icon, ok := r.Icons[kind]
             if ok {
                 w.WriteString(icon)
+            // Check if the kind indicates no icon should be rendered.
+            // if it's not a "no icon" kind, we can try to find a default icon.
+            } else if !kinds.IsNoIconKind(kind) {
+                for _, v := range []string{"note", "info", "default"} {
+                    icon, ok = r.Icons[v]
+                    if ok {
+                        w.WriteString(icon)
+                        break
+                    }
+                }
             }
             if _, ok := node.AttributeString("title"); ok {
                 // do nothing
