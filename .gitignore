@@ -1,1 +1,5 @@
 __debug*
+tmp/**/*
+*.test
+
+!tmp/.gitkeep
