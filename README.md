@@ -16,8 +16,8 @@ Example](#more-detailed-example) below).
 
 ## State of the project
 
-If you want to use it in your own project feel free, but I recommend either pinning a commit or
-forking since the API is not guarantee to be stable.
+If you want to use it in your own project feel free, but it is recommended that you should either pin a commit or
+fork since the API is not guarantee to be stable.
 
 ## Example
 
