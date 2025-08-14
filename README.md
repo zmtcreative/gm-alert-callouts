@@ -7,22 +7,33 @@
 ![GitHub Tag](https://img.shields.io/github/v/tag/ZMT-Creative/goldmark-gh-alerts?include_prereleases&sort=semver)
 
 
-The `goldmark-gh-alerts` package is an extension for the [Goldmark](http://github.com/yuin/goldmark) Markdown
-Rendering Package that allows you to use [GitHub
-alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts). It also supports Obsidian-style callouts, although the Open/Close feature of Obsidian Callouts is not year implemented.
+The `goldmark-gh-alerts` package is an extension for the
+[Goldmark](http://github.com/yuin/goldmark) Markdown Rendering Package that allows you to use
+[GitHub alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts).
+It also supports Obsidian-style callouts, although the Open/Close feature of Obsidian Callouts is
+not yet implemented.
 
 > [!IMPORTANT]
 > This extension does **not** directly include any icons -- it just provides the parsing and
 > rendering functionality to create the alerts/callouts. The user must provide the list of valid
-> alert/callout names with a string map containing the alert/callout identifier (*e.g., `note`,
-> `important`, etc.*) as the key and the icon as the string value. The icon is usually an SVG in
-> HTML format (*e.g., `<svg>...svg-definiton...</svg>`*), but can be any string that a browser or
-> can render (*e.g., a Unicode glyph or an HTML entity code*).
+> alert/callout names with a string map containing the alert/callout identifier as the key (*e.g.,
+> `note`, `important`, etc.*) and the icon as the string value. The icon is usually an SVG in HTML
+> format (*e.g., `<svg>...svg-definiton...</svg>`*), but can be any string that a browser or
+> application can render (*e.g., a Unicode glyph or an HTML entity code*).
 
-This project is a hard fork of:
-[thiagokokada/goldmark-gh-alerts](https://github.com/thiagokokada/goldmark-gh-alerts). As stated on
-this original project's page, his `goldmark-gh-alerts` extension has been created primarily to support another
-of his projects and is not meant for general usage.
+## State of the Project
+
+This ZMT-Creative project is a hard fork of:
+[thiagokokada/goldmark-gh-alerts](https://github.com/thiagokokada/goldmark-gh-alerts).
+
+As stated on Thiago Okada's original project's page, his `goldmark-gh-alerts` extension package has
+been created primarily to support another of his projects and is not meant for general usage.
+
+ZMT-Creative's package is also being used for a specific (*currently private*) project to create a
+standalone Markdown Reader application.
+
+If you want to use this package in your own project feel free, but it is recommended that you
+should either pin a commit or fork since the API is not guarantee to be stable at this time.
 
 ## Changes from Original Extension
 
@@ -31,10 +42,6 @@ This modified version of the GitHub Alerts extension adds `<div>` wrappers aroun
 `examples` folder containing a more detailed usage example has also been added (see [More Detailed
 Example](#more-detailed-example) below).
 
-## State of the project
-
-If you want to use it in your own project feel free, but it is recommended that you should either pin a commit or
-fork since the API is not guarantee to be stable at this time.
 
 ## Examples
 
