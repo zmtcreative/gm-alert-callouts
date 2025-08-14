@@ -1,8 +1,10 @@
 # Goldmark GitHub Alerts and Obsidian Callouts
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/ZMT-Creative/goldmark-gh-alerts.svg)](https://pkg.go.dev/github.com/ZMT-Creative/goldmark-gh-alerts)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/ZMT-Creative/goldmark-gh-alerts)
 ![GitHub License](https://img.shields.io/github/license/ZMT-Creative/goldmark-gh-alerts)
-
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/ZMT-Creative/goldmark-gh-alerts)
+![GitHub Tag](https://img.shields.io/github/v/tag/ZMT-Creative/goldmark-gh-alerts?include_prereleases&sort=semver)
 
 
 The `goldmark-gh-alerts` package is an extension for the [Goldmark](http://github.com/yuin/goldmark) Markdown
