@@ -81,6 +81,8 @@ go run ./ghalerts.go > example.html
 open example.html
 ```
 
+The example shows one possible way to implement a set of alert types and their icons.
+
 ## License
 
 ```text
