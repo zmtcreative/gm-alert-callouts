@@ -1,8 +1,6 @@
-MIT License
+# MIT License
 
-Copyright (c) 2024 Adam Chovanec
-Copyright (c) 2025 Thiago Kenji Okada
-Copyright (c) 2025 ZMT Creative LLC
+## Copyright (c) 2025 ZMT Creative LLC
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,3 +19,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## Other MIT Licenses
+
+Portions of this software are based on the work of others, used under their
+respective MIT Licenses. Details can be found in the following files:
+
+- [Adam Chovanec](LICENSE-chovanec.md)
+- [Thiago Okada](LICENSE-thiagokokada)
