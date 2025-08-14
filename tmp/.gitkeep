@@ -1,0 +1,4 @@
+# PLACEHOLDER FILE
+
+This file exists so Git will track the ./tmp folder but ignore any files inside
+the folder. Consider this 'scratch space' for local docs during development.
