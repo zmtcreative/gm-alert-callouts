@@ -1,7 +1,7 @@
 package details
 
 import (
-	"github.com/ZMT-Creative/goldmark-gh-alerts/kinds"
+	"github.com/ZMT-Creative/goldmark-gh-alerts/pkg/kinds"
 	gast "github.com/yuin/goldmark/ast"
 )
 

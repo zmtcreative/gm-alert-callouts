@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/ZMT-Creative/goldmark-gh-alerts/kinds"
+	"github.com/ZMT-Creative/goldmark-gh-alerts/pkg/kinds"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"

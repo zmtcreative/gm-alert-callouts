@@ -1,8 +1,8 @@
 package details
 
 import (
-	"github.com/ZMT-Creative/goldmark-gh-alerts/body"
-	"github.com/ZMT-Creative/goldmark-gh-alerts/kinds"
+	"github.com/ZMT-Creative/goldmark-gh-alerts/pkg/body"
+	"github.com/ZMT-Creative/goldmark-gh-alerts/pkg/kinds"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/text"
