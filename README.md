@@ -1,11 +1,26 @@
-# goldmark-gh-alerts
+# Goldmark GitHub Alerts and Obsidian Callouts
 
-goldmark-gh-alerts is an extension for the [Goldmark](http://github.com/yuin/goldmark) Markdown
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/ZMT-Creative/goldmark-gh-alerts)
+![GitHub License](https://img.shields.io/github/license/ZMT-Creative/goldmark-gh-alerts)
+
+
+
+The `goldmark-gh-alerts` package is an extension for the [Goldmark](http://github.com/yuin/goldmark) Markdown
 Rendering Package that allows you to use [GitHub
-alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts).
+alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts). It also supports Obsidian-style callouts, although the Open/Close feature of Obsidian Callouts is not year implemented.
 
-This is a fork of:
-[thiagokokada/goldmark-gh-alerts](https://github.com/thiagokokada/goldmark-gh-alerts).
+> [!IMPORTANT]
+> This extension does **not** directly include any icons -- it just provides the parsing and
+> rendering functionality to create the alerts/callouts. The user must provide the list of valid
+> alert/callout names with a string map containing the alert/callout identifier (*e.g., `note`,
+> `important`, etc.*) as the key and the icon as the string value. The icon is usually an SVG in
+> HTML format (*e.g., `<svg>...svg-definiton...</svg>`*), but can be any string that a browser or
+> can render (*e.g., a Unicode glyph or an HTML entity code*).
+
+This project is a hard fork of:
+[thiagokokada/goldmark-gh-alerts](https://github.com/thiagokokada/goldmark-gh-alerts). As stated on
+this original project's page, his `goldmark-gh-alerts` extension has been created primarily to support another
+of his projects and is not meant for general usage.
 
 ## Changes from Original Extension
 
@@ -17,9 +32,9 @@ Example](#more-detailed-example) below).
 ## State of the project
 
 If you want to use it in your own project feel free, but it is recommended that you should either pin a commit or
-fork since the API is not guarantee to be stable.
+fork since the API is not guarantee to be stable at this time.
 
-## Example
+## Examples
 
 ### Basic example
 
@@ -85,28 +100,13 @@ The example shows one possible way to implement a set of alert types and their i
 
 ## License
 
-```text
-MIT License
+This project is licensed under the [MIT License](LICENSE.md)
 
-Copyright (c) 2024 Adam Chovanec
-Copyright (c) 2025 Thiago Kenji Okada
-Copyright (c) 2025 ZMT Creative LLC
+## Project Lineage
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Portions of this software are based on the work of others, used under their
+respective MIT Licenses. Details can be found in the following files:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+- [Adam Chovanec](LICENSE-chovanec.md)
+- [Thiago Okada](LICENSE-thiagokokada)
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
