@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 
@@ -92,7 +91,7 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 	alert.SetAttributeString("opened", len(opened) != 0)
 	alert.SetAttributeString("title", title)
 	alert.SetAttributeString("shouldfold", shouldFold)
-	fmt.Println("Alert kind:", string(kind), " | closed:", len(closed) != 0, " | opened:", len(opened) != 0, " | title:", string(title), " | shouldfold:", shouldFold)
+	// fmt.Println("Alert kind:", string(kind), " | closed:", len(closed) != 0, " | opened:", len(opened) != 0, " | title:", string(title), " | shouldfold:", shouldFold)
 
 	i := strings.Index(string(line), "]")
 	reader.Advance(i)
