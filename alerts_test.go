@@ -46,7 +46,10 @@ var cases = [...]TestCase{
 		md: `> [!note]
 > Paragraph
 > over a few lines`,
-		html: `<div class="gh-alert gh-alert-note" data-callout="note"><div class="gh-alert-title"><p><svg></svg>Note</p></div><div class="gh-alert-body"><p>Paragraph
+		html: `<div class="gh-alert gh-alert-note callout callout-note" data-callout="note"><div class="gh-alert-title callout-title">
+<svg></svg><p class="callout-title-text">Note</p>
+</div>
+<div class="gh-alert-body callout-body"><p>Paragraph
 over a few lines</p>
 </div></div>`},
 	{
@@ -57,7 +60,10 @@ over a few lines</p>
 >
 > second paragraph with *some* syntax
 `,
-		html: `<div class="gh-alert gh-alert-info" data-callout="info"><div class="gh-alert-title"><p><svg></svg>Info</p></div><div class="gh-alert-body"><p>paragraph
+		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+<svg></svg><p class="callout-title-text">Info</p>
+</div>
+<div class="gh-alert-body callout-body"><p>paragraph
 over a few lines</p>
 <p>second paragraph with <em>some</em> syntax</p>
 </div></div>`},
@@ -69,18 +75,27 @@ over a few lines</p>
 >
 > second paragraph with *some* syntax
 `,
-		html: `<div class="gh-alert gh-alert-info" data-callout="info"><div class="gh-alert-title"><p><svg></svg>Info</p></div><div class="gh-alert-body"><p>paragraph
+		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+<svg></svg><p class="callout-title-text">Info</p>
+</div>
+<div class="gh-alert-body callout-body"><p>paragraph
 over a few lines</p>
 <p>second paragraph with <em>some</em> syntax</p>
 </div></div>`},	{
 		desc: "Alerts without body",
 		md:   `> [!info] title`,
-		html: `<div class="gh-alert gh-alert-info" data-callout="info"><div class="gh-alert-title"><p><svg></svg>title</p></div></div>`},
+		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+<svg></svg><p class="callout-title-text">title</p>
+</div>
+</div>`},
 	{
 		desc: "Alerts with list",
 		md: `> [!info]
 > - item`,
-		html: `<div class="gh-alert gh-alert-info" data-callout="info"><div class="gh-alert-title"><p><svg></svg>Info</p></div><div class="gh-alert-body"><ul>
+		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+<svg></svg><p class="callout-title-text">Info</p>
+</div>
+<div class="gh-alert-body callout-body"><ul>
 <li>item</li>
 </ul>
 </div></div>`},
@@ -90,7 +105,10 @@ over a few lines</p>
 > With lots of possibilities:
 > - feature one
 > - feature two`,
-		html: `<div class="gh-alert gh-alert-info" data-callout="info"><div class="gh-alert-title"><p><svg></svg>Info</p></div><div class="gh-alert-body"><p>With lots of possibilities:</p>
+		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+<svg></svg><p class="callout-title-text">Info</p>
+</div>
+<div class="gh-alert-body callout-body"><p>With lots of possibilities:</p>
 <ul>
 <li>feature one</li>
 <li>feature two</li>
@@ -104,7 +122,10 @@ over a few lines</p>
 `}, {
 		desc: "Syntax in summary",
 		md:   `>[!info] Title with *some* syntax [and](http://example.com) links`,
-		html: `<div class="gh-alert gh-alert-info" data-callout="info"><div class="gh-alert-title"><p><svg></svg>Title with <em>some</em> syntax <a href="http://example.com">and</a> links</p></div></div>`}, {
+		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+<svg></svg><p class="callout-title-text">Title with <em>some</em> syntax <a href="http://example.com">and</a> links</p>
+</div>
+</div>`}, {
 		desc: "text before alert type",
 		md: `> abcd [!info]- This is not a alert
 `,
