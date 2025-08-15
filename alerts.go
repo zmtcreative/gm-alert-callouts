@@ -14,10 +14,13 @@ import (
 
 type AlertCallouts struct {
 	alertRenderer.Icons
+	isFoldable bool
 }
 
 // Meta is a extension for the goldmark.
-var AlertCalloutsExtension = &AlertCallouts{}
+var AlertCalloutsExtension = &AlertCallouts{
+	isFoldable: false,
+}
 
 // Extend implements goldmark.Extender.
 func (e *AlertCallouts) Extend(m goldmark.Markdown) {
