@@ -1,4 +1,4 @@
-package alerts
+package alertcallouts
 
 // GhAlerts is a extension for the goldmark.
 
