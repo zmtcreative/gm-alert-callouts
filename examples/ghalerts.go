@@ -5,7 +5,7 @@ import (
 	_ "embed"
 	"fmt"
 
-	alerts "github.com/ZMT-Creative/gm-alert-callouts"
+	alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
@@ -75,7 +75,7 @@ func CreateGoldmarkInstance(opt createOptions) goldmark.Markdown {
 		myIcons := InitAlertIcons() // Initialize alert icons
 		options = append(options,
 			goldmark.WithExtensions(
-				&alerts.GhAlerts{
+				&alertcallouts.GhAlerts{
 					Icons: myIcons,
 				},
 			),
