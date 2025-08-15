@@ -5,7 +5,7 @@ import (
 	_ "embed"
 	"fmt"
 
-	alerts "github.com/ZMT-Creative/goldmark-gh-alerts"
+	alerts "github.com/ZMT-Creative/gm-alert-callouts"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"

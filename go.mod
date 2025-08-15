@@ -1,4 +1,4 @@
-module github.com/ZMT-Creative/goldmark-gh-alerts
+module github.com/ZMT-Creative/gm-alert-callouts
 
 go 1.23.0
 

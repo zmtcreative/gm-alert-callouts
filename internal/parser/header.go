@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"github.com/ZMT-Creative/goldmark-gh-alerts/internal/ast"
-	"github.com/ZMT-Creative/goldmark-gh-alerts/internal/constants"
+	"github.com/ZMT-Creative/gm-alert-callouts/internal/ast"
+	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/text"

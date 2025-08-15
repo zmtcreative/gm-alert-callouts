@@ -8,8 +8,8 @@ import (
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/util"
 
-	alertParser "github.com/ZMT-Creative/goldmark-gh-alerts/internal/parser"
-	alertRenderer "github.com/ZMT-Creative/goldmark-gh-alerts/internal/renderer"
+	alertParser "github.com/ZMT-Creative/gm-alert-callouts/internal/parser"
+	alertRenderer "github.com/ZMT-Creative/gm-alert-callouts/internal/renderer"
 )
 
 type GhAlerts struct {

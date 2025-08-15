@@ -1,7 +1,7 @@
 package ast
 
 import (
-	"github.com/ZMT-Creative/goldmark-gh-alerts/internal/constants"
+	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
 	gast "github.com/yuin/goldmark/ast"
 )
 

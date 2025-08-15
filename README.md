@@ -1,12 +1,12 @@
 # Goldmark GitHub Alerts and Obsidian Callouts
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/ZMT-Creative/goldmark-gh-alerts.svg)](https://pkg.go.dev/github.com/ZMT-Creative/goldmark-gh-alerts)
-![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/ZMT-Creative/goldmark-gh-alerts)
-![GitHub License](https://img.shields.io/github/license/ZMT-Creative/goldmark-gh-alerts)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/w/ZMT-Creative/goldmark-gh-alerts)
-![GitHub Tag](https://img.shields.io/github/v/tag/ZMT-Creative/goldmark-gh-alerts?include_prereleases&sort=semver)
+[![Go Reference](https://pkg.go.dev/badge/github.com/ZMT-Creative/gm-alert-callouts.svg)](https://pkg.go.dev/github.com/ZMT-Creative/gm-alert-callouts)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/ZMT-Creative/gm-alert-callouts)
+![GitHub License](https://img.shields.io/github/license/ZMT-Creative/gm-alert-callouts)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/ZMT-Creative/gm-alert-callouts)
+![GitHub Tag](https://img.shields.io/github/v/tag/ZMT-Creative/gm-alert-callouts?include_prereleases&sort=semver)
 
-The `goldmark-gh-alerts` package is an extension for the
+The `gm-alert-callouts` package is an extension for the
 [Goldmark](http://github.com/yuin/goldmark) Markdown Rendering Package that allows you to use
 [GitHub alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts).
 It also supports Obsidian-style callouts, although the Open/Close feature of Obsidian Callouts is
@@ -21,13 +21,6 @@ not yet implemented.
 > application can render (*e.g., a Unicode glyph or an HTML entity code*).
 
 ## State of the Project
-
-> [!WARNING]
-> This project, under this name (*`github.com/ZMT-Creative/goldmark-gh-alerts`*), will not be
-> supported beyond the `0.2.2` version. This project will remain available on GitHub, but will be
-> removed from `pkg.go.dev` (*eventually*). We are working on a revision of this package with more
-> features and will be creating a new project (*likely named
-> `github.com/ZMT-Creative/gm-alert-callouts`*).
 
 This ZMT-Creative project is a hard fork of:
 [thiagokokada/goldmark-gh-alerts](https://github.com/thiagokokada/goldmark-gh-alerts).
