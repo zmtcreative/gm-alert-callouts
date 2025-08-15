@@ -77,6 +77,8 @@ func (b *alertHeaderParser) Open(parent gast.Node, reader text.Reader, pc parser
 		}
 	}
 
+	// Set the 'shouldfold' attribute if it is set in the parent
+	// We'll need this value in the rendering process to determine which HTML elements to use.
 	if t, ok := parent.AttributeString("shouldfold"); ok {
 		alert.SetAttributeString("shouldfold", t)
 	}

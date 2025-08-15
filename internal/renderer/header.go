@@ -52,15 +52,15 @@ func (r *AlertsHeaderHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRe
 }
 
 func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
-	shouldFold := 0
+	shouldFold := false
 	if t, ok := node.AttributeString("shouldfold"); ok {
-		shouldFold = int(t.(int))
+		shouldFold = bool(t.(bool))
 	}
 
 	startHTML := ""
 	endHTML := ""
 
-	if r.IsFoldable && shouldFold != 0 {
+	if bool(r.IsFoldable) && shouldFold {
 		startHTML = fmt.Sprintf(`<summary class="gh-alert-title callout-title">` + "\n")
 		endHTML = "\n</summary>\n"
 	} else {

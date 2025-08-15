@@ -77,10 +77,16 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 
 	kind := []uint8(match["kind"])
 	closed := []uint8(match["closed"])
-	opened := []uint8(match["opened"])
 	title := []uint8(match["title"])
-	shouldFold := 1
+	opened := []uint8(match["opened"])
 
+	// Set the 'shouldFold' variable:
+	// If the markdown uses either '-' or '+' for folding we assume the user
+	//  wants the alert to be foldable. If neither '-' or '+' is used, we
+	//  assume the alert is not meant to be foldable.
+	// We only need 'opened' here to check if the alert is meant to be foldable.
+	// The 'closed' variable is legacy and is used by existing code elsewhere (we're not tinkering with it -- yet)
+	shouldFold := 1
 	if (len(closed) == 0 && len(opened) == 0) {
 		shouldFold = 0;
 	}
@@ -89,10 +95,8 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 
 	alert.SetAttributeString("kind", kind)
 	alert.SetAttributeString("closed", len(closed) != 0)
-	alert.SetAttributeString("opened", len(opened) != 0)
 	alert.SetAttributeString("title", title)
-	alert.SetAttributeString("shouldfold", shouldFold)
-	// fmt.Println("Alert kind:", string(kind), " | closed:", len(closed) != 0, " | opened:", len(opened) != 0, " | title:", string(title), " | shouldfold:", shouldFold)
+	alert.SetAttributeString("shouldfold", shouldFold != 0)
 
 	i := strings.Index(string(line), "]")
 	if i >= 0 {

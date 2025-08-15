@@ -78,7 +78,7 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 	}
 	shouldFold := false
 	if t, ok := node.AttributeString("shouldfold"); ok {
-		shouldFold = t != 0
+		shouldFold = bool(t.(bool))
 	}
 
 	startHTML := ""
