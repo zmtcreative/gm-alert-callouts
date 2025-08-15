@@ -6,14 +6,13 @@
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/ZMT-Creative/goldmark-gh-alerts)
 ![GitHub Tag](https://img.shields.io/github/v/tag/ZMT-Creative/goldmark-gh-alerts?include_prereleases&sort=semver)
 
-
 The `goldmark-gh-alerts` package is an extension for the
 [Goldmark](http://github.com/yuin/goldmark) Markdown Rendering Package that allows you to use
 [GitHub alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts).
 It also supports Obsidian-style callouts, although the Open/Close feature of Obsidian Callouts is
 not yet implemented.
 
-> [!IMPORTANT]
+> [!NOTE]
 > This extension does **not** directly include any icons -- it just provides the parsing and
 > rendering functionality to create the alerts/callouts. The user must provide the list of valid
 > alert/callout names with a string map containing the alert/callout identifier as the key (*e.g.,
@@ -22,6 +21,13 @@ not yet implemented.
 > application can render (*e.g., a Unicode glyph or an HTML entity code*).
 
 ## State of the Project
+
+> [!WARNING]
+> This project, under this name (*`github.com/ZMT-Creative/goldmark-gh-alerts`*), will not be
+> supported beyond the `0.2.2` version. This project will remain available on GitHub, but will be
+> removed from `pkg.go.dev` (*eventually*). We are working on a revision of this package with more
+> features and will be creating a new project (*likely named
+> `github.com/ZMT-Creative/gm-alert-callouts`*).
 
 This ZMT-Creative project is a hard fork of:
 [thiagokokada/goldmark-gh-alerts](https://github.com/thiagokokada/goldmark-gh-alerts).
@@ -41,7 +47,6 @@ This modified version of the GitHub Alerts extension adds `<div>` wrappers aroun
 **Title** text and the alert **Body** text. This allows more detailed styling with CSS. A new
 `examples` folder containing a more detailed usage example has also been added (see [More Detailed
 Example](#more-detailed-example) below).
-
 
 ## Examples
 
@@ -118,4 +123,3 @@ respective MIT Licenses. Details can be found in the following files:
 
 - [Adam Chovanec](LICENSE-chovanec.md)
 - [Thiago Okada](LICENSE-thiagokokada)
-
