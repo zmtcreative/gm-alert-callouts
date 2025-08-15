@@ -32,7 +32,7 @@ func (b *alertHeaderParser) Open(parent gast.Node, reader text.Reader, pc parser
 	reader.Advance(1)
 
 	next := reader.Peek()
-	if next == '-' {
+	if next == '-' || next == '+' {
 		reader.Advance(1)
 	}
 
@@ -75,6 +75,10 @@ func (b *alertHeaderParser) Open(parent gast.Node, reader text.Reader, pc parser
 			kind = string(t.([]uint8))
 			alert.SetAttributeString("kind", kind)
 		}
+	}
+
+	if t, ok := parent.AttributeString("shouldfold"); ok {
+		alert.SetAttributeString("shouldfold", t)
 	}
 
 	return alert, parser.NoChildren

@@ -14,11 +14,13 @@ import (
 
 type AlertsHTMLRenderer struct {
 	html.Config
+	IsFoldable
 }
 
-func NewAlertsHTMLRenderer(opts ...html.Option) renderer.NodeRenderer {
+func NewAlertsHTMLRenderer(isFoldable IsFoldable, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHTMLRenderer{
 		Config: html.NewConfig(),
+		IsFoldable: isFoldable,
 	}
 	for _, opt := range opts {
 		opt.SetHTMLOption(&r.Config)
@@ -68,10 +70,33 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 		}
 	}
 
-	if entering {
-		fmt.Fprintf(w, `<div class="gh-alert gh-alert-%s" data-callout="%s">`, alertType, alertType)
+	open := " open"
+	if t, ok := node.AttributeString("closed"); ok {
+		if bool(t.(bool)) {
+			open = ""
+		}
+	}
+	shouldFold := false
+	if t, ok := node.AttributeString("shouldfold"); ok {
+		shouldFold = t != 0
+	}
+
+	startHTML := ""
+	endHTML := ""
+
+	if bool(r.IsFoldable) && shouldFold {
+		startHTML = fmt.Sprintf(`<details class="gh-alert gh-alert-%s callout callout-foldable callout-%s" data-callout="%s"%s>`, alertType, alertType, alertType, open)
+		endHTML = "</div>\n</details>\n"
 	} else {
-		w.WriteString("</div>\n")
+		startHTML = fmt.Sprintf(`<div class="gh-alert gh-alert-%s callout callout-%s" data-callout="%s">`, alertType, alertType, alertType)
+		endHTML = "</div>\n"
+	}
+
+	if entering {
+		// fmt.Fprintf(w, `<div class="gh-alert gh-alert-%s" data-callout="%s">`, alertType, alertType)
+		w.WriteString(startHTML)
+	} else {
+		w.WriteString(endHTML)
 	}
 	return gast.WalkContinue, nil
 }

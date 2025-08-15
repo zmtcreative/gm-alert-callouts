@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 
@@ -24,7 +25,7 @@ func (b *alertParser) Trigger() []byte {
 	return []byte{'>'}
 }
 
-var regex = regexp.MustCompile(`^\[!(?P<kind>[\w]+)\](?P<closed>-{0,1})($|\s+(?P<title>.*))`)
+var regex = regexp.MustCompile(`^\[!(?P<kind>[\w]+)\](?:(?P<closed>-{0,1})|(?P<opened>[+]{0,1}))($|\s+(?P<title>.*))`)
 
 func (b *alertParser) process(reader text.Reader) (bool, int) {
 	// This is slightly modified code from https://github.com/yuin/goldmark.git
@@ -68,20 +69,30 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 
 	// right after `>` and up to one space
 	subline := line[advanceBy:]
-	match := regex.FindSubmatch(subline)
-	if match == nil {
-		return nil, parser.NoChildren
-	}
+	// match := regex.FindSubmatch(subline)
+	// if match == nil {
+	// 	return nil, parser.NoChildren
+	// }
+	match := constants.FindNamedMatches(regex, string(subline))
 
-	kind := match[1]
-	closed := match[2]
-	title := match[3]
+	kind := []uint8(match["kind"])
+	closed := []uint8(match["closed"])
+	opened := []uint8(match["opened"])
+	title := []uint8(match["title"])
+	shouldFold := 1
+
+	if (len(closed) == 0 && len(opened) == 0) {
+		shouldFold = 0;
+	}
 
 	alert := ast.NewAlerts()
 
 	alert.SetAttributeString("kind", kind)
 	alert.SetAttributeString("closed", len(closed) != 0)
+	alert.SetAttributeString("opened", len(opened) != 0)
 	alert.SetAttributeString("title", title)
+	alert.SetAttributeString("shouldfold", shouldFold)
+	fmt.Println("Alert kind:", string(kind), " | closed:", len(closed) != 0, " | opened:", len(opened) != 0, " | title:", string(title), " | shouldfold:", shouldFold)
 
 	i := strings.Index(string(line), "]")
 	reader.Advance(i)

@@ -1,6 +1,10 @@
 package constants
 
-import gast "github.com/yuin/goldmark/ast"
+import (
+	"regexp"
+
+	gast "github.com/yuin/goldmark/ast"
+)
 
 // Node kinds for different alert components
 var (
@@ -22,4 +26,14 @@ func IsNoIconKind(kind string) bool {
 	default:
 		return false
 	}
+}
+
+func FindNamedMatches(regex *regexp.Regexp, str string) map[string]string {
+    match := regex.FindStringSubmatch(str)
+
+    results := map[string]string{}
+    for i, name := range match {
+        results[regex.SubexpNames()[i]] = name
+    }
+    return results
 }
