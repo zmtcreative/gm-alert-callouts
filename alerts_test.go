@@ -9,7 +9,7 @@ import (
 
 var markdown = goldmark.New(
 	goldmark.WithExtensions(
-		&GhAlerts{
+		&AlertCallouts{
 			Icons: map[string]string{"note": "<svg></svg>"},
 		},
 	),

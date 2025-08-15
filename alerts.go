@@ -1,6 +1,6 @@
 package alertcallouts
 
-// GhAlerts is a extension for the goldmark.
+// AlertCallouts is a extension for the goldmark.
 
 import (
 	"github.com/yuin/goldmark"
@@ -12,15 +12,15 @@ import (
 	alertRenderer "github.com/ZMT-Creative/gm-alert-callouts/internal/renderer"
 )
 
-type GhAlerts struct {
+type AlertCallouts struct {
 	alertRenderer.Icons
 }
 
 // Meta is a extension for the goldmark.
-var GhAlertsExtension = &GhAlerts{}
+var AlertCalloutsExtension = &AlertCallouts{}
 
 // Extend implements goldmark.Extender.
-func (e *GhAlerts) Extend(m goldmark.Markdown) {
+func (e *AlertCallouts) Extend(m goldmark.Markdown) {
 	m.Parser().AddOptions(
 		parser.WithBlockParsers(
 			util.Prioritized(alertParser.NewAlertsParser(), 799),

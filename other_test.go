@@ -254,7 +254,7 @@ Double tab indent</p>
 // Test with different icon configurations
 var markdownWithIcons = goldmark.New(
 	goldmark.WithExtensions(
-		&GhAlerts{
+		&AlertCallouts{
 			Icons: map[string]string{
 				"note":      "📝",
 				"tip":       "💡",
@@ -308,7 +308,7 @@ var iconTestCases = [...]TestCase{
 // Test with no icons configuration
 var markdownNoIcons = goldmark.New(
 	goldmark.WithExtensions(
-		&GhAlerts{},
+		&AlertCallouts{},
 	),
 )
 
@@ -383,7 +383,7 @@ func TestASTNodeCreation(t *testing.T) {
 
 // Test extension registration
 func TestExtensionRegistration(t *testing.T) {
-	ext := &GhAlerts{
+	ext := &AlertCallouts{
 		Icons: map[string]string{"test": "icon"},
 	}
 
