@@ -32,6 +32,10 @@ func FindNamedMatches(regex *regexp.Regexp, str string) map[string]string {
     match := regex.FindStringSubmatch(str)
 
     results := map[string]string{}
+    if match == nil {
+        return results
+    }
+
     for i, name := range match {
         results[regex.SubexpNames()[i]] = name
     }

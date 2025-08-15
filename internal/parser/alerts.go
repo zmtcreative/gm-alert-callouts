@@ -68,11 +68,12 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 
 	// right after `>` and up to one space
 	subline := line[advanceBy:]
-	// match := regex.FindSubmatch(subline)
-	// if match == nil {
-	// 	return nil, parser.NoChildren
-	// }
 	match := constants.FindNamedMatches(regex, string(subline))
+
+	// If no match found, this is not an alert
+	if len(match["kind"]) == 0 {
+		return nil, parser.NoChildren
+	}
 
 	kind := []uint8(match["kind"])
 	closed := []uint8(match["closed"])
@@ -94,7 +95,9 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 	// fmt.Println("Alert kind:", string(kind), " | closed:", len(closed) != 0, " | opened:", len(opened) != 0, " | title:", string(title), " | shouldfold:", shouldFold)
 
 	i := strings.Index(string(line), "]")
-	reader.Advance(i)
+	if i >= 0 {
+		reader.Advance(i)
+	}
 
 	return alert, parser.HasChildren
 }
