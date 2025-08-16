@@ -4,6 +4,7 @@ import (
 	"bytes"
 	_ "embed"
 	"fmt"
+	"strings"
 
 	alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
 	"github.com/yuin/goldmark"
@@ -11,8 +12,11 @@ import (
 	"github.com/yuin/goldmark/parser"
 )
 
-//go:embed css/ghalerts.css
+//go:embed css/alertcallouts.css
 var cssData []byte
+
+//go:embed text/sample.md
+var sample string
 
 func main() {
 	md := CreateGoldmarkInstance(createOptions{
@@ -20,21 +24,10 @@ func main() {
 		enableGFM:   true,
 	})
 
-	// Example markdown with GitHub alerts
-	mdSource := `
-# Title
-
-Some text with a GitHub **Important** alert:
-
-> [!IMPORTANT]
-> This is a GitHub alert!
-
-This is some text with a Tip:
-
-> [!TIP]
-> This is a GitHub tip!
-`
-
+	// Example markdown with GitHub alerts (read from embedded sample)
+	mdSource := sample
+	// Convert CRLF line endings to LF for consistency in processing markdown source
+	mdSource = strings.ReplaceAll(mdSource, "\r\n", "\n")
 	var buf bytes.Buffer
 	if err := md.Convert([]byte(mdSource), &buf); err != nil {
 		panic(err)
@@ -77,6 +70,7 @@ func CreateGoldmarkInstance(opt createOptions) goldmark.Markdown {
 			goldmark.WithExtensions(
 				&alertcallouts.AlertCallouts{
 					Icons: myIcons,
+					DisableFolding: false, // Folding is enabled by default
 				},
 			),
 		)
