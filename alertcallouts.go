@@ -17,8 +17,50 @@ type AlertCalloutsOptions struct {
 	alertRenderer.DisableFolding
 }
 
-// Meta is a extension for the goldmark.
+// AlertCallouts is a extension for the goldmark (backwards compatibility).
 var AlertCallouts = &AlertCalloutsOptions{}
+
+// Option is a functional option for configuring AlertCalloutsOptions.
+type Option func(*AlertCalloutsOptions)
+
+// WithIcons sets the icons map for alert callouts.
+func WithIcons(icons map[string]string) Option {
+	return func(opts *AlertCalloutsOptions) {
+		opts.Icons = icons
+	}
+}
+
+// WithDisableFolding disables the folding functionality for alert callouts.
+func WithDisableFolding(disable bool) Option {
+	return func(opts *AlertCalloutsOptions) {
+		opts.DisableFolding = alertRenderer.DisableFolding(disable)
+	}
+}
+
+// WithIcon adds a single icon to the icons map for alert callouts.
+func WithIcon(kind, icon string) Option {
+	return func(opts *AlertCalloutsOptions) {
+		if opts.Icons == nil {
+			opts.Icons = make(map[string]string)
+		}
+		opts.Icons[kind] = icon
+	}
+}
+
+// NewAlertCallouts creates a new AlertCallouts extension with the given options.
+// This follows the standard Goldmark extension initialization pattern.
+func NewAlertCallouts(options ...Option) *AlertCalloutsOptions {
+	opts := &AlertCalloutsOptions{
+		Icons:          make(map[string]string),
+		DisableFolding: false,
+	}
+
+	for _, option := range options {
+		option(opts)
+	}
+
+	return opts
+}
 
 // Extend implements goldmark.Extender.
 func (e *AlertCalloutsOptions) Extend(m goldmark.Markdown) {
