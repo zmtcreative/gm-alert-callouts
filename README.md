@@ -20,6 +20,9 @@ not yet implemented.
 > format (*e.g., `<svg>...svg-definiton...</svg>`*), but can be any string that a browser or
 > application can render (*e.g., a Unicode glyph or an HTML entity code*).
 
+Throughout this document and the code itself, the terms `alert(s)` and `callout(s)` are used interchangeably. GitHub refers to these as `Alerts` while Obsidian refers to them as `Callouts` -- for the purposes of this extension they
+mean the same thing.
+
 ## State of the Project
 
 This ZMT-Creative project is a hard fork of:
@@ -43,9 +46,7 @@ Example](#more-detailed-example) below).
 
 ## Examples
 
-### Basic example
-
-#### **Go**
+## Enabling the Extension in Goldmark
 
 ```go
 import (
@@ -56,66 +57,124 @@ import (
 var markdown = goldmark.New(
   goldmark.WithExtensions(
     &alertcallouts.AlertCallouts{
-      Icons: map[string]string{"note": `<svg class="octicon octicon-info mr-2" viewBox="0 0 16 16"
-      version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0
-      1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0
-      1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8
-      6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>`},
       DisableFolding: false,
+      Icons: map[string]string{"note": `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      stroke-linejoin="round" class="svg-icon lucide-info"><circle cx="12" cy="12" r="10"></circle>
+      <path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>`},
     },
   ),
 )
 ```
 
-##### Options When Enabling This Extension
+### Options When Enabling This Extension
 
-| Option         | Default Value               | Notes   |
-| :------------- | :-------------------------- | :------ |
+| Option         | Default Value             | Notes   |
+| :------------- | :------------------------ | :------ |
 | Icons          | empty `map[string]string` | `"kind": value`, (*see example above*) |
-| DisableFolding | `false`                     | Folding support is enabled by default. Use this option to disable folding. |
+| DisableFolding | `false`                   | Folding support is enabled by default. Use this option to disable folding. |
 
-#### **Markdown**
+## Standard Alert/Callout Style
+
+### **Markdown Example 1**
+
+This is a standard GitHub-style Alert (also used for non-folding Obsidian Callouts):
 
 ```markdown
-> [!NOTE]
-> Useful information that users should know, even when skimming content.
+> [!IMPORTANT]
+> This is a GitHub important alert!
 ```
 
-#### **HTML**
+#### **HTML for Example 1**
 
 ```html
-<div class="gh-alert gh-alert-note callout callout-note">
-  <div class="gh-alert-title callout-title">
-      <svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
-      aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5
-      6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0
-      1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z">
-      </path></svg>
-      <p class="callout-title-text">Note</p>
+<div class="callout callout-important" data-callout="important">
+  <div class="callout-title">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="lucide lucide-message-square-warning-icon lucide-message-square-warning">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M12 7v2"/>
+    <path d="M12 13h.01"/></svg>
+    <p class="callout-title-text">Important</p>
   </div>
-  <div class="gh-alert-body callout-body">
-    <p>Useful information that users should know, even when skimming content.</p>
+  <div class="callout-body">
+    <p>This is a GitHub important alert!</p>
   </div>
 </div>
 ```
 
-### More Detailed Example
+## Foldable Alert/Callouts
+
+When a `-` or `+` are appended directly after the marker (e.g., `> [!TIP]-`) the extension will
+alter the HTML output to use the `<details>` and `<summary>` elements. This allows us to open and close
+the callout and style it in CSS. The `-` creates a closed-by-default callout and the `+` creates an
+open-by-default callout.
+
+If no symbol is used, the HTML output uses just `<div>` elements (as noted in the first example above).
+
+### Markdown Example 2 (Closed Callout)
+
+This is a **Tip** alert using a foldable callout that is closed by default:
+
+```markdown
+> [!TIP]-
+> This is a GitHub tip in a closed callout.
+```
+
+#### HTML for Example 2
+
+```html
+<details class="callout callout-foldable callout-tip" data-callout="tip">
+  <summary class="callout-title">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="lucide lucide-lightbulb-icon lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5
+    1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/>
+    <path d="M10 22h4"/></svg>
+    <p class="callout-title-text">Tip</p>
+  </summary>
+  <div class="callout-body">
+    <p>This is a GitHub tip in a closed callout.</p>
+  </div>
+</details>
+```
+
+### Markdown for Example 3 (Open Callout)
+
+This is an **Info** alert using a foldable callout that is open by default:
+
+```markdown
+> [!INFO]+
+> This is an info alert in a foldable callout (open by default).
+```
+
+#### HTML for Example 3
+
+```html
+<details class="callout callout-foldable callout-info" data-callout="info" open>
+  <summary class="callout-title">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/>
+    <path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+    <p class="callout-title-text">Info</p>
+  </summary>
+  <div class="callout-body">
+    <p>This is an info alert in a foldable callout (open by default).</p>
+  </div>
+</details>
+```
+
+## More Detailed Example Code
 
 A more detailed code example is located in the `examples` folder. If you are on Windows you can run
 the `run-ghalerts.ps1` script which will generate the HTML output of sample GitHub Alerts markdown
 text. This will write the output to `example.html` and then start the default web browser to view
 it.
 
-If you are on MacOS or Linux, just do the following in the `examples` folder (*this assumes the
-`open` command is available on your MacOS or Linux system*):
-
-```sh
-go run ./showalerts.go > example.html
-open example.html
-```
-
-> *Yes, I could write this as a `bash` script, but until I set up a WSL/Linux test environment
-> I'm not going to assume something I write is working correctly without testing it.*
+If you are on MacOS or Linux, you should be able to run the `run-showalerts.sh` bash script. You might
+need to run the command `chmod +x run-showalerts.sh` to make the script executable. This script has
+**not** been tested since we aren't currently developing any of this on Linux or MacOS.
 
 The example shows one possible way to implement a set of alert types and their icons.
 
