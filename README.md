@@ -9,13 +9,14 @@
 The `gm-alert-callouts` package is an extension for the
 [Goldmark](http://github.com/yuin/goldmark) Markdown Rendering Package that allows you to use
 [GitHub alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts).
-It also supports Obsidian-style callouts, although the Open/Close feature of Obsidian Callouts is
-not yet implemented.
+It also supports Obsidian-style callouts, including the Open/Close feature using
+the `+` (default open) and `-` (default closed) characters appended to the marker after
+the `]` (right square bracket).
 
 > [!NOTE]
 > This extension does **not** directly include any icons -- it just provides the parsing and
 > rendering functionality to create the alerts/callouts. The user must provide the list of valid
-> alert/callout names with a string map containing the alert/callout identifier as the key (*e.g.,
+> alert/callout names with a mapped string (`map[string]string{}`) containing the alert/callout identifier as the key (*e.g.,
 > `note`, `important`, etc.*) and the icon as the string value. The icon is usually an SVG in HTML
 > format (*e.g., `<svg>...svg-definiton...</svg>`*), but can be any string that a browser or
 > application can render (*e.g., a Unicode glyph or an HTML entity code*).
@@ -39,17 +40,32 @@ should either pin a commit or fork since the API is not guarantee to be stable a
 
 ## Changes from Original Extension
 
-This modified version of the GitHub Alerts extension adds `<div>` wrappers around the alert
-**Title** text and the alert **Body** text. This allows more detailed styling with CSS. A new
-`examples` folder containing a more detailed usage example has also been added (see [More Detailed
-Example](#more-detailed-example) below).
+This modified version of the `goldmark-gh-alerts` extension adds `<div>` wrappers around the alert
+**Title** text and the alert **Body** text. This allows more detailed styling with CSS.
 
-## Examples
+A new `examples` folder containing a more detailed usage example has also been added (see [More
+Detailed Example](#more-detailed-example-code) below).
+
+By default, the extension also supports Obsidian-style foldable callouts, and uses the `<details>`
+and `<summary>` HTML elements to wrap the callout. More details on this feature are explained below
+and can be seen in the code example.
 
 ## Enabling the Extension in Goldmark
 
+Install the extension:
+
+```sh
+go get github.com/ZMT-Creative/gm-alert-callouts
+```
+
+In your code:
+
 ```go
+package main
+
 import (
+    "fmt"
+
     "github.com/yuin/goldmark"
     alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
 )
@@ -65,6 +81,22 @@ var markdown = goldmark.New(
     },
   ),
 )
+
+func main() {
+    mdSource := `# Hi Bob
+> [!WARNING]+
+> Close the airlock before removing your helmet!
+
+> [!TIP]
+> Remember to rewind the tape when you're done!`
+
+    var buf bytes.Buffer
+    if err := markdown.Convert([]byte(mdSource), &buf); err != nil {
+        panic(err)
+    }
+
+    fmt.Printf(`<html><head></head><body>%s</body></html>`, buf.String())
+}
 ```
 
 ### Options When Enabling This Extension
