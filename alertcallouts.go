@@ -12,16 +12,16 @@ import (
 	alertRenderer "github.com/ZMT-Creative/gm-alert-callouts/internal/renderer"
 )
 
-type AlertCallouts struct {
+type AlertCalloutsOptions struct {
 	alertRenderer.Icons
 	alertRenderer.DisableFolding
 }
 
 // Meta is a extension for the goldmark.
-var AlertCalloutsExtension = &AlertCallouts{}
+var AlertCallouts = &AlertCalloutsOptions{}
 
 // Extend implements goldmark.Extender.
-func (e *AlertCallouts) Extend(m goldmark.Markdown) {
+func (e *AlertCalloutsOptions) Extend(m goldmark.Markdown) {
 	m.Parser().AddOptions(
 		parser.WithBlockParsers(
 			util.Prioritized(alertParser.NewAlertsParser(), 799),
