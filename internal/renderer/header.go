@@ -75,10 +75,8 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 		if t, ok := node.AttributeString("kind"); ok {
 			kind = strings.ToLower(t.(string))
 			icon, ok := r.Icons[kind]
-			// iconOutput := ""
 			if ok {
 				w.WriteString(icon)
-				// iconOutput = fmt.Sprintf(`<div class="callout-icon icon-%s">` + icon + `</div>`, kind)
 				// Check if the kind indicates no icon should be rendered.
 				// if it's not a "no icon" kind, we can try to find a default icon.
 			} else if !constants.IsNoIconKind(kind) {
@@ -86,14 +84,10 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 					icon, ok = r.Icons[v]
 					if ok {
 						w.WriteString(icon)
-						// iconOutput = fmt.Sprintf(`<div class="callout-icon icon-%s">` + icon + `</div>`, v)
 						break
 					}
 				}
 			}
-			// if iconOutput != "" {
-			// 	w.WriteString(iconOutput)
-			// }
 			w.WriteString(`<p class="callout-title-text">`)
 			if _, ok := node.AttributeString("title"); ok {
 				// do nothing
