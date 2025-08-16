@@ -55,7 +55,7 @@ func WithIcon(kind, icon string) Option {
 func NewAlertCallouts(options ...Option) *alertCalloutsOptions {
 	opts := &alertCalloutsOptions{
 		Icons:          make(map[string]string),
-		FoldingEnabled: false,
+		FoldingEnabled: true,
 	}
 
 	for _, option := range options {
