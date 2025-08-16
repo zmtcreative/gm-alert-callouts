@@ -59,7 +59,7 @@ Install the extension:
 go get github.com/ZMT-Creative/gm-alert-callouts
 ```
 
-Starting with version 0.4.1, the extension supports a more idiomatic Go initialization pattern
+Starting with version 0.5.0, the extension supports a more idiomatic Go initialization pattern
 using functional options. This provides better extensibility and follows Goldmark conventions:
 
 In your code:
