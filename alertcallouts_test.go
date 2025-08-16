@@ -566,47 +566,57 @@ var noIconTestCases = [...]TestCase{
 }
 
 func TestAlerts(t *testing.T) {
-	for i, c := range cases {
-		testutil.DoTestCase(markdown, testutil.MarkdownTestCase{
-			No:          i,
-			Description: c.desc,
-			Markdown:    c.md,
-			Expected:    c.html,
-		}, t)
-	}
-}
+	t.Run("Basic", func(t *testing.T) {
+		for i, c := range cases {
+			t.Run(c.desc, func(t *testing.T) {
+				testutil.DoTestCase(markdown, testutil.MarkdownTestCase{
+					No:          i,
+					Description: c.desc,
+					Markdown:    c.md,
+					Expected:    c.html,
+				}, t)
+			})
+		}
+	})
 
-func TestAdditionalAlerts(t *testing.T) {
-	for i, c := range additionalTestCases {
-		testutil.DoTestCase(markdown, testutil.MarkdownTestCase{
-			No:          i,
-			Description: c.desc,
-			Markdown:    c.md,
-			Expected:    c.html,
-		}, t)
-	}
-}
+	t.Run("Additional", func(t *testing.T) {
+		for i, c := range additionalTestCases {
+			t.Run(c.desc, func(t *testing.T) {
+				testutil.DoTestCase(markdown, testutil.MarkdownTestCase{
+					No:          i,
+					Description: c.desc,
+					Markdown:    c.md,
+					Expected:    c.html,
+				}, t)
+			})
+		}
+	})
 
-func TestAlertsWithIcons(t *testing.T) {
-	for i, c := range iconTestCases {
-		testutil.DoTestCase(markdownWithIcons, testutil.MarkdownTestCase{
-			No:          i,
-			Description: c.desc,
-			Markdown:    c.md,
-			Expected:    c.html,
-		}, t)
-	}
-}
+	t.Run("WithIcons", func(t *testing.T) {
+		for i, c := range iconTestCases {
+			t.Run(c.desc, func(t *testing.T) {
+				testutil.DoTestCase(markdownWithIcons, testutil.MarkdownTestCase{
+					No:          i,
+					Description: c.desc,
+					Markdown:    c.md,
+					Expected:    c.html,
+				}, t)
+			})
+		}
+	})
 
-func TestAlertsWithoutIcons(t *testing.T) {
-	for i, c := range noIconTestCases {
-		testutil.DoTestCase(markdownNoIcons, testutil.MarkdownTestCase{
-			No:          i,
-			Description: c.desc,
-			Markdown:    c.md,
-			Expected:    c.html,
-		}, t)
-	}
+	t.Run("WithoutIcons", func(t *testing.T) {
+		for i, c := range noIconTestCases {
+			t.Run(c.desc, func(t *testing.T) {
+				testutil.DoTestCase(markdownNoIcons, testutil.MarkdownTestCase{
+					No:          i,
+					Description: c.desc,
+					Markdown:    c.md,
+					Expected:    c.html,
+				}, t)
+			})
+		}
+	})
 }
 
 // Test AST node functionality
@@ -614,24 +624,29 @@ func TestASTNodeCreation(t *testing.T) {
 	// These tests verify that the AST nodes are created correctly
 	// by attempting to convert to HTML and checking for errors
 
-	testCases := []string{
-		`> [!note] Test AST`,
-		`> [!warning]
-> Body content`,
-		`> [!info]- Closed alert`,
+	testCases := []struct {
+		name string
+		md   string
+	}{
+		{"SimpleAlert", `> [!note] Test AST`},
+		{"AlertWithBody", `> [!warning]
+> Body content`},
+		{"ClosedAlert", `> [!info]- Closed alert`},
 	}
 
-	for _, md := range testCases {
-		var buf strings.Builder
-		err := markdown.Convert([]byte(md), &buf)
-		if err != nil {
-			t.Errorf("Failed to parse markdown: %s, error: %v", md, err)
-		}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			var buf strings.Builder
+			err := markdown.Convert([]byte(tc.md), &buf)
+			if err != nil {
+				t.Errorf("Failed to parse markdown: %s, error: %v", tc.md, err)
+			}
 
-		// Verify that some HTML was generated
-		if buf.Len() == 0 {
-			t.Errorf("No HTML generated for markdown: %s", md)
-		}
+			// Verify that some HTML was generated
+			if buf.Len() == 0 {
+				t.Errorf("No HTML generated for markdown: %s", tc.md)
+			}
+		})
 	}
 }
 
