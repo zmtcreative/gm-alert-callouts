@@ -623,6 +623,51 @@ var noIconTestCases = [...]TestCase{
 	},
 }
 
+var mdDisableFolding = goldmark.New(
+	goldmark.WithExtensions(
+		&AlertCallouts{
+			DisableFolding: true,
+		},
+	),
+)
+
+var disableFoldingTestCases = [...]TestCase{
+	{
+		desc: "Alert with no folding symbol",
+		md:   `> [!note]
+Test`,
+		html: `<div class="gh-alert gh-alert-note callout callout-note" data-callout="note"><div class="gh-alert-title callout-title">
+<p class="callout-title-text">Note</p>
+</div>
+
+</div>
+<p>Test</p>`,
+	},
+	// Foldable alerts
+	{
+		desc: "Closed alert with dash",
+		md:   `> [!warning]-
+This is a closed alert`,
+		html: `<div class="gh-alert gh-alert-warning callout callout-warning" data-callout="warning"><div class="gh-alert-title callout-title">
+<p class="callout-title-text">Warning</p>
+</div>
+
+</div>
+<p>This is a closed alert</p>`,
+	},
+	{
+		desc: "Open alert with plus",
+		md:   `> [!warning]+
+This is an open alert`,
+		html: `<div class="gh-alert gh-alert-warning callout callout-warning" data-callout="warning"><div class="gh-alert-title callout-title">
+<p class="callout-title-text">Warning</p>
+</div>
+
+</div>
+<p>This is an open alert</p>`,
+	},
+}
+
 func TestAlerts(t *testing.T) {
 	t.Run("Basic", func(t *testing.T) {
 		for i, c := range cases {
@@ -641,6 +686,19 @@ func TestAlerts(t *testing.T) {
 		for i, c := range additionalTestCases {
 			t.Run(c.desc, func(t *testing.T) {
 				testutil.DoTestCase(markdown, testutil.MarkdownTestCase{
+					No:          i,
+					Description: c.desc,
+					Markdown:    c.md,
+					Expected:    c.html,
+				}, t)
+			})
+		}
+	})
+
+	t.Run("DisabledFolding", func(t *testing.T) {
+		for i, c := range disableFoldingTestCases {
+			t.Run(c.desc, func(t *testing.T) {
+				testutil.DoTestCase(mdDisableFolding, testutil.MarkdownTestCase{
 					No:          i,
 					Description: c.desc,
 					Markdown:    c.md,
