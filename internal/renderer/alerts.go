@@ -86,10 +86,10 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 
 	if bool(!r.DisableFolding) && shouldFold {
 		startHTML = fmt.Sprintf(`<details class="gh-alert gh-alert-%s callout callout-foldable callout-%s" data-callout="%s"%s>`, alertType, alertType, alertType, open)
-		endHTML = "</div>\n</details>\n"
+		endHTML = "\n</details>\n"
 	} else {
 		startHTML = fmt.Sprintf(`<div class="gh-alert gh-alert-%s callout callout-%s" data-callout="%s">`, alertType, alertType, alertType)
-		endHTML = "</div>\n"
+		endHTML = "\n</div>\n"
 	}
 
 	if entering {
