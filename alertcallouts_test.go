@@ -844,8 +844,8 @@ func TestNewAlertCallouts(t *testing.T) {
 			t.Errorf("Expected empty Icons map, got %d items", len(ext.Icons))
 		}
 
-		if ext.FoldingEnabled != false {
-			t.Error("Expected FoldingEnabled to be false by default")
+		if ext.FoldingEnabled != true {
+			t.Error("Expected FoldingEnabled to be true by default")
 		}
 	})
 
