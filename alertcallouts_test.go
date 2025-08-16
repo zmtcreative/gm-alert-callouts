@@ -10,8 +10,9 @@ import (
 
 var mdIconEmptySVG = goldmark.New(
 	goldmark.WithExtensions(
-		&AlertCalloutsOptions{
+		&alertCalloutsOptions{
 			Icons: map[string]string{"note": "<svg></svg>"},
+			FoldingEnabled: true,
 		},
 	),
 )
@@ -527,7 +528,7 @@ Double tab indent</p>
 // Test with different icon configurations
 var mdWithIcons = goldmark.New(
 	goldmark.WithExtensions(
-		&AlertCalloutsOptions{
+		&alertCalloutsOptions{
 			Icons: map[string]string{
 				"note":      "📝",
 				"tip":       "💡",
@@ -535,6 +536,7 @@ var mdWithIcons = goldmark.New(
 				"caution":   "🔥",
 				"important": "❗",
 			},
+			FoldingEnabled: true,
 		},
 	),
 )
@@ -625,8 +627,8 @@ var casesNoIcons = [...]TestCase{
 
 var mdDisableFolding = goldmark.New(
 	goldmark.WithExtensions(
-		&AlertCalloutsOptions{
-			DisableFolding: true,
+		&alertCalloutsOptions{
+			FoldingEnabled: false,
 		},
 	),
 )
@@ -768,9 +770,9 @@ func TestASTNodeCreation(t *testing.T) {
 
 // Test extension registration
 func TestExtensionRegistration(t *testing.T) {
-	ext := &AlertCalloutsOptions{
+	ext := &alertCalloutsOptions{
 		Icons: map[string]string{"test": "icon"},
-		DisableFolding: true,
+		FoldingEnabled: false,
 	}
 
 	md := goldmark.New(goldmark.WithExtensions(ext))
@@ -842,8 +844,8 @@ func TestNewAlertCallouts(t *testing.T) {
 			t.Errorf("Expected empty Icons map, got %d items", len(ext.Icons))
 		}
 
-		if ext.DisableFolding != false {
-			t.Error("Expected DisableFolding to be false by default")
+		if ext.FoldingEnabled != false {
+			t.Error("Expected FoldingEnabled to be false by default")
 		}
 	})
 
@@ -882,8 +884,8 @@ func TestNewAlertCallouts(t *testing.T) {
 	t.Run("Disable folding", func(t *testing.T) {
 		ext := NewAlertCallouts(WithFolding(false))
 
-		if ext.DisableFolding != true {
-			t.Error("Expected DisableFolding to be true")
+		if ext.FoldingEnabled != false {
+			t.Error("Expected FoldingEnabled to be false")
 		}
 	})
 
@@ -908,15 +910,15 @@ func TestNewAlertCallouts(t *testing.T) {
 			t.Errorf("Expected important icon, got %s", ext.Icons["important"])
 		}
 
-		if ext.DisableFolding != true {
-			t.Error("Expected DisableFolding to be true")
+		if ext.FoldingEnabled != false {
+			t.Error("Expected FoldingEnabled to be false")
 		}
 	})
 }
 
 func TestWithIcon(t *testing.T) {
 	t.Run("Adds icon to nil map", func(t *testing.T) {
-		opts := &AlertCalloutsOptions{}
+		opts := &alertCalloutsOptions{}
 		option := WithIcon("test", "<svg>test</svg>")
 		option(opts)
 
@@ -930,7 +932,7 @@ func TestWithIcon(t *testing.T) {
 	})
 
 	t.Run("Adds icon to existing map", func(t *testing.T) {
-		opts := &AlertCalloutsOptions{
+		opts := &alertCalloutsOptions{
 			Icons: map[string]string{"existing": "<svg>existing</svg>"},
 		}
 
@@ -951,7 +953,7 @@ func TestWithIcon(t *testing.T) {
 	})
 
 	t.Run("Overwrites existing icon", func(t *testing.T) {
-		opts := &AlertCalloutsOptions{
+		opts := &alertCalloutsOptions{
 			Icons: map[string]string{"note": "<svg>old</svg>"},
 		}
 
@@ -971,7 +973,7 @@ func TestWithIcons(t *testing.T) {
 			"warning": "<svg>warning</svg>",
 		}
 
-		opts := &AlertCalloutsOptions{}
+		opts := &alertCalloutsOptions{}
 		option := WithIcons(icons)
 		option(opts)
 
@@ -987,7 +989,7 @@ func TestWithIcons(t *testing.T) {
 	})
 
 	t.Run("Replaces existing icons", func(t *testing.T) {
-		opts := &AlertCalloutsOptions{
+		opts := &alertCalloutsOptions{
 			Icons: map[string]string{"old": "<svg>old</svg>"},
 		}
 
@@ -1009,24 +1011,24 @@ func TestWithIcons(t *testing.T) {
 	})
 }
 
-func TestWithDisableFolding(t *testing.T) {
+func TestWithFolding(t *testing.T) {
 	t.Run("Enables folding", func(t *testing.T) {
-		opts := &AlertCalloutsOptions{}
+		opts := &alertCalloutsOptions{}
 		option := WithFolding(true)
 		option(opts)
 
-		if opts.DisableFolding != false {
-			t.Error("Expected DisableFolding to be false")
+		if opts.FoldingEnabled != true {
+			t.Error("Expected FoldingEnabled to be true")
 		}
 	})
 
 	t.Run("Disables folding", func(t *testing.T) {
-		opts := &AlertCalloutsOptions{}
+		opts := &alertCalloutsOptions{}
 		option := WithFolding(false)
 		option(opts)
 
-		if opts.DisableFolding != true {
-			t.Error("Expected DisableFolding to be true")
+		if opts.FoldingEnabled != false {
+			t.Error("Expected FoldingEnabled to be false")
 		}
 	})
 }
