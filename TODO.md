@@ -18,6 +18,7 @@ This is a list of things we may implement or improve as development continues.
 - [ ] Add `MakeIconMap()` helper function to allow users to pass custom icon configuration data
       using a specially-formatted custom list of markers and icon definitions (*see [Custom Icon
       Definition File](#custom-icon-definition-file) later in this document*)
+  - [ ] Add `assets` folder to hold icon file maps for embedding
 
 ## Rendering
 
