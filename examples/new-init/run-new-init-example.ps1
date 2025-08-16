@@ -5,7 +5,7 @@
 Write-Host "Running new AlertCallouts initialization example..." -ForegroundColor Green
 
 # Change to the new-init directory
-Set-Location examples\new-init
+# Set-Location examples\new-init
 
 # Run the Go program
 try {
@@ -28,7 +28,7 @@ try {
     Write-Host "Error running example: $_" -ForegroundColor Red
 } finally {
     # Return to the original directory
-    Set-Location ..\..
+    # Set-Location ..\..
 }
 
 Write-Host "Done!" -ForegroundColor Green
