@@ -68,7 +68,7 @@ func CreateGoldmarkInstance(opt createOptions) goldmark.Markdown {
 		myIcons := InitAlertCalloutsIcons() // Initialize alert icons
 		options = append(options,
 			goldmark.WithExtensions(
-				&alertcallouts.AlertCallouts{
+				&alertcallouts.AlertCalloutsOptions{
 					Icons: myIcons,
 					DisableFolding: false, // Folding is enabled by default
 				},
