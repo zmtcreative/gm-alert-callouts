@@ -27,6 +27,7 @@ func main() {
 	// Example markdown with GitHub alerts (read from embedded sample)
 	mdSource := sample
 	// Convert CRLF line endings to LF for consistency in processing markdown source
+	// (some plugins perform better with LF line endings -- not sure why, but this has been our experience)
 	mdSource = strings.ReplaceAll(mdSource, "\r\n", "\n")
 	var buf bytes.Buffer
 	if err := md.Convert([]byte(mdSource), &buf); err != nil {
@@ -66,13 +67,12 @@ func CreateGoldmarkInstance(opt createOptions) goldmark.Markdown {
 	// Add GitHub Alerts extension if enabled
 	if opt.useAlertCallouts {
 		myIcons := InitAlertCalloutsIcons() // Initialize alert icons
+		alertCalloutsOpts := alertcallouts.NewAlertCallouts(
+			alertcallouts.WithIcons(myIcons),
+			alertcallouts.WithFolding(true),
+		)
 		options = append(options,
-			goldmark.WithExtensions(
-				&alertcallouts.AlertCalloutsOptions{
-					Icons: myIcons,
-					DisableFolding: false, // Folding is enabled by default
-				},
-			),
+			goldmark.WithExtensions(alertCalloutsOpts),
 		)
 	}
 
