@@ -8,9 +8,9 @@ import (
 	"github.com/yuin/goldmark/testutil"
 )
 
-var markdown = goldmark.New(
+var mdIconEmptySVG = goldmark.New(
 	goldmark.WithExtensions(
-		&AlertCallouts{
+		&AlertCalloutsOptions{
 			Icons: map[string]string{"note": "<svg></svg>"},
 		},
 	),
@@ -22,7 +22,7 @@ type TestCase struct {
 	html string
 }
 
-var cases = [...]TestCase{
+var casesBasic = [...]TestCase{
 	{
 		desc: "Empty blockquote",
 		md:   ">",
@@ -169,7 +169,7 @@ over a few lines</p>
 }
 
 // Additional test cases for comprehensive coverage
-var additionalTestCases = [...]TestCase{
+var casesAdvanced = [...]TestCase{
 	// Edge cases and malformed syntax
 	{
 		desc: "Invalid alert type with numbers",
@@ -525,9 +525,9 @@ Double tab indent</p>
 }
 
 // Test with different icon configurations
-var markdownWithIcons = goldmark.New(
+var mdWithIcons = goldmark.New(
 	goldmark.WithExtensions(
-		&AlertCallouts{
+		&AlertCalloutsOptions{
 			Icons: map[string]string{
 				"note":      "📝",
 				"tip":       "💡",
@@ -539,7 +539,7 @@ var markdownWithIcons = goldmark.New(
 	),
 )
 
-var iconTestCases = [...]TestCase{
+var casesWithIcons = [...]TestCase{
 	{
 		desc: "Alert with icon",
 		md: `> [!note]
@@ -603,13 +603,13 @@ var iconTestCases = [...]TestCase{
 }
 
 // Test with no icons configuration
-var markdownNoIcons = goldmark.New(
+var mdNoIcons = goldmark.New(
 	goldmark.WithExtensions(
-		&AlertCallouts{},
+		AlertCallouts,
 	),
 )
 
-var noIconTestCases = [...]TestCase{
+var casesNoIcons = [...]TestCase{
 	{
 		desc: "Alert without any icons configured",
 		md: `> [!note]
@@ -625,13 +625,13 @@ var noIconTestCases = [...]TestCase{
 
 var mdDisableFolding = goldmark.New(
 	goldmark.WithExtensions(
-		&AlertCallouts{
+		&AlertCalloutsOptions{
 			DisableFolding: true,
 		},
 	),
 )
 
-var disableFoldingTestCases = [...]TestCase{
+var casesDisableFolding = [...]TestCase{
 	{
 		desc: "Alert with no folding symbol",
 		md:   `> [!note]
@@ -670,9 +670,9 @@ This is an open alert`,
 
 func TestAlerts(t *testing.T) {
 	t.Run("Basic", func(t *testing.T) {
-		for i, c := range cases {
+		for i, c := range casesBasic {
 			t.Run(c.desc, func(t *testing.T) {
-				testutil.DoTestCase(markdown, testutil.MarkdownTestCase{
+				testutil.DoTestCase(mdIconEmptySVG, testutil.MarkdownTestCase{
 					No:          i,
 					Description: c.desc,
 					Markdown:    c.md,
@@ -683,9 +683,9 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("Additional", func(t *testing.T) {
-		for i, c := range additionalTestCases {
+		for i, c := range casesAdvanced {
 			t.Run(c.desc, func(t *testing.T) {
-				testutil.DoTestCase(markdown, testutil.MarkdownTestCase{
+				testutil.DoTestCase(mdIconEmptySVG, testutil.MarkdownTestCase{
 					No:          i,
 					Description: c.desc,
 					Markdown:    c.md,
@@ -696,7 +696,7 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("DisabledFolding", func(t *testing.T) {
-		for i, c := range disableFoldingTestCases {
+		for i, c := range casesDisableFolding {
 			t.Run(c.desc, func(t *testing.T) {
 				testutil.DoTestCase(mdDisableFolding, testutil.MarkdownTestCase{
 					No:          i,
@@ -709,9 +709,9 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("WithIcons", func(t *testing.T) {
-		for i, c := range iconTestCases {
+		for i, c := range casesWithIcons {
 			t.Run(c.desc, func(t *testing.T) {
-				testutil.DoTestCase(markdownWithIcons, testutil.MarkdownTestCase{
+				testutil.DoTestCase(mdWithIcons, testutil.MarkdownTestCase{
 					No:          i,
 					Description: c.desc,
 					Markdown:    c.md,
@@ -722,9 +722,9 @@ func TestAlerts(t *testing.T) {
 	})
 
 	t.Run("WithoutIcons", func(t *testing.T) {
-		for i, c := range noIconTestCases {
+		for i, c := range casesNoIcons {
 			t.Run(c.desc, func(t *testing.T) {
-				testutil.DoTestCase(markdownNoIcons, testutil.MarkdownTestCase{
+				testutil.DoTestCase(mdNoIcons, testutil.MarkdownTestCase{
 					No:          i,
 					Description: c.desc,
 					Markdown:    c.md,
@@ -753,7 +753,7 @@ func TestASTNodeCreation(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			var buf strings.Builder
-			err := markdown.Convert([]byte(tc.md), &buf)
+			err := mdIconEmptySVG.Convert([]byte(tc.md), &buf)
 			if err != nil {
 				t.Errorf("Failed to parse markdown: %s, error: %v", tc.md, err)
 			}
@@ -768,8 +768,9 @@ func TestASTNodeCreation(t *testing.T) {
 
 // Test extension registration
 func TestExtensionRegistration(t *testing.T) {
-	ext := &AlertCallouts{
+	ext := &AlertCalloutsOptions{
 		Icons: map[string]string{"test": "icon"},
+		DisableFolding: true,
 	}
 
 	md := goldmark.New(goldmark.WithExtensions(ext))
@@ -793,7 +794,7 @@ func BenchmarkSimpleAlert(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		var buf strings.Builder
-		err := markdown.Convert([]byte(md), &buf)
+		err := mdIconEmptySVG.Convert([]byte(md), &buf)
 		if err != nil {
 			b.Error("Failed to parse")
 		}
@@ -816,7 +817,7 @@ func BenchmarkComplexAlert(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		var buf strings.Builder
-		err := markdown.Convert([]byte(md), &buf)
+		err := mdIconEmptySVG.Convert([]byte(md), &buf)
 		if err != nil {
 			b.Error("Failed to parse")
 		}
