@@ -58,50 +58,10 @@ Install the extension:
 go get github.com/ZMT-Creative/gm-alert-callouts
 ```
 
+Starting with version 0.4.1, the extension supports a more idiomatic Go initialization pattern
+using functional options. This provides better extensibility and follows Goldmark conventions:
+
 In your code:
-
-```go
-package main
-
-import (
-    "fmt"
-
-    "github.com/yuin/goldmark"
-    alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
-)
-
-var markdown = goldmark.New(
-  goldmark.WithExtensions(
-    &alertcallouts.AlertCallouts{
-      DisableFolding: false,
-      Icons: map[string]string{"note": `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-      stroke-linejoin="round" class="svg-icon lucide-info"><circle cx="12" cy="12" r="10"></circle>
-      <path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>`},
-    },
-  ),
-)
-
-func main() {
-    mdSource := `# Hi Bob
-> [!WARNING]+
-> Close the airlock before removing your helmet!
-
-> [!TIP]
-> Remember to rewind the tape when you're done!`
-
-    var buf bytes.Buffer
-    if err := markdown.Convert([]byte(mdSource), &buf); err != nil {
-        panic(err)
-    }
-
-    fmt.Printf(`<html><head></head><body>%s</body></html>`, buf.String())
-}
-```
-
-### New Recommended Initialization Method (v0.4.1+)
-
-Starting with version 0.4.1, the extension supports a more idiomatic Go initialization pattern using functional options. This provides better extensibility and follows Goldmark conventions:
 
 ```go
 package main
@@ -150,7 +110,7 @@ func main() {
 | :------- | :---------- |
 | `WithIcon(kind, icon string)` | Adds a single icon for the specified alert type |
 | `WithIcons(icons map[string]string)` | Sets the complete icons map (replaces any existing icons) |
-| `WithFolding(enable bool)` | Enables or disables folding functionality |
+| `WithFolding(enable bool)` | Enables or disables folding functionality (enabled by default) |
 
 #### Alternative Icon Configuration
 
@@ -173,18 +133,12 @@ extension := alertcallouts.NewAlertCallouts(
 
 ### Backward Compatibility
 
-The original initialization methods are still fully supported:
+The simple initialization method is still fully supported:
 
 ```go
-// Method 1: Using the global variable (simplest)
+// Using the global variable (simplest)
+// This will initalize the extension with Folding enabled but no icons
 markdown := goldmark.New(goldmark.WithExtensions(alertcallouts.AlertCallouts))
-
-// Method 2: Using the struct directly
-extension := &alertcallouts.AlertCalloutsOptions{
-    Icons: map[string]string{"note": "<svg>...</svg>"},
-    DisableFolding: false,
-}
-markdown := goldmark.New(goldmark.WithExtensions(extension))
 ```
 
 ### Options When Enabling This Extension
