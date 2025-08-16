@@ -24,7 +24,7 @@ func (b *alertParser) Trigger() []byte {
 	return []byte{'>'}
 }
 
-var regex = regexp.MustCompile(`^\[!(?P<kind>[\w]+)\](?P<closed>-{0,1})($|\s+(?P<title>.*))`)
+var regex = regexp.MustCompile(`^\[!(?P<kind>[\w]+)\](?:(?P<closed>-{0,1})|(?P<opened>[+]{0,1}))($|\s+(?P<title>.*))`)
 
 func (b *alertParser) process(reader text.Reader) (bool, int) {
 	// This is slightly modified code from https://github.com/yuin/goldmark.git
@@ -68,23 +68,40 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 
 	// right after `>` and up to one space
 	subline := line[advanceBy:]
-	match := regex.FindSubmatch(subline)
-	if match == nil {
+	match := constants.FindNamedMatches(regex, string(subline))
+
+	// If no match found, this is not an alert
+	if len(match["kind"]) == 0 {
 		return nil, parser.NoChildren
 	}
 
-	kind := match[1]
-	closed := match[2]
-	title := match[3]
+	kind := []uint8(match["kind"])
+	closed := []uint8(match["closed"])
+	title := []uint8(match["title"])
+	opened := []uint8(match["opened"])
+
+	// Set the 'shouldFold' variable:
+	// If the markdown uses either '-' or '+' for folding we assume the user
+	//  wants the alert to be foldable. If neither '-' or '+' is used, we
+	//  assume the alert is not meant to be foldable.
+	// We only need 'opened' here to check if the alert is meant to be foldable.
+	// The 'closed' variable is legacy and is used by existing code elsewhere (we're not tinkering with it -- yet)
+	shouldFold := 1
+	if (len(closed) == 0 && len(opened) == 0) {
+		shouldFold = 0;
+	}
 
 	alert := ast.NewAlerts()
 
 	alert.SetAttributeString("kind", kind)
 	alert.SetAttributeString("closed", len(closed) != 0)
 	alert.SetAttributeString("title", title)
+	alert.SetAttributeString("shouldfold", shouldFold != 0)
 
 	i := strings.Index(string(line), "]")
-	reader.Advance(i)
+	if i >= 0 {
+		reader.Advance(i)
+	}
 
 	return alert, parser.HasChildren
 }

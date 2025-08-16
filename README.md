@@ -61,10 +61,18 @@ var markdown = goldmark.New(
       1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0
       1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8
       6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>`},
+      DisableFolding: false,
     },
   ),
 )
 ```
+
+##### Options When Enabling This Extension
+
+| Option         | Default Value               | Notes   |
+| :------------- | :-------------------------- | :------ |
+| Icons          | empty `map[string]string` | `"kind": value`, (*see example above*) |
+| DisableFolding | `false`                     | Folding support is enabled by default. Use this option to disable folding. |
 
 #### **Markdown**
 
@@ -76,18 +84,16 @@ var markdown = goldmark.New(
 #### **HTML**
 
 ```html
-<div class="gh-alert gh-alert-note">
-  <div class="gh-alert-title">
-    <p>
+<div class="gh-alert gh-alert-note callout callout-note">
+  <div class="gh-alert-title callout-title">
       <svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16"
       aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5
       6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0
       1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z">
       </path></svg>
-      Note
-    </p>
+      <p class="callout-title-text">Note</p>
   </div>
-  <div class="gh-alert-body">
+  <div class="gh-alert-body callout-body">
     <p>Useful information that users should know, even when skimming content.</p>
   </div>
 </div>
@@ -107,6 +113,9 @@ If you are on MacOS or Linux, just do the following in the `examples` folder (*t
 go run ./showalerts.go > example.html
 open example.html
 ```
+
+> *Yes, I could write this as a `bash` script, but until I set up a WSL/Linux test environment
+> I'm not going to assume something I write is working correctly without testing it.*
 
 The example shows one possible way to implement a set of alert types and their icons.
 

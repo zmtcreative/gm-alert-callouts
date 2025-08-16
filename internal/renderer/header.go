@@ -1,6 +1,7 @@
 package renderer
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
@@ -13,17 +14,20 @@ import (
 )
 
 type Icons map[string]string
+type DisableFolding bool
 
 type AlertsHeaderHTMLRenderer struct {
 	html.Config
 	Icons
+	DisableFolding
 	titleCaser cases.Caser
 }
 
-func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, opts ...html.Option) renderer.NodeRenderer {
+func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, disableFolding DisableFolding, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHeaderHTMLRenderer{
 		Config:     html.NewConfig(),
 		Icons:      icons,
+		DisableFolding: disableFolding,
 		titleCaser: cases.Title(language.English, cases.Compact),
 	}
 	for _, opt := range opts {
@@ -32,9 +36,10 @@ func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, opts ...html.Option) rend
 	return r
 }
 
-func NewAlertsHeaderHTMLRenderer(opts ...html.Option) renderer.NodeRenderer {
+func NewAlertsHeaderHTMLRenderer(disableFolding DisableFolding, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHeaderHTMLRenderer{
-		Config: html.NewConfig(),
+		Config:      html.NewConfig(),
+		DisableFolding: disableFolding,
 	}
 	for _, opt := range opts {
 		opt.SetHTMLOption(&r.Config)
@@ -47,8 +52,24 @@ func (r *AlertsHeaderHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRe
 }
 
 func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
+	shouldFold := false
+	if t, ok := node.AttributeString("shouldfold"); ok {
+		shouldFold = bool(t.(bool))
+	}
+
+	startHTML := ""
+	endHTML := ""
+
+	if bool(!r.DisableFolding) && shouldFold {
+		startHTML = fmt.Sprintf(`<summary class="gh-alert-title callout-title">` + "\n")
+		endHTML = "\n</summary>\n"
+	} else {
+		startHTML = `<div class="gh-alert-title callout-title">` + "\n"
+		endHTML = "\n</div>\n"
+	}
+
 	if entering {
-		w.WriteString(`<div class="gh-alert-title"><p>`)
+		w.WriteString(startHTML)
 		var kind string = ""
 
 		if t, ok := node.AttributeString("kind"); ok {
@@ -67,6 +88,7 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 					}
 				}
 			}
+			w.WriteString(`<p class="callout-title-text">`)
 			if _, ok := node.AttributeString("title"); ok {
 				// do nothing
 			} else {
@@ -74,7 +96,8 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 			}
 		}
 	} else {
-		w.WriteString(`</p></div>`)
+		w.WriteString(`</p>`)
+		w.WriteString(endHTML)
 	}
 	return gast.WalkContinue, nil
 }

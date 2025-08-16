@@ -28,7 +28,7 @@ func (r *AlertsBodyHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegi
 
 func (r *AlertsBodyHTMLRenderer) renderAlertsBody(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
 	if entering {
-		w.WriteString(`<div class="gh-alert-body">`)
+		w.WriteString(`<div class="gh-alert-body callout-body">`)
 	} else {
 		w.WriteString("</div>")
 	}
