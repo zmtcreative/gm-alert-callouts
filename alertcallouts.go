@@ -14,7 +14,7 @@ import (
 
 type AlertCallouts struct {
 	alertRenderer.Icons
-	alertRenderer.IsFoldable
+	alertRenderer.DisableFolding
 }
 
 // Meta is a extension for the goldmark.
@@ -30,8 +30,8 @@ func (e *AlertCallouts) Extend(m goldmark.Markdown) {
 	)
 	m.Renderer().AddOptions(
 		renderer.WithNodeRenderers(
-			util.Prioritized(alertRenderer.NewAlertsHTMLRenderer(e.IsFoldable), 0),
-			util.Prioritized(alertRenderer.NewAlertsHeaderHTMLRendererWithIcons(e.Icons, e.IsFoldable), 0),
+			util.Prioritized(alertRenderer.NewAlertsHTMLRenderer(e.DisableFolding), 0),
+			util.Prioritized(alertRenderer.NewAlertsHeaderHTMLRendererWithIcons(e.Icons, e.DisableFolding), 0),
 			util.Prioritized(alertRenderer.NewAlertsBodyHTMLRenderer(), 0),
 		),
 	)

@@ -14,20 +14,20 @@ import (
 )
 
 type Icons map[string]string
-type IsFoldable bool
+type DisableFolding bool
 
 type AlertsHeaderHTMLRenderer struct {
 	html.Config
 	Icons
-	IsFoldable
+	DisableFolding
 	titleCaser cases.Caser
 }
 
-func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, isFoldable IsFoldable, opts ...html.Option) renderer.NodeRenderer {
+func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, disableFolding DisableFolding, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHeaderHTMLRenderer{
 		Config:     html.NewConfig(),
 		Icons:      icons,
-		IsFoldable: isFoldable,
+		DisableFolding: disableFolding,
 		titleCaser: cases.Title(language.English, cases.Compact),
 	}
 	for _, opt := range opts {
@@ -36,10 +36,10 @@ func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, isFoldable IsFoldable, op
 	return r
 }
 
-func NewAlertsHeaderHTMLRenderer(isFoldable IsFoldable, opts ...html.Option) renderer.NodeRenderer {
+func NewAlertsHeaderHTMLRenderer(disableFolding DisableFolding, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHeaderHTMLRenderer{
-		Config: html.NewConfig(),
-		IsFoldable: isFoldable,
+		Config:      html.NewConfig(),
+		DisableFolding: disableFolding,
 	}
 	for _, opt := range opts {
 		opt.SetHTMLOption(&r.Config)
@@ -60,7 +60,7 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 	startHTML := ""
 	endHTML := ""
 
-	if bool(r.IsFoldable) && shouldFold {
+	if bool(!r.DisableFolding) && shouldFold {
 		startHTML = fmt.Sprintf(`<summary class="gh-alert-title callout-title">` + "\n")
 		endHTML = "\n</summary>\n"
 	} else {

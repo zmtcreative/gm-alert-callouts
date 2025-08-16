@@ -14,13 +14,13 @@ import (
 
 type AlertsHTMLRenderer struct {
 	html.Config
-	IsFoldable
+	DisableFolding
 }
 
-func NewAlertsHTMLRenderer(isFoldable IsFoldable, opts ...html.Option) renderer.NodeRenderer {
+func NewAlertsHTMLRenderer(disableFolding DisableFolding, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHTMLRenderer{
-		Config: html.NewConfig(),
-		IsFoldable: isFoldable,
+		Config:         html.NewConfig(),
+		DisableFolding: disableFolding,
 	}
 	for _, opt := range opts {
 		opt.SetHTMLOption(&r.Config)
@@ -84,7 +84,7 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 	startHTML := ""
 	endHTML := ""
 
-	if bool(r.IsFoldable) && shouldFold {
+	if bool(!r.DisableFolding) && shouldFold {
 		startHTML = fmt.Sprintf(`<details class="gh-alert gh-alert-%s callout callout-foldable callout-%s" data-callout="%s"%s>`, alertType, alertType, alertType, open)
 		endHTML = "</div>\n</details>\n"
 	} else {

@@ -76,13 +76,14 @@ over a few lines</p>
 >
 > second paragraph with *some* syntax
 `,
-		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+		html: `<details class="gh-alert gh-alert-info callout callout-foldable callout-info" data-callout="info"><summary class="gh-alert-title callout-title">
 <svg></svg><p class="callout-title-text">Info</p>
-</div>
+</summary>
 <div class="gh-alert-body callout-body"><p>paragraph
 over a few lines</p>
 <p>second paragraph with <em>some</em> syntax</p>
-</div></div>`},	{
+</div></div>
+</details>`},	{
 		desc: "Alerts without body",
 		md:   `> [!info] title`,
 		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
@@ -204,23 +205,46 @@ var additionalTestCases = [...]TestCase{
 </blockquote>
 `,
 	},
+	// Foldable alerts
 	{
 		desc: "Closed alert with dash",
 		md:   `> [!warning]- This is a closed alert`,
-		html: `<div class="gh-alert gh-alert-warning callout callout-warning" data-callout="warning"><div class="gh-alert-title callout-title">
+		html: `<details class="gh-alert gh-alert-warning callout callout-foldable callout-warning" data-callout="warning"><summary class="gh-alert-title callout-title">
 <svg></svg><p class="callout-title-text">This is a closed alert</p>
+</summary>
 </div>
-</div>`,
+</details>`,
+	},
+	{
+		desc: "Open alert with plus",
+		md:   `> [!warning]+ This is an open alert`,
+		html: `<details class="gh-alert gh-alert-warning callout callout-foldable callout-warning" data-callout="warning" open><summary class="gh-alert-title callout-title">
+<svg></svg><p class="callout-title-text">This is an open alert</p>
+</summary>
+</div>
+</details>`,
 	},
 	{
 		desc: "Closed alert without title",
 		md: `> [!tip]-
 > content here`,
-		html: `<div class="gh-alert gh-alert-tip callout callout-tip" data-callout="tip"><div class="gh-alert-title callout-title">
+		html: `<details class="gh-alert gh-alert-tip callout callout-foldable callout-tip" data-callout="tip"><summary class="gh-alert-title callout-title">
 <svg></svg><p class="callout-title-text">Tip</p>
-</div>
+</summary>
 <div class="gh-alert-body callout-body"><p>content here</p>
-</div></div>`,
+</div></div>
+</details>`,
+	},
+	{
+		desc: "Open alert without title",
+		md: `> [!tip]+
+> content here`,
+		html: `<details class="gh-alert gh-alert-tip callout callout-foldable callout-tip" data-callout="tip" open><summary class="gh-alert-title callout-title">
+<svg></svg><p class="callout-title-text">Tip</p>
+</summary>
+<div class="gh-alert-body callout-body"><p>content here</p>
+</div></div>
+</details>`,
 	},
 
 	// Case sensitivity tests
