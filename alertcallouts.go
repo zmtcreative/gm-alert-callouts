@@ -12,34 +12,37 @@ import (
 	alertRenderer "github.com/ZMT-Creative/gm-alert-callouts/internal/renderer"
 )
 
-type AlertCalloutsOptions struct {
+type alertCalloutsOptions struct {
 	alertRenderer.Icons
-	alertRenderer.DisableFolding
+	alertRenderer.FoldingEnabled
 }
 
 // AlertCallouts is a extension for the goldmark (backwards compatibility).
-var AlertCallouts = &AlertCalloutsOptions{}
+var AlertCallouts = &alertCalloutsOptions{
+	Icons:          make(map[string]string),
+	FoldingEnabled: true,
+}
 
-// Option is a functional option for configuring AlertCalloutsOptions.
-type Option func(*AlertCalloutsOptions)
+// Option is a functional option for configuring alertCalloutsOptions.
+type Option func(*alertCalloutsOptions)
 
 // WithIcons sets the icons map for alert callouts.
 func WithIcons(icons map[string]string) Option {
-	return func(opts *AlertCalloutsOptions) {
+	return func(opts *alertCalloutsOptions) {
 		opts.Icons = icons
 	}
 }
 
 // WithFolding sets the folding functionality for alert callouts.
 func WithFolding(enable bool) Option {
-	return func(opts *AlertCalloutsOptions) {
-		opts.DisableFolding = alertRenderer.DisableFolding(!enable)
+	return func(opts *alertCalloutsOptions) {
+		opts.FoldingEnabled = alertRenderer.FoldingEnabled(enable)
 	}
 }
 
 // WithIcon adds a single icon to the icons map for alert callouts.
 func WithIcon(kind, icon string) Option {
-	return func(opts *AlertCalloutsOptions) {
+	return func(opts *alertCalloutsOptions) {
 		if opts.Icons == nil {
 			opts.Icons = make(map[string]string)
 		}
@@ -49,10 +52,10 @@ func WithIcon(kind, icon string) Option {
 
 // NewAlertCallouts creates a new AlertCallouts extension with the given options.
 // This follows the standard Goldmark extension initialization pattern.
-func NewAlertCallouts(options ...Option) *AlertCalloutsOptions {
-	opts := &AlertCalloutsOptions{
+func NewAlertCallouts(options ...Option) *alertCalloutsOptions {
+	opts := &alertCalloutsOptions{
 		Icons:          make(map[string]string),
-		DisableFolding: false,
+		FoldingEnabled: false,
 	}
 
 	for _, option := range options {
@@ -63,7 +66,7 @@ func NewAlertCallouts(options ...Option) *AlertCalloutsOptions {
 }
 
 // Extend implements goldmark.Extender.
-func (e *AlertCalloutsOptions) Extend(m goldmark.Markdown) {
+func (e *alertCalloutsOptions) Extend(m goldmark.Markdown) {
 	m.Parser().AddOptions(
 		parser.WithBlockParsers(
 			util.Prioritized(alertParser.NewAlertsParser(), 799),
@@ -72,8 +75,8 @@ func (e *AlertCalloutsOptions) Extend(m goldmark.Markdown) {
 	)
 	m.Renderer().AddOptions(
 		renderer.WithNodeRenderers(
-			util.Prioritized(alertRenderer.NewAlertsHTMLRenderer(e.DisableFolding), 0),
-			util.Prioritized(alertRenderer.NewAlertsHeaderHTMLRendererWithIcons(e.Icons, e.DisableFolding), 0),
+			util.Prioritized(alertRenderer.NewAlertsHTMLRenderer(e.FoldingEnabled), 0),
+			util.Prioritized(alertRenderer.NewAlertsHeaderHTMLRendererWithIcons(e.Icons, e.FoldingEnabled), 0),
 			util.Prioritized(alertRenderer.NewAlertsBodyHTMLRenderer(), 0),
 		),
 	)
