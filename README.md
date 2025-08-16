@@ -16,13 +16,14 @@ the `]` (right square bracket).
 > [!NOTE]
 > This extension does **not** directly include any icons -- it just provides the parsing and
 > rendering functionality to create the alerts/callouts. The user must provide the list of valid
-> alert/callout names with a mapped string (`map[string]string{}`) containing the alert/callout identifier as the key (*e.g.,
-> `note`, `important`, etc.*) and the icon as the string value. The icon is usually an SVG in HTML
-> format (*e.g., `<svg>...svg-definiton...</svg>`*), but can be any string that a browser or
-> application can render (*e.g., a Unicode glyph or an HTML entity code*).
+> alert/callout names with a mapped string (`map[string]string{}`) containing the alert/callout
+> identifier as the key (*e.g., `note`, `important`, etc.*) and the icon as the string value. The
+> icon is usually an SVG in HTML format (*e.g., `<svg>...svg-definiton...</svg>`*), but can be any
+> string that a browser or application can render (*e.g., a Unicode glyph or an HTML entity code*).
 
-Throughout this document and the code itself, the terms `alert(s)` and `callout(s)` are used interchangeably. GitHub refers to these as `Alerts` while Obsidian refers to them as `Callouts` -- for the purposes of this extension they
-mean the same thing.
+Throughout this document and the code itself, the terms `alert(s)` and `callout(s)` are used
+interchangeably. GitHub refers to these as `Alerts` while Obsidian refers to them as `Callouts` --
+for the purposes of this extension they mean the same thing.
 
 ## State of the Project
 
@@ -58,37 +59,53 @@ Install the extension:
 go get github.com/ZMT-Creative/gm-alert-callouts
 ```
 
+Starting with version 0.4.1, the extension supports a more idiomatic Go initialization pattern
+using functional options. This provides better extensibility and follows Goldmark conventions:
+
 In your code:
 
 ```go
 package main
 
 import (
+    "bytes"
     "fmt"
 
     "github.com/yuin/goldmark"
     alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
 )
 
-var markdown = goldmark.New(
-  goldmark.WithExtensions(
-    &alertcallouts.AlertCallouts{
-      DisableFolding: false,
-      Icons: map[string]string{"note": `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-      stroke-linejoin="round" class="svg-icon lucide-info"><circle cx="12" cy="12" r="10"></circle>
-      <path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>`},
-    },
-  ),
-)
-
 func main() {
-    mdSource := `# Hi Bob
-> [!WARNING]+
-> Close the airlock before removing your helmet!
+    // Create extension with functional options
+    extension := alertcallouts.NewAlertCallouts(
+        alertcallouts.WithIcon("note", `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path>
+          <path d="M12 8h.01"></path></svg>`),
+        alertcallouts.WithIcon("warning", `<svg xmlns="http://www.w3.org/2000/svg" width="24"
+          height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11
+          12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0
+          1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>`),
+        alertcallouts.WithIcon("tip", `<svg xmlns="http://www.w3.org/2000/svg" width="24"
+          height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9
+          1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path>
+          <path d="M9 18h6"></path><path d="M10 22h4"></path></svg>`),
+        alertcallouts.WithFolding(true), // Enable folding (default)
+    )
 
-> [!TIP]
-> Remember to rewind the tape when you're done!`
+    markdown := goldmark.New(goldmark.WithExtensions(extension))
+
+    mdSource := `# Alert Examples
+> [!NOTE]
+> This is a note with an icon.
+
+> [!WARNING]-
+> This is a closed warning callout.
+
+> [!TIP]+
+> This is an open tip callout.`
 
     var buf bytes.Buffer
     if err := markdown.Convert([]byte(mdSource), &buf); err != nil {
@@ -99,12 +116,45 @@ func main() {
 }
 ```
 
-### Options When Enabling This Extension
+### Available Functional Options
 
-| Option         | Default Value             | Notes   |
-| :------------- | :------------------------ | :------ |
-| Icons          | empty `map[string]string` | `"kind": value`, (*see example above*) |
-| DisableFolding | `false`                   | Folding support is enabled by default. Use this option to disable folding. |
+| Function | Description |
+| :------- | :---------- |
+| `WithIcon(kind, icon string)` | Adds a single icon for the specified alert type |
+| `WithIcons(icons map[string]string)` | Sets the complete icons map (replaces any existing icons) |
+| `WithFolding(enable bool)` | Enables or disables folding functionality (enabled by default) |
+
+### Alternative Icon Configuration
+
+You can also configure multiple icons at once:
+
+```go
+icons := map[string]string{
+    "note":      "<svg>...</svg>",
+    "warning":   "<svg>...</svg>",
+    "important": "<svg>...</svg>",
+    "tip":       "<svg>...</svg>",
+    "caution":   "<svg>...</svg>",
+}
+
+extension := alertcallouts.NewAlertCallouts(
+    alertcallouts.WithIcons(icons),
+    alertcallouts.WithFolding(true),
+)
+```
+
+### Backward Compatibility
+
+The simple initialization method is still fully supported:
+
+```go
+// Using the global variable (simplest)
+// This will initalize the extension with Folding enabled but no icons
+markdown := goldmark.New(goldmark.WithExtensions(alertcallouts.AlertCallouts))
+
+// This is equivalent to the newer init method called with no options
+markdown := goldmark.New(goldmark.WithExtension(alertcallouts.NewAlertCallouts()))
+```
 
 ## Standard Alert/Callout Style
 
