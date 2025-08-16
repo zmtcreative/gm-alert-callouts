@@ -879,8 +879,8 @@ func TestNewAlertCallouts(t *testing.T) {
 		}
 	})
 
-	t.Run("With disable folding option", func(t *testing.T) {
-		ext := NewAlertCallouts(WithDisableFolding(true))
+	t.Run("Disable folding", func(t *testing.T) {
+		ext := NewAlertCallouts(WithFolding(false))
 
 		if ext.DisableFolding != true {
 			t.Error("Expected DisableFolding to be true")
@@ -892,7 +892,7 @@ func TestNewAlertCallouts(t *testing.T) {
 
 		ext := NewAlertCallouts(
 			WithIcons(icons),
-			WithDisableFolding(true),
+			WithFolding(false),
 			WithIcon("important", "<svg>important</svg>"),
 		)
 
@@ -1012,7 +1012,7 @@ func TestWithIcons(t *testing.T) {
 func TestWithDisableFolding(t *testing.T) {
 	t.Run("Enables folding", func(t *testing.T) {
 		opts := &AlertCalloutsOptions{}
-		option := WithDisableFolding(false)
+		option := WithFolding(true)
 		option(opts)
 
 		if opts.DisableFolding != false {
@@ -1022,7 +1022,7 @@ func TestWithDisableFolding(t *testing.T) {
 
 	t.Run("Disables folding", func(t *testing.T) {
 		opts := &AlertCalloutsOptions{}
-		option := WithDisableFolding(true)
+		option := WithFolding(false)
 		option(opts)
 
 		if opts.DisableFolding != true {
@@ -1035,7 +1035,7 @@ func TestNewAlertCalloutsIntegration(t *testing.T) {
 	t.Run("Integration with Goldmark", func(t *testing.T) {
 		ext := NewAlertCallouts(
 			WithIcon("note", "<svg>note-icon</svg>"),
-			WithDisableFolding(false),
+			WithFolding(true),
 		)
 
 		md := goldmark.New(goldmark.WithExtensions(ext))
@@ -1088,7 +1088,7 @@ func TestNewAlertCalloutsIntegration(t *testing.T) {
 	t.Run("Folding functionality with new initializer", func(t *testing.T) {
 		ext := NewAlertCallouts(
 			WithIcon("tip", "<svg>tip-icon</svg>"),
-			WithDisableFolding(false), // Folding enabled
+			WithFolding(true), // Folding enabled
 		)
 
 		md := goldmark.New(goldmark.WithExtensions(ext))

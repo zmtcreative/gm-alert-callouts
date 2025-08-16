@@ -30,10 +30,10 @@ func WithIcons(icons map[string]string) Option {
 	}
 }
 
-// WithDisableFolding disables the folding functionality for alert callouts.
-func WithDisableFolding(disable bool) Option {
+// WithFolding sets the folding functionality for alert callouts.
+func WithFolding(enable bool) Option {
 	return func(opts *AlertCalloutsOptions) {
-		opts.DisableFolding = alertRenderer.DisableFolding(disable)
+		opts.DisableFolding = alertRenderer.DisableFolding(!enable)
 	}
 }
 
