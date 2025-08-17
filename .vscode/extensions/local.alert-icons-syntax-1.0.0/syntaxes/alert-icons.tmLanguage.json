@@ -1,0 +1,171 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Alert Icons",
+    "scopeName": "source.alert-icons",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#icon-definition"
+        },
+        {
+            "include": "#alias-definition"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line.number-sign.alert-icons",
+                    "match": "^\\s*#.*$"
+                }
+            ]
+        },
+        "icon-definition": {
+            "patterns": [
+                {
+                    "name": "meta.icon-definition.alert-icons",
+                    "begin": "^\\s*([a-zA-Z][a-zA-Z0-9_-]*)(\\|)",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "entity.name.function.icon-key.alert-icons"
+                        },
+                        "2": {
+                            "name": "keyword.operator.separator.alert-icons"
+                        }
+                    },
+                    "end": "$",
+                    "patterns": [
+                        {
+                            "include": "#svg-content"
+                        }
+                    ]
+                }
+            ]
+        },
+        "alias-definition": {
+            "patterns": [
+                {
+                    "match": "^\\s*([a-zA-Z][a-zA-Z0-9_-]*)(->)([a-zA-Z][a-zA-Z0-9_-]*)\\s*$",
+                    "captures": {
+                        "1": {
+                            "name": "variable.other.alias.alert-icons"
+                        },
+                        "2": {
+                            "name": "keyword.operator.arrow.alert-icons"
+                        },
+                        "3": {
+                            "name": "variable.other.target.alert-icons"
+                        }
+                    }
+                }
+            ]
+        },
+        "svg-content": {
+            "patterns": [
+                {
+                    "name": "meta.tag.svg.alert-icons",
+                    "begin": "(<)(svg)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.tag.begin.xml"
+                        },
+                        "2": {
+                            "name": "entity.name.tag.xml"
+                        }
+                    },
+                    "end": "(</)(svg)(>)|(/)(>)",
+                    "endCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.tag.begin.xml"
+                        },
+                        "2": {
+                            "name": "entity.name.tag.xml"
+                        },
+                        "3": {
+                            "name": "punctuation.definition.tag.end.xml"
+                        },
+                        "4": {
+                            "name": "punctuation.definition.tag.end.xml"
+                        },
+                        "5": {
+                            "name": "punctuation.definition.tag.end.xml"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#xml-attributes"
+                        },
+                        {
+                            "include": "#xml-tags"
+                        }
+                    ]
+                }
+            ]
+        },
+        "xml-tags": {
+            "patterns": [
+                {
+                    "name": "meta.tag.xml",
+                    "begin": "(<)([a-zA-Z_:][a-zA-Z0-9_:.-]*)",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.tag.begin.xml"
+                        },
+                        "2": {
+                            "name": "entity.name.tag.xml"
+                        }
+                    },
+                    "end": "(/?>)",
+                    "endCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.tag.end.xml"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#xml-attributes"
+                        }
+                    ]
+                },
+                {
+                    "name": "meta.tag.xml",
+                    "begin": "(</)([a-zA-Z_:][a-zA-Z0-9_:.-]*)",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.tag.begin.xml"
+                        },
+                        "2": {
+                            "name": "entity.name.tag.xml"
+                        }
+                    },
+                    "end": "(>)",
+                    "endCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.tag.end.xml"
+                        }
+                    }
+                }
+            ]
+        },
+        "xml-attributes": {
+            "patterns": [
+                {
+                    "match": "([a-zA-Z_:][a-zA-Z0-9_:.-]*)(=)(\"[^\"]*\"|'[^']*'|[^\\s>]+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.other.attribute-name.xml"
+                        },
+                        "2": {
+                            "name": "punctuation.separator.key-value.xml"
+                        },
+                        "3": {
+                            "name": "string.quoted.xml"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

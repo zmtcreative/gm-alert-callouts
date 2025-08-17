@@ -1,0 +1,48 @@
+{
+	"name": "alert-icons-syntax",
+	"displayName": "Alert Icons Syntax",
+	"description": "Syntax highlighting for Alert Icons definition files",
+	"version": "1.0.0",
+	"publisher": "local",
+	"engines": {
+		"vscode": "^1.74.0"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"contributes": {
+		"languages": [
+			{
+				"id": "alert-icons",
+				"aliases": [
+					"Alert Icons",
+					"alert-icons"
+				],
+				"extensions": [
+					".acicons",
+					".acicon",
+					".aci"
+				],
+				"filenames": [
+					"alertcallouts-icons",
+					"alertcallouts.icons",
+					"alertcallout-icons",
+					"alertcallout.icons"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "alert-icons",
+				"scopeName": "source.alert-icons",
+				"path": "./syntaxes/alert-icons.tmLanguage.json"
+			}
+		]
+	},
+	"__metadata": {
+		"installedTimestamp": 1755359705467,
+		"targetPlatform": "undefined",
+		"size": 16957
+	}
+}
