@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
+	utils "github.com/ZMT-Creative/gm-alert-callouts/internal/utilities"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
@@ -44,7 +45,7 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 			alertType = strings.ToLower(typeStr)
 		}
 		// Check if the alertType is "noicon" or one of its variants
-		if constants.IsNoIconKind(alertType) {
+		if utils.IsNoIconKind(alertType) {
 			// If the alertType is "noicon", we want to use the "title" if it exists
 			// If not, we can just use existing alertType as a fallback
 			if rt, ok := node.AttributeString("title"); ok {

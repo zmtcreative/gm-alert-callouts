@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
+	utils "github.com/ZMT-Creative/gm-alert-callouts/internal/utilities"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
@@ -82,7 +83,7 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 				w.WriteString(icon)
 				// Check if the kind indicates no icon should be rendered.
 				// if it's not a "no icon" kind, we can try to find a default icon.
-			} else if !constants.IsNoIconKind(kind) {
+			} else if !utils.IsNoIconKind(kind) {
 				for _, v := range []string{"note", "info", "default"} {
 					icon, ok = r.Icons[v]
 					if ok {

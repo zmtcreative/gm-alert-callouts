@@ -4,7 +4,6 @@ package alertcallouts
 
 import (
 	_ "embed"
-	"strings"
 
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/parser"
@@ -14,6 +13,7 @@ import (
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
 	alertParser "github.com/ZMT-Creative/gm-alert-callouts/internal/parser"
 	alertRenderer "github.com/ZMT-Creative/gm-alert-callouts/internal/renderer"
+	utils "github.com/ZMT-Creative/gm-alert-callouts/internal/utilities"
 )
 
 //go:embed assets/alertcallouts-gfmplus.icons
@@ -38,7 +38,7 @@ type alertCalloutsOptions struct {
 // AlertCallouts is a extension for Goldmark.
 // This variable will initialize the extension with Folding Enabled and the basic GFM icon set
 var AlertCallouts = &alertCalloutsOptions{
-	Icons:          createIconsMap(alertCalloutsIconsGFM),
+	Icons:          utils.CreateIconsMap(alertCalloutsIconsGFM),
 	FoldingEnabled: true,
 	defaultIcons:   constants.ICONS_GFM,
 }
@@ -66,7 +66,7 @@ func WithIcon(kind, icon string) Option {
 // UseGFMIcons sets the icon map to the GFM icon set.
 func UseGFMIcons() Option {
 	return func(opts *alertCalloutsOptions) {
-		opts.Icons = createIconsMap(alertCalloutsIconsGFM)
+		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsGFM)
 		opts.defaultIcons = constants.ICONS_GFM
 	}
 }
@@ -74,7 +74,7 @@ func UseGFMIcons() Option {
 // UseGFMPlusIcons sets the icon map to the GFM Plus icon set.
 func UseGFMPlusIcons() Option {
 	return func(opts *alertCalloutsOptions) {
-		opts.Icons = createIconsMap(alertCalloutsIconsGFMPlus)
+		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMPlus)
 		opts.defaultIcons = constants.ICONS_GFM_PLUS
 	}
 }
@@ -82,7 +82,7 @@ func UseGFMPlusIcons() Option {
 // UseObsidianIcons sets the icon map to the Obsidian icon set.
 func UseObsidianIcons() Option {
 	return func(opts *alertCalloutsOptions) {
-		opts.Icons = createIconsMap(alertCalloutsIconsObsidian)
+		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsObsidian)
 		opts.defaultIcons = constants.ICONS_OBSIDIAN
 	}
 }
@@ -127,67 +127,3 @@ func (e *alertCalloutsOptions) Extend(m goldmark.Markdown) {
 	)
 }
 
-// createIconsMap creates a map of icon names to their SVG data from the given icon data string.
-func createIconsMap(icondata string) map[string]string {
-	iconmap := make(map[string]string)
-
-	// Parse the embedded alert callouts data
-	lines := strings.Split(icondata, "\n")
-
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-
-		// Skip empty lines and comments
-		if line == "" || strings.HasPrefix(line, "#") {
-			continue
-		}
-
-		// Check if it's an alias definition (contains ->)
-		if strings.Contains(line, "->") {
-			parts := strings.SplitN(line, "->", 2)
-			if len(parts) == 2 {
-				alias := strings.TrimSpace(parts[0])
-				primary := strings.TrimSpace(parts[1])
-				// Set alias to reference the primary icon (will be set after core icons are loaded)
-				if svg, exists := iconmap[primary]; exists {
-					iconmap[alias] = svg
-				} else {
-					// Store for later processing if primary doesn't exist yet
-					// This handles the case where aliases are defined before their primary keys
-					defer func(alias, primary string) {
-						if svg, exists := iconmap[primary]; exists {
-							iconmap[alias] = svg
-						}
-					}(alias, primary)
-				}
-			}
-			continue
-		}
-
-		// Parse core icon definition (key|svg)
-		parts := strings.SplitN(line, "|", 2)
-		if len(parts) == 2 {
-			key := strings.TrimSpace(parts[0])
-			svg := strings.TrimSpace(parts[1])
-			iconmap[key] = svg
-		}
-	}
-
-	// Second pass to handle any aliases that couldn't be resolved in first pass
-	lines = strings.Split(icondata, "\n")
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if strings.Contains(line, "->") {
-			parts := strings.SplitN(line, "->", 2)
-			if len(parts) == 2 {
-				alias := strings.TrimSpace(parts[0])
-				primary := strings.TrimSpace(parts[1])
-				if svg, exists := iconmap[primary]; exists {
-					iconmap[alias] = svg
-				}
-			}
-		}
-	}
-
-	return iconmap
-}

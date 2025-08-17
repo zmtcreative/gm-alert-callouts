@@ -6,6 +6,7 @@ import (
 
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/ast"
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
+	"github.com/ZMT-Creative/gm-alert-callouts/internal/utilities"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/text"
@@ -68,7 +69,7 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 
 	// right after `>` and up to one space
 	subline := line[advanceBy:]
-	match := constants.FindNamedMatches(regex, string(subline))
+	match := utilities.FindNamedMatches(regex, string(subline))
 
 	// If no match found, this is not an alert
 	if len(match["kind"]) == 0 {
