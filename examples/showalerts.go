@@ -12,7 +12,7 @@ import (
 	"github.com/yuin/goldmark/parser"
 )
 
-//go:embed css/alertcallouts.css
+//go:embed css/alertcallouts-gfmplus.css
 var cssData []byte
 
 //go:embed text/sample.md
