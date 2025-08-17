@@ -86,6 +86,13 @@ func WithFolding(enable bool) Option {
 	}
 }
 
+// CreateIconsMap creates a map of icon names to their SVG data from the given icon data string.
+// This is a public wrapper around the internal utilities function, allowing users to create
+// custom icon maps from their own icon data files.
+func CreateIconsMap(iconData string) map[string]string {
+	return utils.CreateIconsMap(iconData)
+}
+
 // AlertCallouts will initialize the extension with Folding Enabled and the basic GFM icon set
 // This can be initialized using the `goldmark.WithExtensions(alertcallouts.AlertCallouts)` syntax
 var AlertCallouts = NewAlertCallouts(
