@@ -35,14 +35,6 @@ type alertCalloutsOptions struct {
 	defaultIcons int
 }
 
-// AlertCallouts is a extension for Goldmark.
-// This variable will initialize the extension with Folding Enabled and the basic GFM icon set
-var AlertCallouts = &alertCalloutsOptions{
-	Icons:          utils.CreateIconsMap(alertCalloutsIconsGFM),
-	FoldingEnabled: true,
-	defaultIcons:   constants.ICONS_GFM,
-}
-
 // Option is a functional option for configuring alertCalloutsOptions.
 type Option func(*alertCalloutsOptions)
 
@@ -63,7 +55,7 @@ func WithIcon(kind, icon string) Option {
 	}
 }
 
-// UseGFMIcons sets the icon map to the GFM icon set.
+// UseGFMIcons sets the icon map to the GFM (GitHub Flavored Markdown) icon set.
 func UseGFMIcons() Option {
 	return func(opts *alertCalloutsOptions) {
 		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsGFM)
@@ -71,7 +63,7 @@ func UseGFMIcons() Option {
 	}
 }
 
-// UseGFMPlusIcons sets the icon map to the GFM Plus icon set.
+// UseGFMPlusIcons sets the icon map to the GFM Plus icon set (essentially a melding of GFM and Obsidian).
 func UseGFMPlusIcons() Option {
 	return func(opts *alertCalloutsOptions) {
 		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMPlus)
@@ -79,7 +71,7 @@ func UseGFMPlusIcons() Option {
 	}
 }
 
-// UseObsidianIcons sets the icon map to the Obsidian icon set.
+// UseObsidianIcons sets the icon map to the Obsidian-style icon set.
 func UseObsidianIcons() Option {
 	return func(opts *alertCalloutsOptions) {
 		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsObsidian)
@@ -93,6 +85,13 @@ func WithFolding(enable bool) Option {
 		opts.FoldingEnabled = alertRenderer.FoldingEnabled(enable)
 	}
 }
+
+// AlertCallouts will initialize the extension with Folding Enabled and the basic GFM icon set
+// This can be initialized using the `goldmark.WithExtensions(alertcallouts.AlertCallouts)` syntax
+var AlertCallouts = NewAlertCallouts(
+	UseGFMIcons(),
+	WithFolding(true),
+)
 
 // NewAlertCallouts creates a new AlertCallouts extension with the given options.
 // This follows the standard Goldmark extension initialization pattern.
