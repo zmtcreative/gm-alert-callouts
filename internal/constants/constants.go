@@ -6,6 +6,13 @@ import (
 	gast "github.com/yuin/goldmark/ast"
 )
 
+const (
+	ICONS_NONE = iota
+	ICONS_GFM
+	ICONS_GFM_PLUS
+	ICONS_OBSIDIAN
+)
+
 // Node kinds for different alert components
 var (
 	// KindAlerts is the NodeKind for the alert block.
