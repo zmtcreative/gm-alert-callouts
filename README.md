@@ -14,7 +14,8 @@ the `+` (default open) and `-` (default closed) characters appended to the marke
 the `]` (right square bracket).
 
 > [!NOTE]
-> This extension does **not** directly include any icons -- it just provides the parsing and
+>
+> This extension does **not** include any icons -- it just provides the parsing and
 > rendering functionality to create the alerts/callouts. The user must provide the list of valid
 > alert/callout names with a mapped string (`map[string]string{}`) containing the alert/callout
 > identifier as the key (*e.g., `note`, `important`, etc.*) and the icon as the string value. The
@@ -266,8 +267,9 @@ This project is licensed under the [MIT License](LICENSE.md)
 
 ## Project Lineage
 
-Portions of this software are based on the work of others, used under their
-respective MIT Licenses. Details can be found in the following files:
+Portions of this software are based on the work of others, used under their respective MIT
+Licenses. In keeping with the requirements of the MIT License, here are the license notices for
+these authors:
 
 - [Adam Chovanec](LICENSE-chovanec.md)
 - [Thiago Okada](LICENSE-thiagokokada)
