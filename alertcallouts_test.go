@@ -48,10 +48,10 @@ var casesBasic = [...]TestCase{
 		md: `> [!note]
 > Paragraph
 > over a few lines`,
-		html: `<div class="gh-alert gh-alert-note callout callout-note" data-callout="note"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-note" data-callout="note"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Note</p>
 </div>
-<div class="gh-alert-body callout-body"><p>Paragraph
+<div class="callout-body"><p>Paragraph
 over a few lines</p>
 </div>
 </div>`},
@@ -63,10 +63,10 @@ over a few lines</p>
 >
 > second paragraph with *some* syntax
 `,
-		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-info" data-callout="info"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Info</p>
 </div>
-<div class="gh-alert-body callout-body"><p>paragraph
+<div class="callout-body"><p>paragraph
 over a few lines</p>
 <p>second paragraph with <em>some</em> syntax</p>
 </div>
@@ -79,17 +79,17 @@ over a few lines</p>
 >
 > second paragraph with *some* syntax
 `,
-		html: `<details class="gh-alert gh-alert-info callout callout-foldable callout-info" data-callout="info"><summary class="gh-alert-title callout-title">
+		html: `<details class="callout callout-foldable callout-info" data-callout="info"><summary class="callout-title">
 <svg></svg><p class="callout-title-text">Info</p>
 </summary>
-<div class="gh-alert-body callout-body"><p>paragraph
+<div class="callout-body"><p>paragraph
 over a few lines</p>
 <p>second paragraph with <em>some</em> syntax</p>
 </div>
 </details>`},	{
 		desc: "Alerts without body",
 		md:   `> [!info] title`,
-		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-info" data-callout="info"><div class="callout-title">
 <svg></svg><p class="callout-title-text">title</p>
 </div>
 
@@ -98,10 +98,10 @@ over a few lines</p>
 		desc: "Alerts with list",
 		md: `> [!info]
 > - item`,
-		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-info" data-callout="info"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Info</p>
 </div>
-<div class="gh-alert-body callout-body"><ul>
+<div class="callout-body"><ul>
 <li>item</li>
 </ul>
 </div>
@@ -112,10 +112,10 @@ over a few lines</p>
 > With lots of possibilities:
 > - feature one
 > - feature two`,
-		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-info" data-callout="info"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Info</p>
 </div>
-<div class="gh-alert-body callout-body"><p>With lots of possibilities:</p>
+<div class="callout-body"><p>With lots of possibilities:</p>
 <ul>
 <li>feature one</li>
 <li>feature two</li>
@@ -130,7 +130,7 @@ over a few lines</p>
 `}, {
 		desc: "Syntax in summary",
 		md:   `>[!info] Title with *some* syntax [and](http://example.com) links`,
-		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-info" data-callout="info"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Title with <em>some</em> syntax <a href="http://example.com">and</a> links</p>
 </div>
 
@@ -175,7 +175,7 @@ var casesAdvanced = [...]TestCase{
 	{
 		desc: "Invalid alert type with numbers",
 		md:   `> [!info123] title`,
-		html: `<div class="gh-alert gh-alert-info123 callout callout-info123" data-callout="info123"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-info123" data-callout="info123"><div class="callout-title">
 <svg></svg><p class="callout-title-text">title</p>
 </div>
 
@@ -217,7 +217,7 @@ var casesAdvanced = [...]TestCase{
 	{
 		desc: "Closed alert with dash",
 		md:   `> [!warning]- This is a closed alert`,
-		html: `<details class="gh-alert gh-alert-warning callout callout-foldable callout-warning" data-callout="warning"><summary class="gh-alert-title callout-title">
+		html: `<details class="callout callout-foldable callout-warning" data-callout="warning"><summary class="callout-title">
 <svg></svg><p class="callout-title-text">This is a closed alert</p>
 </summary>
 
@@ -226,7 +226,7 @@ var casesAdvanced = [...]TestCase{
 	{
 		desc: "Open alert with plus",
 		md:   `> [!warning]+ This is an open alert`,
-		html: `<details class="gh-alert gh-alert-warning callout callout-foldable callout-warning" data-callout="warning" open><summary class="gh-alert-title callout-title">
+		html: `<details class="callout callout-foldable callout-warning" data-callout="warning" open><summary class="callout-title">
 <svg></svg><p class="callout-title-text">This is an open alert</p>
 </summary>
 
@@ -236,10 +236,10 @@ var casesAdvanced = [...]TestCase{
 		desc: "Closed alert without title",
 		md: `> [!tip]-
 > content here`,
-		html: `<details class="gh-alert gh-alert-tip callout callout-foldable callout-tip" data-callout="tip"><summary class="gh-alert-title callout-title">
+		html: `<details class="callout callout-foldable callout-tip" data-callout="tip"><summary class="callout-title">
 <svg></svg><p class="callout-title-text">Tip</p>
 </summary>
-<div class="gh-alert-body callout-body"><p>content here</p>
+<div class="callout-body"><p>content here</p>
 </div>
 </details>`,
 	},
@@ -247,10 +247,10 @@ var casesAdvanced = [...]TestCase{
 		desc: "Open alert without title",
 		md: `> [!tip]+
 > content here`,
-		html: `<details class="gh-alert gh-alert-tip callout callout-foldable callout-tip" data-callout="tip" open><summary class="gh-alert-title callout-title">
+		html: `<details class="callout callout-foldable callout-tip" data-callout="tip" open><summary class="callout-title">
 <svg></svg><p class="callout-title-text">Tip</p>
 </summary>
-<div class="gh-alert-body callout-body"><p>content here</p>
+<div class="callout-body"><p>content here</p>
 </div>
 </details>`,
 	},
@@ -259,7 +259,7 @@ var casesAdvanced = [...]TestCase{
 	{
 		desc: "Mixed case alert type",
 		md:   `> [!WaRnInG] Mixed case`,
-		html: `<div class="gh-alert gh-alert-warning callout callout-warning" data-callout="warning"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-warning" data-callout="warning"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Mixed case</p>
 </div>
 
@@ -268,7 +268,7 @@ var casesAdvanced = [...]TestCase{
 	{
 		desc: "Uppercase alert type",
 		md:   `> [!ERROR] Uppercase alert`,
-		html: `<div class="gh-alert gh-alert-error callout callout-error" data-callout="error"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-error" data-callout="error"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Uppercase alert</p>
 </div>
 
@@ -285,10 +285,10 @@ var casesAdvanced = [...]TestCase{
 >   return true;
 > }
 > ` + "```",
-		html: `<div class="gh-alert gh-alert-note callout callout-note" data-callout="note"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-note" data-callout="note"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Note</p>
 </div>
-<div class="gh-alert-body callout-body"><p>Here's some code:</p>
+<div class="callout-body"><p>Here's some code:</p>
 <pre><code>function test() {
   return true;
 }
@@ -300,10 +300,10 @@ var casesAdvanced = [...]TestCase{
 		desc: "Alert with inline code",
 		md: `> [!info]
 > Use the ` + "`alert`" + ` function`,
-		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-info" data-callout="info"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Info</p>
 </div>
-<div class="gh-alert-body callout-body"><p>Use the <code>alert</code> function</p>
+<div class="callout-body"><p>Use the <code>alert</code> function</p>
 </div>
 </div>`,
 	},
@@ -314,10 +314,10 @@ var casesAdvanced = [...]TestCase{
 >   - nested item
 >   - another nested
 > - item 2`,
-		html: `<div class="gh-alert gh-alert-tip callout callout-tip" data-callout="tip"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-tip" data-callout="tip"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Tip</p>
 </div>
-<div class="gh-alert-body callout-body"><ul>
+<div class="callout-body"><ul>
 <li>item 1
 <ul>
 <li>nested item</li>
@@ -335,10 +335,10 @@ var casesAdvanced = [...]TestCase{
 > 1. First step
 > 2. Second step
 > 3. Third step`,
-		html: `<div class="gh-alert gh-alert-important callout callout-important" data-callout="important"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-important" data-callout="important"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Important</p>
 </div>
-<div class="gh-alert-body callout-body"><ol>
+<div class="callout-body"><ol>
 <li>First step</li>
 <li>Second step</li>
 <li>Third step</li>
@@ -351,10 +351,10 @@ var casesAdvanced = [...]TestCase{
 		md: `> [!note]
 > > This is a nested quote
 > > with multiple lines`,
-		html: `<div class="gh-alert gh-alert-note callout callout-note" data-callout="note"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-note" data-callout="note"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Note</p>
 </div>
-<div class="gh-alert-body callout-body"><blockquote>
+<div class="callout-body"><blockquote>
 <p>This is a nested quote
 with multiple lines</p>
 </blockquote>
@@ -370,10 +370,10 @@ with multiple lines</p>
 >
 >
 > Second paragraph after empty lines`,
-		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-info" data-callout="info"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Info</p>
 </div>
-<div class="gh-alert-body callout-body"><p>First paragraph</p>
+<div class="callout-body"><p>First paragraph</p>
 <p>Second paragraph after empty lines</p>
 </div>
 </div>`,
@@ -385,10 +385,10 @@ with multiple lines</p>
 >
 >
 `,
-		html: `<div class="gh-alert gh-alert-warning callout callout-warning" data-callout="warning"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-warning" data-callout="warning"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Warning</p>
 </div>
-<div class="gh-alert-body callout-body"><p>Content here</p>
+<div class="callout-body"><p>Content here</p>
 </div>
 </div>`,
 	},
@@ -397,7 +397,7 @@ with multiple lines</p>
 	{
 		desc: "Alert with HTML entities in title",
 		md:   `> [!note] Title with &amp; <script> tags`,
-		html: `<div class="gh-alert gh-alert-note callout callout-note" data-callout="note"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-note" data-callout="note"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Title with &amp; <!-- raw HTML omitted --> tags</p>
 </div>
 
@@ -407,10 +407,10 @@ with multiple lines</p>
 		desc: "Alert with HTML in content",
 		md: `> [!warning]
 > Be careful with <strong>HTML</strong> & scripts`,
-		html: `<div class="gh-alert gh-alert-warning callout callout-warning" data-callout="warning"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-warning" data-callout="warning"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Warning</p>
 </div>
-<div class="gh-alert-body callout-body"><p>Be careful with <!-- raw HTML omitted -->HTML<!-- raw HTML omitted --> &amp; scripts</p>
+<div class="callout-body"><p>Be careful with <!-- raw HTML omitted -->HTML<!-- raw HTML omitted --> &amp; scripts</p>
 </div>
 </div>`,
 	},
@@ -419,7 +419,7 @@ with multiple lines</p>
 	{
 		desc: "Alert with unicode in title",
 		md:   `> [!info] Título con acentos é çharacters 中文`,
-		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-info" data-callout="info"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Título con acentos é çharacters 中文</p>
 </div>
 
@@ -429,10 +429,10 @@ with multiple lines</p>
 		desc: "Alert with emoji",
 		md: `> [!tip] 🚀 Rocket tip
 > Use emojis sparingly 😊`,
-		html: `<div class="gh-alert gh-alert-tip callout callout-tip" data-callout="tip"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-tip" data-callout="tip"><div class="callout-title">
 <svg></svg><p class="callout-title-text">🚀 Rocket tip</p>
 </div>
-<div class="gh-alert-body callout-body"><p>Use emojis sparingly 😊</p>
+<div class="callout-body"><p>Use emojis sparingly 😊</p>
 </div>
 </div>`,
 	},
@@ -441,7 +441,7 @@ with multiple lines</p>
 	{
 		desc: "Alert with very long title",
 		md:   `> [!note] This is a very long title that goes on and on and on and should still work properly even with lots of text in the title section of the alert`,
-		html: `<div class="gh-alert gh-alert-note callout callout-note" data-callout="note"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-note" data-callout="note"><div class="callout-title">
 <svg></svg><p class="callout-title-text">This is a very long title that goes on and on and on and should still work properly even with lots of text in the title section of the alert</p>
 </div>
 
@@ -451,10 +451,10 @@ with multiple lines</p>
 		desc: "Alert with very long paragraph",
 		md: `> [!info]
 > This is a very long paragraph that contains lots of text and should wrap properly in the alert body. It includes multiple sentences and should demonstrate that the alert can handle substantial amounts of content without any issues. The formatting should remain intact and the HTML output should be properly structured.`,
-		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-info" data-callout="info"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Info</p>
 </div>
-<div class="gh-alert-body callout-body"><p>This is a very long paragraph that contains lots of text and should wrap properly in the alert body. It includes multiple sentences and should demonstrate that the alert can handle substantial amounts of content without any issues. The formatting should remain intact and the HTML output should be properly structured.</p>
+<div class="callout-body"><p>This is a very long paragraph that contains lots of text and should wrap properly in the alert body. It includes multiple sentences and should demonstrate that the alert can handle substantial amounts of content without any issues. The formatting should remain intact and the HTML output should be properly structured.</p>
 </div>
 </div>`,
 	},
@@ -465,10 +465,10 @@ with multiple lines</p>
 		md: `> [!note]
 >	Indented with tab
 >		Double tab indent`,
-		html: `<div class="gh-alert gh-alert-note callout callout-note" data-callout="note"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-note" data-callout="note"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Note</p>
 </div>
-<div class="gh-alert-body callout-body"><blockquote>
+<div class="callout-body"><blockquote>
 <blockquote>
 <p>Indented with tab
 Double tab indent</p>
@@ -483,10 +483,10 @@ Double tab indent</p>
 		desc: "Caution alert type",
 		md: `> [!caution]
 > Be very careful here`,
-		html: `<div class="gh-alert gh-alert-caution callout callout-caution" data-callout="caution"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-caution" data-callout="caution"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Caution</p>
 </div>
-<div class="gh-alert-body callout-body"><p>Be very careful here</p>
+<div class="callout-body"><p>Be very careful here</p>
 </div>
 </div>`,
 	},
@@ -494,10 +494,10 @@ Double tab indent</p>
 		desc: "Important alert type",
 		md: `> [!important] Critical information
 > This is very important`,
-		html: `<div class="gh-alert gh-alert-important callout callout-important" data-callout="important"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-important" data-callout="important"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Critical information</p>
 </div>
-<div class="gh-alert-body callout-body"><p>This is very important</p>
+<div class="callout-body"><p>This is very important</p>
 </div>
 </div>`,
 	},
@@ -510,16 +510,16 @@ Double tab indent</p>
 
 > [!warning]
 > Second alert`,
-		html: `<div class="gh-alert gh-alert-info callout callout-info" data-callout="info"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-info" data-callout="info"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Info</p>
 </div>
-<div class="gh-alert-body callout-body"><p>First alert</p>
+<div class="callout-body"><p>First alert</p>
 </div>
 </div>
-<div class="gh-alert gh-alert-warning callout callout-warning" data-callout="warning"><div class="gh-alert-title callout-title">
+<div class="callout callout-warning" data-callout="warning"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Warning</p>
 </div>
-<div class="gh-alert-body callout-body"><p>Second alert</p>
+<div class="callout-body"><p>Second alert</p>
 </div>
 </div>`,
 	},
@@ -546,10 +546,10 @@ var casesWithIcons = [...]TestCase{
 		desc: "Alert with icon",
 		md: `> [!note]
 > Content with icon`,
-		html: `<div class="gh-alert gh-alert-note callout callout-note" data-callout="note"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-note" data-callout="note"><div class="callout-title">
 📝<p class="callout-title-text">Note</p>
 </div>
-<div class="gh-alert-body callout-body"><p>Content with icon</p>
+<div class="callout-body"><p>Content with icon</p>
 </div>
 </div>`,
 	},
@@ -557,10 +557,10 @@ var casesWithIcons = [...]TestCase{
 		desc: "Alert using 'noicon' to suppress icon",
 		md: `> [!noicon] Error
 > No icon for this type`,
-		html: `<div class="gh-alert gh-alert-error callout callout-error" data-callout="error"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-error" data-callout="error"><div class="callout-title">
 <p class="callout-title-text">Error</p>
 </div>
-<div class="gh-alert-body callout-body"><p>No icon for this type</p>
+<div class="callout-body"><p>No icon for this type</p>
 </div>
 </div>`,
 	},
@@ -568,17 +568,17 @@ var casesWithIcons = [...]TestCase{
 		desc: "Alert using 'noicon' to suppress icon with complex title formatting",
 		md: `> [!noicon] Error **BAD* [text](#link) ` + "`some code`" + `
 > No icon for this type`,
-		html: `<div class="gh-alert gh-alert-error-bad callout callout-error-bad" data-callout="error-bad"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-error-bad" data-callout="error-bad"><div class="callout-title">
 <p class="callout-title-text">Error *<em>BAD</em> <a href="#link">text</a> <code>some code</code></p>
 </div>
-<div class="gh-alert-body callout-body"><p>No icon for this type</p>
+<div class="callout-body"><p>No icon for this type</p>
 </div>
 </div>`,
 	},
 	{
 		desc: "Custom title with icon",
 		md:   `> [!tip] Custom tip title`,
-		html: `<div class="gh-alert gh-alert-tip callout callout-tip" data-callout="tip"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-tip" data-callout="tip"><div class="callout-title">
 💡<p class="callout-title-text">Custom tip title</p>
 </div>
 
@@ -587,7 +587,7 @@ var casesWithIcons = [...]TestCase{
 	{
 		desc: "Unsupported alert type 'cite' should use 'note' icon",
 		md:   `> [!cite]`,
-		html: `<div class="gh-alert gh-alert-cite callout callout-cite" data-callout="cite"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-cite" data-callout="cite"><div class="callout-title">
 📝<p class="callout-title-text">Cite</p>
 </div>
 
@@ -596,7 +596,7 @@ var casesWithIcons = [...]TestCase{
 	{
 		desc: "Unsupported alert type 'cite' with 'Quote' title should use 'note' icon",
 		md:   `> [!cite] Quote`,
-		html: `<div class="gh-alert gh-alert-cite callout callout-cite" data-callout="cite"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-cite" data-callout="cite"><div class="callout-title">
 📝<p class="callout-title-text">Quote</p>
 </div>
 
@@ -604,22 +604,33 @@ var casesWithIcons = [...]TestCase{
 	},
 }
 
-// Test with no icons configuration
-var mdNoIcons = goldmark.New(
+// Test with default GFM icons configuration
+var mdGFMIcons = goldmark.New(
 	goldmark.WithExtensions(
 		AlertCallouts,
 	),
 )
 
-var casesNoIcons = [...]TestCase{
+var casesGFMIcons = [...]TestCase{
 	{
-		desc: "Alert without any icons configured",
+		desc: "Initialized with default GFM icons -- basic note",
 		md: `> [!note]
-> Content without icon`,
-		html: `<div class="gh-alert gh-alert-note callout callout-note" data-callout="note"><div class="gh-alert-title callout-title">
-<p class="callout-title-text">Note</p>
+> Content with GFM note icon`,
+		html: `<div class="callout callout-note iconset-gfm" data-callout="note"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">Note</p>
 </div>
-<div class="gh-alert-body callout-body"><p>Content without icon</p>
+<div class="callout-body"><p>Content with GFM note icon</p>
+</div>
+</div>`,
+	},
+	{
+		desc: "Initialized with default GFM icons -- custom title with important icon",
+		md: `> [!important] Shout-Out
+> Content for shout-out.`,
+		html: `<div class="callout callout-important iconset-gfm" data-callout="important"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square-warning-icon lucide-message-square-warning"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M12 7v2"/><path d="M12 13h.01"/></svg><p class="callout-title-text">Shout-Out</p>
+</div>
+<div class="callout-body"><p>Content for shout-out.</p>
 </div>
 </div>`,
 	},
@@ -638,7 +649,7 @@ var casesDisableFolding = [...]TestCase{
 		desc: "Alert with no folding symbol",
 		md:   `> [!note]
 Test`,
-		html: `<div class="gh-alert gh-alert-note callout callout-note" data-callout="note"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-note" data-callout="note"><div class="callout-title">
 <p class="callout-title-text">Note</p>
 </div>
 
@@ -650,7 +661,7 @@ Test`,
 		desc: "Closed alert with dash",
 		md:   `> [!warning]-
 This is a closed alert`,
-		html: `<div class="gh-alert gh-alert-warning callout callout-warning" data-callout="warning"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-warning" data-callout="warning"><div class="callout-title">
 <p class="callout-title-text">Warning</p>
 </div>
 
@@ -661,7 +672,7 @@ This is a closed alert`,
 		desc: "Open alert with plus",
 		md:   `> [!warning]+
 This is an open alert`,
-		html: `<div class="gh-alert gh-alert-warning callout callout-warning" data-callout="warning"><div class="gh-alert-title callout-title">
+		html: `<div class="callout callout-warning" data-callout="warning"><div class="callout-title">
 <p class="callout-title-text">Warning</p>
 </div>
 
@@ -697,7 +708,7 @@ func TestAlerts(t *testing.T) {
 		}
 	})
 
-	t.Run("DisabledFolding", func(t *testing.T) {
+	t.Run("DisabledFoldingNoIcons", func(t *testing.T) {
 		for i, c := range casesDisableFolding {
 			t.Run(c.desc, func(t *testing.T) {
 				testutil.DoTestCase(mdDisableFolding, testutil.MarkdownTestCase{
@@ -723,10 +734,10 @@ func TestAlerts(t *testing.T) {
 		}
 	})
 
-	t.Run("WithoutIcons", func(t *testing.T) {
-		for i, c := range casesNoIcons {
+	t.Run("WithGFMIcons", func(t *testing.T) {
+		for i, c := range casesGFMIcons {
 			t.Run(c.desc, func(t *testing.T) {
-				testutil.DoTestCase(mdNoIcons, testutil.MarkdownTestCase{
+				testutil.DoTestCase(mdGFMIcons, testutil.MarkdownTestCase{
 					No:          i,
 					Description: c.desc,
 					Markdown:    c.md,
@@ -1054,8 +1065,8 @@ func TestNewAlertCalloutsIntegration(t *testing.T) {
 		result := output.String()
 
 		// Check that the extension is working
-		if !strings.Contains(result, "gh-alert-note") {
-			t.Error("Expected output to contain gh-alert-note class")
+		if !strings.Contains(result, "") {
+			t.Error("Expected output to contain class")
 		}
 
 		if !strings.Contains(result, "<svg>note-icon</svg>") {
@@ -1082,7 +1093,7 @@ func TestNewAlertCalloutsIntegration(t *testing.T) {
 
 		// Should still produce alert output (even without icons)
 		result := output.String()
-		if !strings.Contains(result, "gh-alert-note") {
+		if !strings.Contains(result, "") {
 			t.Error("Expected backwards compatibility to work")
 		}
 	})
