@@ -15,14 +15,14 @@ This is a list of things we may implement or improve as development continues.
 - [ ] Add option(s) to set custom classes (and/or attributes) for HTML elements during rendering
 - [x] Add `NewAlertCallouts()` calling function to provide more complex setup options moving
       forward
-- [ ] Add `MakeIconMap()` helper function to allow users to pass custom icon configuration data
+- [x] Add `CreateIconMap()` helper function to allow users to pass custom icon configuration data
       using a specially-formatted custom list of markers and icon definitions (*see [Custom Icon
       Definition File](#custom-icon-definition-file) later in this document*)
-  - [ ] Add `assets` folder to hold icon file maps for embedding
+  - [x] Add `assets` folder to hold icon file maps for embedding
 
 ## Rendering
 
-- [ ] **Cleanup** -- Remove legacy `gh-alerts` and related classes from HTML element output
+- [x] **Cleanup** -- Remove legacy `gh-alerts` and related classes from HTML element output
 - [ ] Insert custom classes into specific HTML elements as defined during the extension initialization process.
 
 ## Custom Icon Definition File
@@ -46,6 +46,6 @@ info|<svg xmlns="http://www.w3.org/2000/svg" ...rest of svg code here.../></svg>
 summary->abstract
 ```
 
-The proposed `MakeIconMap()` function would take a `string` value containing the text data as shown
-above and parse it into a `map[string]string` variable and return that variable when parsing is
+The implemented `CreateIconMap()` function takes a `string` value containing the text data as shown
+above and parses it into a `map[string]string` variable and returns that variable when parsing is
 complete.
