@@ -16,11 +16,11 @@ import (
 //go:embed assets/css/alertcallouts-gfmplus.css
 var cssData []byte
 
-//go:embed assets/markdown/sample.md
+//go:embed assets/markdown/sample-gfmplus.md
 var sample string
 
-//go:embed assets/iconsets/alertcallouts-simple.icons
-var iconSet string
+// //go:embed assets/iconsets/alertcallouts-simple.icons
+// var iconSet string
 
 func main() {
 	md := CreateGoldmarkInstance(createOptions{
@@ -76,8 +76,8 @@ func CreateGoldmarkInstance(opt createOptions) goldmark.Markdown {
 		// myIcons := InitAlertCalloutsIcons() // Initialize alert icons
 		alertCalloutsOpts := alertcallouts.NewAlertCallouts(
 			// alertcallouts.WithIcons(myIcons),
-			// alertcallouts.UseGFMPlusIcons(),
-			alertcallouts.WithIcons(alertcallouts.CreateIconsMap(iconSet)),
+			alertcallouts.UseGFMPlusIcons(),
+			// alertcallouts.WithIcons(alertcallouts.CreateIconsMap(iconSet)),
 			alertcallouts.WithFolding(true),
 		)
 		options = append(options,
