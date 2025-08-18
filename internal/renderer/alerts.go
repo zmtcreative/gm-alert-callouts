@@ -44,7 +44,7 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 		} else if typeStr, isStr := t.(string); isStr {
 			alertType = strings.ToLower(typeStr)
 		}
-		// Check if the alertType is "noicon" or one of its variants
+		// Check if the alertType is "noicon" or one of its variants (none, nil or null)
 		if utils.IsNoIconKind(alertType) {
 			// If the alertType is "noicon", we want to use the "title" if it exists
 			// but we need to set the alertType to "default" in case there isn't a title
