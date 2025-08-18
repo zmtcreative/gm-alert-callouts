@@ -63,6 +63,26 @@ func TestAlertCalloutsCore(t *testing.T) {
 </details>`,
 		},
 		{
+			desc: "Valid alert name - names CAN contain underscores",
+			md: `> [!tip_one]
+> Content here`,
+			html: `<div class="callout callout-tip_one" data-callout="tip_one"><div class="callout-title">
+<svg></svg><p class="callout-title-text">Tip_one</p>
+</div>
+<div class="callout-body"><p>Content here</p>
+</div>
+</div>`,
+		},
+		{
+			desc: "Invalid alert name - names cannot contain dashes",
+			md: `> [!tip-one]
+> Content here`,
+			html: `<blockquote>
+<p>[!tip-one]
+Content here</p>
+</blockquote>`,
+		},
+		{
 			desc: "Not an alert (regular blockquote)",
 			md:   `> This is a blockquote`,
 			html: `<blockquote>
