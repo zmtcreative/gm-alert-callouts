@@ -44,6 +44,7 @@ func NewAlertsHeaderHTMLRenderer(foldingEnabled FoldingEnabled, defaultIcons int
 		Config:      html.NewConfig(),
 		FoldingEnabled: foldingEnabled,
 		DefaultIcons: defaultIcons,
+		titleCaser: cases.Title(language.English, cases.Compact),
 	}
 	for _, opt := range opts {
 		opt.SetHTMLOption(&r.Config)
