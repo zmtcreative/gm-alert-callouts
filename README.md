@@ -271,5 +271,5 @@ Portions of this software are based on the work of others, used under their resp
 Licenses. In keeping with the requirements of the MIT License, here are the license notices for
 these authors:
 
-- [Adam Chovanec](LICENSE-chovanec.md)
-- [Thiago Okada](LICENSE-thiagokokada)
+- [Adam Chovanec](docs/LICENSE-chovanec.md)
+- [Thiago Okada](docs/LICENSE-thiagokokada.md)
