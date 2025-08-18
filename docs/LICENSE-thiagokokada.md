@@ -24,4 +24,4 @@ SOFTWARE.
 
 - [thiagokokada/goldmark-gh-alerts](https://github.com/thiagokokada/goldmark-gh-alerts)
 
-[<-back](LICENSE.md)
+[<-back](../README.md)

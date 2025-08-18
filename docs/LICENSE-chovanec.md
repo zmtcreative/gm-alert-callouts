@@ -24,4 +24,4 @@ SOFTWARE.
 
 - [staticnoise/goldmark-callout](https://gitlab.com/staticnoise/goldmark-callout)
 
-[<-back](LICENSE.md)
+[<-back](../README.md)
