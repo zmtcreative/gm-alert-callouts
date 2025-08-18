@@ -3,7 +3,9 @@ package main
 import (
 	"bytes"
 	_ "embed"
+	"flag"
 	"fmt"
+	"os"
 	"strings"
 
 	alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
@@ -17,19 +19,35 @@ import (
 var cssData []byte
 
 //go:embed assets/markdown/sample-gfmplus.md
-var sample string
-
-// //go:embed assets/iconsets/alertcallouts-simple.icons
-// var iconSet string
+var defaultSample string
 
 func main() {
+	// Define command line flags
+	var filename string
+	flag.StringVar(&filename, "f", "", "Markdown file to process")
+	flag.StringVar(&filename, "file", "", "Markdown file to process")
+	flag.Parse()
+
 	md := CreateGoldmarkInstance(createOptions{
 		useAlertCallouts: true,
-		enableGFM:   true,
+		enableGFM:       true,
 	})
 
-	// Example markdown with GitHub alerts (read from embedded sample)
-	mdSource := sample
+	// Determine markdown source
+	var mdSource string
+	if filename != "" {
+		// Read from specified file
+		sampleFile, err := os.ReadFile(filename)
+		if err != nil {
+			fmt.Printf("Error reading file %s: %v\n", filename, err)
+			os.Exit(1)
+		}
+		mdSource = string(sampleFile)
+	} else {
+		// Use default embedded sample
+		mdSource = defaultSample
+	}
+
 	// Convert CRLF line endings to LF for consistency in processing markdown source
 	// (some plugins perform better with LF line endings -- not sure why, but this has been our experience)
 	mdSource = strings.ReplaceAll(mdSource, "\r\n", "\n")
@@ -38,7 +56,7 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Printf(`<html><head><style type="text/css">%s</style></head><body>%s</body></html>`, cssData, buf.String())
+	fmt.Printf(`<html><head><meta http-equiv="refresh" content="10"><style type="text/css">%s</style></head><body>%s</body></html>`, cssData, buf.String())
 }
 
 type createOptions struct {
