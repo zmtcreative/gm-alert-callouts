@@ -7,6 +7,7 @@ import (
 
 // IsNoIconKind returns true if the kind string indicates that no icon should be rendered.
 func IsNoIconKind(kind string) bool {
+	kind = strings.ToLower(strings.TrimSpace(kind))
 	switch kind {
 	case "noicon", "no-icon", "nil", "null":
 		return true
