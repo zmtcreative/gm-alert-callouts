@@ -211,7 +211,7 @@ func TestAlertsHeaderHTMLRendererNoIconKinds(t *testing.T) {
 		"default": "<svg>default-icon</svg>",
 	}
 
-	testCases := []string{"noicon", "no-icon", "nil", "null"}
+	testCases := []string{"noicon", "no_icon", "none", "nil", "null"}
 
 	for _, kind := range testCases {
 		t.Run("No icon for "+kind, func(t *testing.T) {
@@ -226,7 +226,7 @@ func TestAlertsHeaderHTMLRendererNoIconKinds(t *testing.T) {
 			}
 
 			html := writer.String()
-			// Should not contain any icons for no-icon kinds
+			// Should not contain any icons for noicon kinds
 			if strings.Contains(html, "<svg>") {
 				t.Errorf("Expected no icon for kind %s, but found icon in: %s", kind, html)
 			}

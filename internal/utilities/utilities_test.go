@@ -12,7 +12,8 @@ func TestIsNoIconKind(t *testing.T) {
 		desc     string
 	}{
 		{"noicon", true, "noicon should return true"},
-		{"none", true, "no-icon should return true"},
+		{"no_icon", true, "no_icon should return true"},
+		{"none", true, "none should return true"},
 		{"nil", true, "nil should return true"},
 		{"null", true, "null should return true"},
 		{"note", false, "note should return false"},
@@ -20,7 +21,8 @@ func TestIsNoIconKind(t *testing.T) {
 		{"info", false, "info should return false"},
 		{"", false, "empty string should return false"},
 		{"NoIcon", true, "NoIcon (capitalized) should return true"},
-		{"NO-ICON", false, "NO-ICON (uppercase) should return false"},
+		{"NOICON", true, "NOICON (uppercase) should return true"},
+		{"NO-ICON", false, "NO-ICON (with dash) should return false"},
 	}
 
 	for _, tc := range testCases {
@@ -307,4 +309,67 @@ key-no-value|`
 			t.Errorf("Expected 'valid|<svg>another</svg>', got '%s'", result["another"])
 		}
 	})
+}
+
+func TestCreateIconsMapValidation(t *testing.T) {
+	testData := `
+# Valid entries
+note|<svg>note-icon</svg>
+tip|<svg>tip-icon</svg>
+warning|<svg>warning-icon</svg>
+info_2|<svg>info2-icon</svg>
+Test123|<svg>test123-icon</svg>
+
+# Valid aliases
+info->note
+hints->tip
+
+# Invalid entries (should be skipped)
+no-icon|<svg>invalid-icon</svg>
+test-case|<svg>invalid-icon</svg>
+my@icon|<svg>invalid-icon</svg>
+icon with spaces|<svg>invalid-icon</svg>
+
+# Invalid aliases (should be skipped)
+no-alias->note
+info->no-primary
+special@alias->note
+`
+
+	iconMap := CreateIconsMap(testData)
+
+	// Test that valid entries are included
+	validKeys := []string{"note", "tip", "warning", "info_2", "Test123", "info", "hints"}
+	for _, key := range validKeys {
+		if _, exists := iconMap[key]; !exists {
+			t.Errorf("Expected valid key '%s' to exist in iconMap", key)
+		}
+	}
+
+	// Test that invalid entries are excluded
+	invalidKeys := []string{"no-icon", "test-case", "my@icon", "icon with spaces", "no-alias", "special@alias"}
+	for _, key := range invalidKeys {
+		if _, exists := iconMap[key]; exists {
+			t.Errorf("Expected invalid key '%s' to be excluded from iconMap", key)
+		}
+	}
+
+	// Test that aliases with invalid primary references are excluded
+	if _, exists := iconMap["info"]; !exists {
+		t.Error("Expected valid alias 'info' to exist")
+	}
+
+	// Verify counts
+	expectedCount := len(validKeys) // 7 valid entries total
+	if len(iconMap) != expectedCount {
+		t.Errorf("Expected iconMap to have %d entries, got %d. Keys: %v", expectedCount, len(iconMap), getKeys(iconMap))
+	}
+}
+
+func getKeys(m map[string]string) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	return keys
 }
