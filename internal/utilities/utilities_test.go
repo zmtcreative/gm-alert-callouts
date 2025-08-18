@@ -19,8 +19,9 @@ func TestIsNoIconKind(t *testing.T) {
 		{"warning", false, "warning should return false"},
 		{"info", false, "info should return false"},
 		{"", false, "empty string should return false"},
-		{"NoIcon", false, "NoIcon (capitalized) should return false"},
-		{"NO-ICON", false, "NO-ICON (uppercase) should return false"},
+		{"none", false, "none should return false"},
+		{"NoIcon", true, "NoIcon (capitalized) should return true"},
+		{"NO-ICON", true, "NO-ICON (uppercase) should return true"},
 	}
 
 	for _, tc := range testCases {
