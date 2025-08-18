@@ -1,0 +1,43 @@
+{
+	"name": "alertcallouts-icons-syntax",
+	"displayName": "Alert Callouts Icons Syntax",
+	"description": "Syntax highlighting for Alert Callouts (a Goldmark Extension) Icons definition files",
+	"version": "1.0.1",
+	"publisher": "local",
+	"engines": {
+		"vscode": "^1.74.0"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"contributes": {
+		"languages": [
+			{
+				"id": "zmtc.alertcallouts-icons",
+				"aliases": [
+					"Alert Callouts Icons",
+					"alert-callouts-icons",
+					"alertcallouts-icons"
+				],
+				"extensions": [
+					".acicons",
+					".acicon",
+					".aci",
+					".icons"
+				],
+				"filenames": [
+					"alertcallouts-icons",
+					"alertcallout-icons"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "zmtc.alertcallouts-icons",
+				"scopeName": "source.alertcallouts-icons",
+				"path": "./syntaxes/alertcallouts-icons.tmLanguage.json"
+			}
+		]
+	}
+}
