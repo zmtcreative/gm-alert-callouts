@@ -77,3 +77,41 @@ You can use the custom title to set any title and use an existing recognized mar
 > [!Important] TL;DR
 >
 > This is a TL;DR (To Long; Didn't Read) callout, but using the IMPORTANT marker so it uses the color and icon of IMPORTANT.
+
+---
+
+```markdown
+> [!unknown]
+>
+> This callout uses an 'unknown' marker name. It defaults to using the "note" icon.
+```
+
+> [!unknown]
+>
+> This callout uses an 'unknown' marker name. It defaults to using the "note" icon.
+
+---
+
+Using `[!noicon]` to create a callout without an icon. By default, this will use the "note", "info" or "default" icon definition (in that order). If none of these three icon kinds have been set, no icon will be used AND
+
+```markdown
+> [!noicon]
+>
+> This callout will not use an icon but will use the marker text 'Noicon' for the header title.
+```
+
+> [!noicon]
+>
+> This callout will not use an icon but will use the marker text 'Noicon' for the header title.
+
+...using a custom title "Wisdom" (still styled as a "note")
+
+```markdown
+> [!noicon] Wisdom
+>
+> This callout will not use an icon but will use the marker text 'Wisdom' for the header title.
+```
+
+> [!noicon] Wisdom
+>
+> This callout will not use an icon but will use the marker text 'Wisdom' for the header title.
