@@ -441,10 +441,21 @@ If an alert type has no configured icon:
 - HTML structure remains consistent
 - No errors are thrown
 
+### Using NoIcon to Force Alert Without Icon
+
+- **This is a feature unique to this extension and is not defined in GFM or Obsidian Alerts/Callouts!**
+- Use `[!NOICON] Warning` to render a 'Warning' alert without an icon and will be styled like a
+  normal 'Warning' alert (*assuming 'Warning' is a valid alert type*)
+- Use `[!NOICON] UnknownAlertType` to render alert with title 'UnknownAlertType' and no icon
+- Using `[!NOICON]` without a custom title will render the alert with 'Noicon' as the alert title
+- (*run the example code in the `examples` folder for more details*)
+- Variants (case-insensitive): `no_icon`, `none`, `nil` and `null`
+
 ### Invalid Alert Types
 
-Invalid or unrecognized alert types:
+Invalid alert types:
 
+- Alert types can only contain letters, numbers and underscores (no dashes or other punctuation)
 - Fall back to standard blockquote rendering
 - Goldmark's default blockquote parser handles the content
 

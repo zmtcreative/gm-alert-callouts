@@ -260,8 +260,8 @@ func TestAlertsHTMLRendererNoIconKind(t *testing.T) {
 			expected: "custom-alert", // should use cleaned title
 		},
 		{
-			name:     "No-icon with title",
-			kind:     "no-icon",
+			name:     "No_icon with title",
+			kind:     "no_icon",
 			title:    "Another Custom",
 			expected: "another-custom",
 		},
@@ -281,7 +281,7 @@ func TestAlertsHTMLRendererNoIconKind(t *testing.T) {
 			name:     "No icon without title",
 			kind:     "noicon",
 			title:    "",
-			expected: "noicon", // should fall back to kind
+			expected: "default", // should be default
 		},
 	}
 

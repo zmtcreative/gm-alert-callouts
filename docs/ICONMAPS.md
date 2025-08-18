@@ -1,5 +1,7 @@
 # Icon Customization Guide
 
+<!-- markdownlint-disable MD033 -->
+
 [<-back to README](../README.md)
 
 This guide explains how to create custom icons and icon maps for the `gm-alert-callouts` extension.
@@ -51,12 +53,15 @@ The icon definition format supports:
 #### Format Rules
 
 1. **Core Definitions**: Use `key|svg_content`
-   - `key`: Alert type identifier (lowercase recommended)
+   - `key`: Alert type identifier (*lowercase recommended*) <br/>(*can only contain
+     letters, numbers and underscores -- no dashes, punctuation or symbols*)
    - `svg_content`: Complete SVG markup
+   - **Lines with invalid `key` values will be skipped**
 
 2. **Aliases**: Use `alias->primary_key`
-   - `alias`: Alternative name for an alert type
-   - `primary_key`: Must reference an existing core definition
+   - `alias`: Alternative name for an alert type (*same naming requirements as `key`*)
+   - `primary_key`: Must reference an existing core definition (*same naming requirements as `key`*)
+   - **Lines with invalid `alias` or `primary` values will be skipped**
 
 3. **Comments and Whitespace**:
    - Lines starting with `#` are comments
@@ -65,7 +70,7 @@ The icon definition format supports:
 
 #### Example Icon Definition File
 
-```text
+```properties
 # Custom Alert Icons
 # Core GitHub alert types with Lucide icons
 
@@ -90,7 +95,7 @@ Use Go's `//go:embed` directive to embed icon definition files at compile time:
 
 **File: `icons/custom.icons`**
 
-```text
+```properties
 # My Custom Icons
 note|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>
 warning|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>

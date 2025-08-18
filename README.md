@@ -170,3 +170,12 @@ For complete HTML structure details and CSS class reference, see the [API Refere
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## Project Lineage
+
+Portions of this software are based on the work of others, used under their respective MIT
+Licenses. In keeping with the requirements of the MIT License, here are the license notices for
+these authors:
+
+- [Adam Chovanec](docs/LICENSE-chovanec.md)
+- [Thiago Okada](docs/LICENSE-thiagokokada.md)
