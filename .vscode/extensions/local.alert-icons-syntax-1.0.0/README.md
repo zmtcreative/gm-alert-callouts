@@ -1,10 +1,10 @@
 # Alert Icons Syntax
 
-VS Code syntax highlighting for Alert Icons definition files.
+VS Code syntax highlighting for the Alert Callouts (*a Goldmark Extension*) Icons definition files.
 
 ## Features
 
-- Syntax highlighting for `.acicons`, `.acicon`, and `.aci` files
+- Syntax highlighting for `.acicons`, `.acicon`, `.aci`, and `.icons` files
 - Support for comments (lines starting with `#`)
 - Highlighting of icon definitions (`key|<svg>...</svg>`)
 - Support for aliases (`alias -> target`)
@@ -13,12 +13,13 @@ VS Code syntax highlighting for Alert Icons definition files.
 ## File Format
 
 The extension recognizes files with:
-- Extensions: `.acicons`, `.acicon`, `.aci`
-- Filenames: `alertcallouts-icons`, `alertcallouts.icons`, `alertcallout-icons`, `alertcallout.icons`
+
+- Extensions: `.acicons`, `.acicon`, `.aci`, `.icons`
+- Filenames: `alertcallouts-icons`, `alertcallout-icons`
 
 ### Syntax Examples
 
-```
+```properties
 # This is a comment
 warning|<svg viewBox="0 0 24 24" fill="currentColor"><path d="..."/></svg>
 error -> warning
