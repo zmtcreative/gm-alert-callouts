@@ -1,59 +1,105 @@
-# Custom Icon Maps for gm-alert-callouts
+# Icon Customization Guide
 
-This document explains how to create custom icon files and use them with the
-`gm-alert-callouts` Goldmark extension.
+[<-back](../README.md)
 
-> [!NOTE]
->
-> The project and this document are still under heavy development. It is possible that information
-> in this document has not been updated with recent changes to the API for this extension.
+This guide explains how to create custom icons and icon maps for the `gm-alert-callouts` extension.
 
 ## Overview
 
-The `gm-alert-callouts` extension supports custom icon sets through `.icons` files and the
-`CreateIconsMap()` function. This allows you to define your own SVG icons for alert callouts or
-modify existing icon sets to match your design requirements.
+The `gm-alert-callouts` extension uses SVG icons to visually distinguish different alert types. You can customize these icons using:
 
-## Icon File Format
+- Built-in icon sets (GFM, GFM Plus, Obsidian)
+- Custom icon maps created programmatically
+- Icon definition files with the `CreateIconsMap()` function
+- Individual icon overrides
 
-Icon files use a simple text format with the following structure:
+> [!IMPORTANT]
+>
+> When adding custom icons and icon sets in `gm-alert-callouts` you are **only** inserting the icon
+> code into the HTML output. You still need to create the necessary CSS styling to format the final
+> alert/callout style. An example of a CSS style file for the `GFM Plus` built-in icon set can be
+> found in the `examples/css/alertcallouts-gfmplus.css` file. This should provide a starting point
+> for customizing the styling for your project.
 
-```text
-# Comments start with # and are ignored
-# Blank lines are also ignored
+## CreateIconsMap Function
 
-# Core icon definitions use: key|svg_content
-note|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>
-tip|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>
+### Function Signature
 
-# Alias definitions use: alias->primary_key
-info->note
-hint->tip
+```go
+func CreateIconsMap(iconData string) map[string]string
 ```
 
-### Format Rules
+Parses icon data in a specific format and returns a map suitable for use with the `WithIcons()` option.
 
-1. **Comments**: Lines starting with `#` are treated as comments and ignored
-2. **Blank lines**: Empty lines are ignored
-3. **Core definitions**: Use the format `key|svg_content` where:
-   - `key` is the alert type name (e.g., `note`, `tip`, `warning`)
-   - `svg_content` is the complete SVG markup for the icon
-4. **Aliases**: Use the format `alias->primary_key` where:
-   - `alias` is an alternative name that maps to an existing key
-   - `primary_key` must reference a key that has been defined with SVG content
+**Parameters:**
 
-### Icon Key Guidelines
+- `iconData string`: Icon definitions in the defined text format
 
-- Keys are case-sensitive
-- Keys should contain only lowercase letters, numbers, and hyphens
-- Standard GitHub alert types are: `note`, `tip`, `important`, `warning`, `caution`
-- You can define additional custom keys as needed
+**Returns:**
 
-## Using Custom Icon Files
+- `map[string]string`: Map where keys are alert types and values are SVG markup
 
-### Method 1: Embedding with go:embed
+### Icon Definition Format
 
-This is the recommended approach for packaging icons with your application:
+The icon definition format supports:
+
+- **Comments**: Lines starting with `#` (ignored during parsing)
+- **Blank lines**: Empty lines (ignored during parsing)
+- **Core definitions**: `key|svg_content` format
+- **Aliases**: `alias->primary_key` format
+
+#### Format Rules
+
+1. **Core Definitions**: Use `key|svg_content`
+   - `key`: Alert type identifier (lowercase recommended)
+   - `svg_content`: Complete SVG markup
+
+2. **Aliases**: Use `alias->primary_key`
+   - `alias`: Alternative name for an alert type
+   - `primary_key`: Must reference an existing core definition
+
+3. **Comments and Whitespace**:
+   - Lines starting with `#` are comments
+   - Blank lines are ignored
+   - Leading/trailing whitespace is trimmed
+
+#### Example Icon Definition File
+
+```text
+# Custom Alert Icons
+# Core GitHub alert types with Lucide icons
+
+note|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+tip|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+important|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M12 7v2"/><path d="M12 13h.01"/></svg>
+warning|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+caution|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16h.01"/><path d="M12 8v4"/><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z"/></svg>
+
+# Common aliases for GitHub compatibility
+info->note
+hint->tip
+danger->caution
+error->caution
+```
+
+## Usage Methods
+
+### Method 1: Embedded Icon Files (Recommended)
+
+Use Go's `//go:embed` directive to embed icon definition files at compile time:
+
+**File: `icons/custom.icons`**
+
+```text
+# My Custom Icons
+note|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>
+warning|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>
+
+# Aliases
+info->note
+```
+
+**File: `main.go`**
 
 ```go
 package main
@@ -62,17 +108,17 @@ import (
     _ "embed"
 
     "github.com/yuin/goldmark"
-    "github.com/ZMT-Creative/gm-alert-callouts"
+    alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
 )
 
-//go:embed path/to/your/custom.icons
+//go:embed icons/custom.icons
 var customIconData string
 
 func main() {
-    // Create the icon map from your embedded data
+    // Create icon map from embedded data
     customIcons := alertcallouts.CreateIconsMap(customIconData)
 
-    // Use with the extension
+    // Use with extension
     md := goldmark.New(
         goldmark.WithExtensions(
             alertcallouts.NewAlertCallouts(
@@ -86,9 +132,9 @@ func main() {
 }
 ```
 
-### Method 2: Loading from File at Runtime
+### Method 2: Runtime File Loading
 
-For dynamic icon loading:
+Load icon definition files at runtime:
 
 ```go
 package main
@@ -97,66 +143,94 @@ import (
     "os"
 
     "github.com/yuin/goldmark"
-    "github.com/ZMT-Creative/gm-alert-callouts"
+    alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
 )
 
 func main() {
     // Read icon file at runtime
-    iconData, err := os.ReadFile("path/to/your/custom.icons")
+    iconData, err := os.ReadFile("path/to/icons.icons")
     if err != nil {
-        // Handle error
-        return
+        panic(err)
     }
 
-    // Create the icon map
+    // Parse icons
     customIcons := alertcallouts.CreateIconsMap(string(iconData))
 
-    // Use with the extension
-    md := goldmark.New(
-        goldmark.WithExtensions(
-            alertcallouts.NewAlertCallouts(
-                alertcallouts.WithIcons(customIcons),
-            ),
-        ),
+    // Create extension
+    extension := alertcallouts.NewAlertCallouts(
+        alertcallouts.WithIcons(customIcons),
+        alertcallouts.WithFolding(true),
     )
+
+    md := goldmark.New(goldmark.WithExtensions(extension))
 }
 ```
 
-### Method 3: Programmatic Icon Definition
+### Method 3: Inline String Data
 
-For simple customizations without files:
+Define icon data directly in code:
 
 ```go
 package main
 
 import (
     "github.com/yuin/goldmark"
-    "github.com/ZMT-Creative/gm-alert-callouts"
+    alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
 )
 
 func main() {
-    md := goldmark.New(
-        goldmark.WithExtensions(
-            alertcallouts.NewAlertCallouts(
-                alertcallouts.WithIcon("note", `<svg>...</svg>`),
-                alertcallouts.WithIcon("tip", `<svg>...</svg>`),
-                alertcallouts.UseGFMIcons(), // Load defaults first
-            ),
-        ),
+    iconData := `# Inline Icon Definitions
+note|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>
+warning|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>
+
+info->note
+`
+
+    customIcons := alertcallouts.CreateIconsMap(iconData)
+
+    extension := alertcallouts.NewAlertCallouts(
+        alertcallouts.WithIcons(customIcons),
+        alertcallouts.WithFolding(true),
     )
+
+    md := goldmark.New(goldmark.WithExtensions(extension))
 }
 ```
 
-## Creating SVG Icons
+### Method 4: Programmatic Icon Maps
 
-### Best Practices
+Create icon maps directly without using `CreateIconsMap()`:
 
-1. **Consistent sizing**: Use `width="24" height="24"` for consistency with built-in icons
-2. **Scalable design**: Use `viewBox="0 0 24 24"` to ensure proper scaling
-3. **Styling**: Include appropriate classes and use `stroke="currentColor"` to inherit text color
-4. **Accessibility**: Ensure icons are recognizable at small sizes
+```go
+package main
 
-### Example SVG Structure
+import (
+    "github.com/yuin/goldmark"
+    alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
+)
+
+func main() {
+    // Define icons programmatically
+    customIcons := map[string]string{
+        "note": `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>`,
+        "tip":  `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>`,
+        // Add aliases by duplicating values
+        "info": `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>`, // Same as note
+        "hint": `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>`, // Same as tip
+    }
+
+    extension := alertcallouts.NewAlertCallouts(
+        alertcallouts.WithIcons(customIcons),
+        alertcallouts.WithFolding(true),
+    )
+
+    md := goldmark.New(goldmark.WithExtensions(extension))
+}
+```
+
+## SVG Icon Best Practices
+
+### Recommended SVG Structure
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg"
@@ -168,110 +242,217 @@ func main() {
      stroke-width="2"
      stroke-linecap="round"
      stroke-linejoin="round"
-     class="custom-icon">
-  <circle cx="12" cy="12" r="10"/>
-  <path d="M12 16v-4"/>
-  <path d="M12 8h.01"/>
+     class="alert-icon">
+  <path d="..."/>
 </svg>
 ```
 
-## Complete Example
+### Best Practices
 
-Here's a complete example creating a custom icon file:
+1. **Consistent sizing**: Use `width="24" height="24"` for consistency
+2. **Scalable design**: Include `viewBox="0 0 24 24"` for proper scaling
+3. **Color inheritance**: Use `stroke="currentColor"` or `fill="currentColor"`
+4. **Accessibility**: Ensure icons are recognizable at small sizes
+5. **Performance**: Minimize SVG complexity for faster rendering
 
-**custom-icons.icons**:
+### Icon Design Guidelines
 
-```text
-# My Custom Alert Icons
-# Using Material Design icons
+| Guideline | Recommendation | Reason |
+|-----------|---------------|---------|
+| **Size** | 24x24 pixels | Consistent with common icon libraries |
+| **Style** | Outline or solid | Choose one style for consistency |
+| **Stroke Width** | 1.5-2 pixels | Good visibility at small sizes |
+| **Colors** | `currentColor` | Inherits text color for theming |
+| **Complexity** | Simple shapes | Better performance and scalability |
 
-note|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-warning|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
-error|<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+## Built-in Icon Sets Reference
 
-# Aliases for compatibility
-important->note
-caution->warning
-danger->error
-info->note
-tip->note
-```
+The extension includes three built-in icon sets that you can examine for reference:
 
-**main.go**:
+### GFM Icons (`UseGFMIcons()`)
+
+GitHub standard alert types with aliases:
+
+- **Core types**: `note`, `tip`, `important`, `warning`, `caution`
+- **Aliases**: `info->note`, `hint->tip`, `danger->caution`, `error->caution`
+
+### GFM Plus Icons (`UseGFMPlusIcons()`)
+
+Extended set with additional Obsidian-compatible types:
+
+- All GFM icons plus additional callout types
+- Better compatibility with Obsidian workflows
+
+### Obsidian Icons (`UseObsidianIcons()`)
+
+Obsidian-style icons optimized for callouts:
+
+- Matches Obsidian's default callout appearance
+- Ideal for users migrating from Obsidian
+
+### Examining Built-in Icons
+
+You can find the source icon definitions in the project's `assets/` folder:
+
+- `assets/alertcallouts-gfm.icons`
+- `assets/alertcallouts-gfmplus.icons`
+- `assets/alertcallouts-obsidian.icons`
+
+These files serve as examples and templates for creating custom icon sets.
+
+## Advanced Usage Patterns
+
+### Combining Built-in and Custom Icons
+
+Start with a built-in set and override specific icons:
 
 ```go
-package main
-
-import (
-    _ "embed"
-
-    "github.com/yuin/goldmark"
-    "github.com/ZMT-Creative/gm-alert-callouts"
+extension := alertcallouts.NewAlertCallouts(
+    alertcallouts.UseGFMIcons(),           // Start with GFM icons
+    alertcallouts.WithIcon("note", customNoteSVG),    // Override note icon
+    alertcallouts.WithIcon("custom", customSVG),      // Add custom type
+    alertcallouts.WithFolding(true),
 )
+```
 
-//go:embed custom-icons.icons
-var customIconData string
+### Dynamic Icon Loading
 
-func main() {
-    customIcons := alertcallouts.CreateIconsMap(customIconData)
+Load different icon sets based on configuration:
 
-    md := goldmark.New(
-        goldmark.WithExtensions(
-            alertcallouts.NewAlertCallouts(
-                alertcallouts.WithIcons(customIcons),
-                alertcallouts.WithFolding(true),
-            ),
-        ),
+```go
+func createExtensionWithIcons(iconSet string) goldmark.Extender {
+    var iconData string
+    var err error
+
+    switch iconSet {
+    case "custom":
+        iconData, err = os.ReadFile("icons/custom.icons")
+    case "minimal":
+        iconData, err = os.ReadFile("icons/minimal.icons")
+    default:
+        // Use built-in GFM icons
+        return alertcallouts.NewAlertCallouts(
+            alertcallouts.UseGFMIcons(),
+            alertcallouts.WithFolding(true),
+        )
+    }
+
+    if err != nil {
+        // Fallback to built-in icons
+        return alertcallouts.NewAlertCallouts(
+            alertcallouts.UseGFMIcons(),
+            alertcallouts.WithFolding(true),
+        )
+    }
+
+    customIcons := alertcallouts.CreateIconsMap(iconData)
+    return alertcallouts.NewAlertCallouts(
+        alertcallouts.WithIcons(customIcons),
+        alertcallouts.WithFolding(true),
     )
-
-    // Process your markdown...
 }
 ```
 
-## Built-in Icon Sets
+### Icon Set Inheritance
 
-The extension includes three built-in icon sets you can reference or extend:
+Extend existing icon sets with additional icons:
 
-- **GFM Icons** (`UseGFMIcons()`): GitHub Flavored Markdown standard icons
-- **GFM Plus Icons** (`UseGFMPlusIcons()`): Extended set with additional icon types
-- **Obsidian Icons** (`UseObsidianIcons()`): Obsidian-style icons
+```go
+//go:embed icons/base.icons
+var baseIconData string
 
-You can examine the source files in the `assets/` directory to see their definitions and use them
-as templates for your custom icons.
+//go:embed icons/extensions.icons
+var extensionIconData string
+
+func main() {
+    // Parse base icons
+    baseIcons := alertcallouts.CreateIconsMap(baseIconData)
+
+    // Parse extension icons
+    extensionIcons := alertcallouts.CreateIconsMap(extensionIconData)
+
+    // Merge icon sets (extensions override base)
+    for key, icon := range extensionIcons {
+        baseIcons[key] = icon
+    }
+
+    extension := alertcallouts.NewAlertCallouts(
+        alertcallouts.WithIcons(baseIcons),
+        alertcallouts.WithFolding(true),
+    )
+
+    md := goldmark.New(goldmark.WithExtensions(extension))
+}
+```
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Icons not displaying**: Check that your SVG markup is valid and properly escaped
-2. **Aliases not working**: Ensure the primary key exists before defining aliases
-3. **Missing icons**: Verify that all referenced alert types have corresponding icon definitions
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| Icons not displaying | Invalid SVG markup | Validate SVG in browser |
+| Aliases not working | Primary key missing | Define core icon before alias |
+| Parse errors | Malformed icon file | Check format and syntax |
 
 ### Debugging Tips
 
-- Use `fmt.Printf("%+v\n", customIcons)` to inspect the generated icon map
-- Test SVG markup in a browser before adding to icon files
-- Check for typos in key names and ensure consistent casing
+1. **Inspect generated map**:
 
-## API Reference
+   ```go
+   icons := alertcallouts.CreateIconsMap(iconData)
+   fmt.Printf("Generated icons: %+v\n", icons)
+   ```
 
-### CreateIconsMap Function
+2. **Validate SVG markup**:
+   - Test SVG content in a browser
+   - Use online SVG validators
+   - Check for unclosed tags
+
+3. **Check icon file format**:
+   - Ensure proper `key|value` format
+   - Verify alias syntax (`alias->primary`)
+   - Look for invisible characters
+
+### Performance Considerations
+
+- **Icon file size**: Large icon definitions increase memory usage
+- **Complex SVGs**: Simplify SVGs for better rendering performance
+- **Icon count**: Minimize unused icons in production builds
+- **Embedding vs runtime**: Embedded icons are faster but increase binary size
+
+## Migration from Manual Icon Maps
+
+If you're currently using manually created icon maps, consider migrating to icon definition files:
+
+**Before (manual map):**
 
 ```go
-func CreateIconsMap(iconData string) map[string]string
+icons := map[string]string{
+    "note": "<svg>...</svg>",
+    "info": "<svg>...</svg>", // Duplicate SVG
+    "tip":  "<svg>...</svg>",
+    "hint": "<svg>...</svg>", // Duplicate SVG
+}
 ```
 
-Parses icon data in the defined format and returns a map of icon keys to SVG content.
+**After (icon definition file):**
 
-**Parameters:**
+```text
+# icons.icons
+note|<svg>...</svg>
+tip|<svg>...</svg>
 
-- `iconData` (string): The content of an icon file as a string
+# Aliases eliminate duplication
+info->note
+hint->tip
+```
 
-**Returns:**
+**Benefits of migration:**
 
-- `map[string]string`: A map where keys are alert types and values are SVG markup
+- Eliminates SVG duplication
+- Easier to maintain and update
+- Cleaner code separation
+- Support for comments and documentation
 
-**Usage:**
-
-This function is typically used with Go's `//go:embed` directive to embed icon files at compile
-time, but can also be used with dynamically loaded content.
+[<-back](../README.md)
