@@ -1,13 +1,20 @@
 # API Reference - gm-alert-callouts
 
-[<-back](../README.md)
+[<-back to README](../README.md)
 
-This document provides comprehensive API documentation for the `gm-alert-callouts` Goldmark extension.
+This document provides API documentation for the `gm-alert-callouts` Goldmark extension.
 
 ## Overview
 
 The `gm-alert-callouts` extension enables rendering of GitHub-style alerts and Obsidian-style
 callouts in Markdown documents.
+
+> [!NOTE]
+>
+> GitHub uses the term `Alerts` while Obsidian uses the term `Callouts` to refer to markdown
+> created using the `> [!NOTE]` syntax. Throughout the documentation (*and even within the code*)
+> you will see references to `Alerts` and `Callouts` (and `alertcallouts`) -- these terms should be
+> considered interchangeable for our purposes.
 
 ## Core Types and Interfaces
 
@@ -79,6 +86,8 @@ All configuration uses functional options that can be passed to `NewAlertCallout
 
 ### Icon Configuration
 
+-----
+
 #### `UseGFMIcons() Option`
 
 Configures the extension with GitHub Flavored Markdown standard icons.
@@ -99,9 +108,28 @@ extension := alertcallouts.NewAlertCallouts(
 )
 ```
 
+-----
+
 #### `UseGFMPlusIcons() Option`
 
 Configures the extension with an extended icon set that combines GitHub and Obsidian-style icons for maximum compatibility. This will use the expected GitHub-style icons for the standard five GitHub Alerts, but will use an extended set of icons for other callouts. **If you require strict adherence to Obsidian-style icons, use the `UseObsidianIcons()` option instead.**
+
+**Included Alert Types:**
+
+- `note` (aliases: `notes`, `info`, `information`)
+- `tip` (aliases: `tips`, `hint`, `hints`)
+- `important`
+- `warning` (aliases: `warn`, `warnings`, `attention`)
+- `caution` (aliases: `danger`, `error`, `errors`)
+- `bug`
+- `example`
+- `failure` (aliases: `fail`, `missing`)
+- `question` (aliases: `questions`, `faq`, `faqs`, `help`)
+- `quote` (aliases: `quotes`, `cite`, `citation`, `citations`)
+- `scroll` (aliases: `history`, `tldr`)
+- `success` (aliases: `check`, `done`)
+- `summary` (aliases: `abstract`, `abstracts`, `overview`, `overviews`)
+- `todo` (aliases: `todos`, `todolist`, `task`, `tasks`, `tasklist`, `checklist`, `punchlist`, `outline`, `outlines`)
 
 **Example:**
 
@@ -111,9 +139,27 @@ extension := alertcallouts.NewAlertCallouts(
 )
 ```
 
+-----
+
 #### `UseObsidianIcons() Option`
 
 Configures the extension with Obsidian-compatible icons, ideal for users transitioning from or integrating with Obsidian.
+
+**Included Alert Types:**
+
+- `note`
+- `abstract` (aliases: `summary`, `tldr`)
+- `info`
+- `todo` (aliases: `check`, `done`)
+- `tip` (aliases: `hint`, `important`)
+- `success`
+- `question` (aliases: `help`, `faq`)
+- `warning` (aliases: `caution`, `attention`)
+- `failure` (aliases: `fail`, `missing`)
+- `danger` (aliases: `error`)
+- `bug`
+- `example`
+- `quote` (aliases: `cite`)
 
 **Example:**
 
@@ -122,6 +168,8 @@ extension := alertcallouts.NewAlertCallouts(
     alertcallouts.UseObsidianIcons(),
 )
 ```
+
+-----
 
 #### `WithIcons(icons map[string]string) Option`
 
@@ -145,6 +193,8 @@ extension := alertcallouts.NewAlertCallouts(
 )
 ```
 
+-----
+
 #### `WithIcon(kind, icon string) Option`
 
 Adds or overrides a single icon without affecting other configured icons. Can be used multiple times and combined with other icon options. If a `kind` already exists it will be overwritten with the new value.
@@ -163,6 +213,8 @@ extension := alertcallouts.NewAlertCallouts(
     alertcallouts.WithIcon("custom", "<svg>custom alert icon</svg>"), // Add new type
 )
 ```
+
+-----
 
 ### Functionality Options
 
@@ -231,6 +283,8 @@ func main() {
 }
 ```
 
+-----
+
 ### Advanced Configuration
 
 ```go
@@ -252,6 +306,8 @@ func createAdvancedExtension() goldmark.Extender {
     return extension
 }
 ```
+
+-----
 
 ### Integration with Other Extensions
 
@@ -418,4 +474,4 @@ The extension registers parsers at priority 799, ensuring proper precedence over
 - Compatible with Goldmark v1.4.6+
 - Works alongside standard Goldmark extensions (GFM, footnotes, etc.)
 
-[<-back](../README.md)
+[<-back to README](../README.md)

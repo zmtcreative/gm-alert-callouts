@@ -1,6 +1,6 @@
 # Icon Customization Guide
 
-[<-back](../README.md)
+[<-back to README](../README.md)
 
 This guide explains how to create custom icons and icon maps for the `gm-alert-callouts` extension.
 
@@ -8,7 +8,7 @@ This guide explains how to create custom icons and icon maps for the `gm-alert-c
 
 The `gm-alert-callouts` extension uses SVG icons to visually distinguish different alert types. You can customize these icons using:
 
-- Built-in icon sets (GFM, GFM Plus, Obsidian)
+- Built-in icon sets (GFM, GFM Plus, Obsidian) -- (*see [FEATURES](FEATURES.md#icon-configuration) for more information*)
 - Custom icon maps created programmatically
 - Icon definition files with the `CreateIconsMap()` function
 - Individual icon overrides
@@ -18,7 +18,7 @@ The `gm-alert-callouts` extension uses SVG icons to visually distinguish differe
 > When adding custom icons and icon sets in `gm-alert-callouts` you are **only** inserting the icon
 > code into the HTML output. You still need to create the necessary CSS styling to format the final
 > alert/callout style. An example of a CSS style file for the `GFM Plus` built-in icon set can be
-> found in the `examples/css/alertcallouts-gfmplus.css` file. This should provide a starting point
+> found in the `examples/assets/css/alertcallouts-gfmplus.css` file. This should provide a starting point
 > for customizing the styling for your project.
 
 ## CreateIconsMap Function
@@ -132,6 +132,8 @@ func main() {
 }
 ```
 
+-----
+
 ### Method 2: Runtime File Loading
 
 Load icon definition files at runtime:
@@ -166,6 +168,8 @@ func main() {
 }
 ```
 
+-----
+
 ### Method 3: Inline String Data
 
 Define icon data directly in code:
@@ -196,6 +200,8 @@ info->note
     md := goldmark.New(goldmark.WithExtensions(extension))
 }
 ```
+
+-----
 
 ### Method 4: Programmatic Icon Maps
 
@@ -229,6 +235,8 @@ func main() {
 ```
 
 ## SVG Icon Best Practices
+
+The following are suggestions based on our research and experience creating this extension.
 
 ### Recommended SVG Structure
 
@@ -455,4 +463,4 @@ hint->tip
 - Cleaner code separation
 - Support for comments and documentation
 
-[<-back](../README.md)
+[<-back to README](../README.md)
