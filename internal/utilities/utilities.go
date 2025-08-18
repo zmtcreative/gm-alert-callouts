@@ -9,7 +9,7 @@ import (
 func IsNoIconKind(kind string) bool {
 	kind = strings.ToLower(strings.TrimSpace(kind))
 	switch kind {
-	case "noicon", "no-icon", "nil", "null":
+	case "noicon", "none", "nil", "null":
 		return true
 	default:
 		return false

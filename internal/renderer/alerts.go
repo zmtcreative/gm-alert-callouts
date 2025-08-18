@@ -44,31 +44,36 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 		} else if typeStr, isStr := t.(string); isStr {
 			alertType = strings.ToLower(typeStr)
 		}
-		// Check if the alertType is "noicon" or one of its variants
+		// Check if the alertType is "noicon" or one of its variants (none, nil or null)
 		if utils.IsNoIconKind(alertType) {
 			// If the alertType is "noicon", we want to use the "title" if it exists
-			// If not, we can just use existing alertType as a fallback
+			// but we need to set the alertType to "default" in case there isn't a title
+			alertType = "default"
 			if rt, ok := node.AttributeString("title"); ok {
 				if typeBytes, isBytes := rt.([]uint8); isBytes {
 					rawTitle = strings.ToLower(string(typeBytes))
 				} else if typeStr, isStr := rt.(string); isStr {
 					rawTitle = strings.ToLower(typeStr)
 				}
-				// Create regular expressions for cleaning up the title for use in the HTML output
-				reHTML := regexp.MustCompile(`<[^>]+>`)
-				reWS := regexp.MustCompile(`\s+`)
-				reMDInline := regexp.MustCompile(`\*\*|\*|__|_|~~|\\`)
-				reMDLinks := regexp.MustCompile(`!?\[(.*?)\]\((.*?)\)`)
-				reMDCode := regexp.MustCompile("`{1,3}[^`]*`{1,3}")
-				// Clean up the raw title using the regular expressions
-				rawTitle = reHTML.ReplaceAllString(rawTitle, "")
-				rawTitle = reMDInline.ReplaceAllString(rawTitle, "")
-				rawTitle = reMDLinks.ReplaceAllString(rawTitle, "")
-				rawTitle = reMDCode.ReplaceAllString(rawTitle, "")
-				rawTitle = strings.TrimSpace(rawTitle)
-				rawTitle = reWS.ReplaceAllString(rawTitle, "-")
-				// Set the alert type to the cleaned-up title
-				alertType = rawTitle
+				// If we have a rawTitle, we can use it
+				// If not, we can just use existing alertType of "default" as a fallback
+				if rawTitle != "" {
+					// Create regular expressions for cleaning up the title for use in the HTML output
+					reHTML := regexp.MustCompile(`<[^>]+>`)
+					reWS := regexp.MustCompile(`\s+`)
+					reMDInline := regexp.MustCompile(`\*\*|\*|__|_|~~|\\`)
+					reMDLinks := regexp.MustCompile(`!?\[(.*?)\]\((.*?)\)`)
+					reMDCode := regexp.MustCompile("`{1,3}[^`]*`{1,3}")
+					// Clean up the raw title using the regular expressions
+					rawTitle = reHTML.ReplaceAllString(rawTitle, "")
+					rawTitle = reMDInline.ReplaceAllString(rawTitle, "")
+					rawTitle = reMDLinks.ReplaceAllString(rawTitle, "")
+					rawTitle = reMDCode.ReplaceAllString(rawTitle, "")
+					rawTitle = strings.TrimSpace(rawTitle)
+					rawTitle = reWS.ReplaceAllString(rawTitle, "-")
+					// Set the alert type to the cleaned-up title
+					alertType = rawTitle
+				}
 			}
 		}
 	}
@@ -106,7 +111,6 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 	}
 
 	if entering {
-		// fmt.Fprintf(w, `<div class="gh-alert gh-alert-%s" data-callout="%s">`, alertType, alertType)
 		w.WriteString(startHTML)
 	} else {
 		w.WriteString(endHTML)
