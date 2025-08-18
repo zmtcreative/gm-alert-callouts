@@ -9,7 +9,7 @@ import (
 func IsNoIconKind(kind string) bool {
 	kind = strings.ToLower(strings.TrimSpace(kind))
 	switch kind {
-	case "noicon", "none", "nil", "null":
+	case "noicon", "no_icon", "none", "nil", "null":
 		return true
 	default:
 		return false
@@ -33,6 +33,7 @@ func FindNamedMatches(regex *regexp.Regexp, str string) map[string]string {
 // CreateIconsMap creates a map of icon names to their SVG data from the given icon data string.
 func CreateIconsMap(icondata string) map[string]string {
 	iconmap := make(map[string]string)
+	wordRegex := regexp.MustCompile(`^\w+$`)
 
 	// Parse the embedded alert callouts data
 	lines := strings.Split(icondata, "\n")
@@ -51,6 +52,12 @@ func CreateIconsMap(icondata string) map[string]string {
 			if len(parts) == 2 {
 				alias := strings.TrimSpace(parts[0])
 				primary := strings.TrimSpace(parts[1])
+
+				// Validate alias and primary values match [\w]+ pattern
+				if !wordRegex.MatchString(alias) || !wordRegex.MatchString(primary) {
+					continue // Skip invalid alias entries
+				}
+
 				// Set alias to reference the primary icon (will be set after core icons are loaded)
 				if svg, exists := iconmap[primary]; exists {
 					iconmap[alias] = svg
@@ -72,6 +79,12 @@ func CreateIconsMap(icondata string) map[string]string {
 		if len(parts) == 2 {
 			key := strings.TrimSpace(parts[0])
 			svg := strings.TrimSpace(parts[1])
+
+			// Validate key matches [\w]+ pattern
+			if !wordRegex.MatchString(key) {
+				continue // Skip invalid key entries
+			}
+
 			iconmap[key] = svg
 		}
 	}
@@ -85,6 +98,12 @@ func CreateIconsMap(icondata string) map[string]string {
 			if len(parts) == 2 {
 				alias := strings.TrimSpace(parts[0])
 				primary := strings.TrimSpace(parts[1])
+
+				// Validate alias and primary values match [\w]+ pattern
+				if !wordRegex.MatchString(alias) || !wordRegex.MatchString(primary) {
+					continue // Skip invalid alias entries
+				}
+
 				if svg, exists := iconmap[primary]; exists {
 					iconmap[alias] = svg
 				}
