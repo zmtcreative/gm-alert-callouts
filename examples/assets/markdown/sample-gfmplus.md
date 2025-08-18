@@ -6,6 +6,8 @@
 
 This document demonstrates all available callouts in the GFM Plus icon set, including both primary callouts and their aliases.
 
+It also shows examples of callouts with custom titles and folding.
+
 + [Primary Callouts](#primary-callouts)
 + [Alias Callouts](#alias-callouts)
 + [Folding Examples](#folding-examples)
