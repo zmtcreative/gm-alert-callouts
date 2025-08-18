@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
+	utils "github.com/ZMT-Creative/gm-alert-callouts/internal/utilities"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
@@ -15,12 +16,14 @@ import (
 type AlertsHTMLRenderer struct {
 	html.Config
 	FoldingEnabled
+	DefaultIcons int
 }
 
-func NewAlertsHTMLRenderer(foldingEnabled FoldingEnabled, opts ...html.Option) renderer.NodeRenderer {
+func NewAlertsHTMLRenderer(foldingEnabled FoldingEnabled, defaultIcons int, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHTMLRenderer{
 		Config:         html.NewConfig(),
 		FoldingEnabled: foldingEnabled,
+		DefaultIcons:   defaultIcons,
 	}
 	for _, opt := range opts {
 		opt.SetHTMLOption(&r.Config)
@@ -42,7 +45,7 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 			alertType = strings.ToLower(typeStr)
 		}
 		// Check if the alertType is "noicon" or one of its variants
-		if constants.IsNoIconKind(alertType) {
+		if utils.IsNoIconKind(alertType) {
 			// If the alertType is "noicon", we want to use the "title" if it exists
 			// If not, we can just use existing alertType as a fallback
 			if rt, ok := node.AttributeString("title"); ok {
@@ -81,14 +84,24 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 		shouldFold = bool(t.(bool))
 	}
 
+	iconset := ""
+	switch r.DefaultIcons {
+	case constants.ICONS_GFM:
+		iconset = " iconset-gfm"
+	case constants.ICONS_GFM_PLUS:
+		iconset = " iconset-gfmplus"
+	case constants.ICONS_OBSIDIAN:
+		iconset = " iconset-obsidian"
+	}
+
 	startHTML := ""
 	endHTML := ""
 
 	if bool(r.FoldingEnabled) && shouldFold {
-		startHTML = fmt.Sprintf(`<details class="gh-alert gh-alert-%s callout callout-foldable callout-%s" data-callout="%s"%s>`, alertType, alertType, alertType, open)
+		startHTML = fmt.Sprintf(`<details class="callout callout-foldable callout-%s%s" data-callout="%s"%s>`, alertType, iconset, alertType, open)
 		endHTML = "\n</details>\n"
 	} else {
-		startHTML = fmt.Sprintf(`<div class="gh-alert gh-alert-%s callout callout-%s" data-callout="%s">`, alertType, alertType, alertType)
+		startHTML = fmt.Sprintf(`<div class="callout callout-%s%s" data-callout="%s">`, alertType, iconset, alertType)
 		endHTML = "\n</div>\n"
 	}
 

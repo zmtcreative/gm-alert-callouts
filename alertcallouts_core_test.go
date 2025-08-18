@@ -1,12 +1,5 @@
 package alertcallouts
 
-// This file contains streamlined integration and core functionality tests.
-// Detailed functionality tests are split into separate files:
-// - alertcallouts_core_test.go: Core alert functionality
-// - alertcallouts_options_test.go: Configuration and options
-// - alertcallouts_integration_test.go: End-to-end integration tests
-// Internal package unit tests are in their respective internal/ directories.
-
 import (
 	"strings"
 	"testing"
@@ -15,32 +8,26 @@ import (
 	"github.com/yuin/goldmark/testutil"
 )
 
-var mdIconEmptySVG = goldmark.New(
-	goldmark.WithExtensions(
-		&alertCalloutsOptions{
-			Icons: map[string]string{"note": "<svg></svg>"},
-			FoldingEnabled: true,
-		},
-	),
-)
+// Core functionality tests - essential alert behavior
+func TestAlertCalloutsCore(t *testing.T) {
+	mdTest := goldmark.New(
+		goldmark.WithExtensions(
+			&alertCalloutsOptions{
+				Icons:          map[string]string{"note": "<svg></svg>", "info": "<svg></svg>", "warning": "<svg></svg>", "tip": "<svg></svg>"},
+				FoldingEnabled: true,
+			},
+		),
+	)
 
-type TestCase struct {
-	desc string
-	md   string
-	html string
-}
-
-// Essential functionality tests - focused on the most important behaviors
-func TestAlerts(t *testing.T) {
-	essentialTests := []TestCase{
+	testCases := []TestCase{
 		{
 			desc: "Basic alert",
 			md: `> [!note]
-> Simple alert content`,
+> Paragraph content`,
 			html: `<div class="callout callout-note" data-callout="note"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Note</p>
 </div>
-<div class="callout-body"><p>Simple alert content</p>
+<div class="callout-body"><p>Paragraph content</p>
 </div>
 </div>`,
 		},
@@ -54,7 +41,7 @@ func TestAlerts(t *testing.T) {
 </div>`,
 		},
 		{
-			desc: "Foldable alert",
+			desc: "Foldable alert closed",
 			md: `> [!warning]- Closed alert
 > Content here`,
 			html: `<details class="callout callout-foldable callout-warning" data-callout="warning"><summary class="callout-title">
@@ -65,41 +52,37 @@ func TestAlerts(t *testing.T) {
 </details>`,
 		},
 		{
-			desc: "Regular blockquote (not alert)",
-			md:   `> This is a regular blockquote`,
+			desc: "Foldable alert open",
+			md: `> [!tip]+ Open alert
+> Content here`,
+			html: `<details class="callout callout-foldable callout-tip" data-callout="tip" open><summary class="callout-title">
+<svg></svg><p class="callout-title-text">Open alert</p>
+</summary>
+<div class="callout-body"><p>Content here</p>
+</div>
+</details>`,
+		},
+		{
+			desc: "Not an alert (regular blockquote)",
+			md:   `> This is a blockquote`,
 			html: `<blockquote>
-<p>This is a regular blockquote</p>
+<p>This is a blockquote</p>
 </blockquote>
 `,
 		},
 		{
 			desc: "Invalid alert syntax",
-			md:   `> [!info invalid syntax`,
+			md:   `> [!info This is not a alert`,
 			html: `<blockquote>
-<p>[!info invalid syntax</p>
+<p>[!info This is not a alert</p>
 </blockquote>
 `,
 		},
-		{
-			desc: "Alert with list",
-			md: `> [!tip]
-> - Item one
-> - Item two`,
-			html: `<div class="callout callout-tip" data-callout="tip"><div class="callout-title">
-<svg></svg><p class="callout-title-text">Tip</p>
-</div>
-<div class="callout-body"><ul>
-<li>Item one</li>
-<li>Item two</li>
-</ul>
-</div>
-</div>`,
-		},
 	}
 
-	for _, tc := range essentialTests {
+	for _, tc := range testCases {
 		t.Run(tc.desc, func(t *testing.T) {
-			testutil.DoTestCase(mdIconEmptySVG, testutil.MarkdownTestCase{
+			testutil.DoTestCase(mdTest, testutil.MarkdownTestCase{
 				Description: tc.desc,
 				Markdown:    tc.md,
 				Expected:    tc.html,
@@ -108,8 +91,17 @@ func TestAlerts(t *testing.T) {
 	}
 }
 
-// AST node creation test
-func TestASTNodeCreation(t *testing.T) {
+// Test AST node functionality
+func TestASTNodeCreationCore(t *testing.T) {
+	mdTest := goldmark.New(
+		goldmark.WithExtensions(
+			&alertCalloutsOptions{
+				Icons:          map[string]string{"note": "<svg></svg>", "warning": "<svg></svg>", "info": "<svg></svg>"},
+				FoldingEnabled: true,
+			},
+		),
+	)
+
 	testCases := []struct {
 		name string
 		md   string
@@ -123,7 +115,7 @@ func TestASTNodeCreation(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			var buf strings.Builder
-			err := mdIconEmptySVG.Convert([]byte(tc.md), &buf)
+			err := mdTest.Convert([]byte(tc.md), &buf)
 			if err != nil {
 				t.Errorf("Failed to parse markdown: %s, error: %v", tc.md, err)
 			}
@@ -135,8 +127,8 @@ func TestASTNodeCreation(t *testing.T) {
 	}
 }
 
-// Extension registration test
-func TestExtensionRegistration(t *testing.T) {
+// Test extension registration
+func TestExtensionRegistrationCore(t *testing.T) {
 	ext := &alertCalloutsOptions{
 		Icons:          map[string]string{"test": "icon"},
 		FoldingEnabled: false,
@@ -155,21 +147,39 @@ func TestExtensionRegistration(t *testing.T) {
 	}
 }
 
-// Performance benchmarks
-func BenchmarkSimpleAlert(b *testing.B) {
+// Benchmark tests for performance
+func BenchmarkSimpleAlertCore(b *testing.B) {
+	mdTest := goldmark.New(
+		goldmark.WithExtensions(
+			&alertCalloutsOptions{
+				Icons:          map[string]string{"info": "<svg></svg>"},
+				FoldingEnabled: true,
+			},
+		),
+	)
+
 	md := `> [!info] Simple alert
 > Content here`
 
 	for i := 0; i < b.N; i++ {
 		var buf strings.Builder
-		err := mdIconEmptySVG.Convert([]byte(md), &buf)
+		err := mdTest.Convert([]byte(md), &buf)
 		if err != nil {
 			b.Error("Failed to parse")
 		}
 	}
 }
 
-func BenchmarkComplexAlert(b *testing.B) {
+func BenchmarkComplexAlertCore(b *testing.B) {
+	mdTest := goldmark.New(
+		goldmark.WithExtensions(
+			&alertCalloutsOptions{
+				Icons:          map[string]string{"warning": "<svg></svg>"},
+				FoldingEnabled: true,
+			},
+		),
+	)
+
 	md := `> [!warning] Complex alert with content
 > This is a paragraph with *emphasis*.
 >
@@ -182,7 +192,7 @@ func BenchmarkComplexAlert(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		var buf strings.Builder
-		err := mdIconEmptySVG.Convert([]byte(md), &buf)
+		err := mdTest.Convert([]byte(md), &buf)
 		if err != nil {
 			b.Error("Failed to parse")
 		}

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
+	utils "github.com/ZMT-Creative/gm-alert-callouts/internal/utilities"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
@@ -20,14 +21,16 @@ type AlertsHeaderHTMLRenderer struct {
 	html.Config
 	Icons
 	FoldingEnabled
+	DefaultIcons int
 	titleCaser cases.Caser
 }
 
-func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, foldingEnabled FoldingEnabled, opts ...html.Option) renderer.NodeRenderer {
+func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, foldingEnabled FoldingEnabled, defaultIcons int, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHeaderHTMLRenderer{
 		Config:     html.NewConfig(),
 		Icons:      icons,
 		FoldingEnabled: foldingEnabled,
+		DefaultIcons: defaultIcons,
 		titleCaser: cases.Title(language.English, cases.Compact),
 	}
 	for _, opt := range opts {
@@ -36,10 +39,12 @@ func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, foldingEnabled FoldingEna
 	return r
 }
 
-func NewAlertsHeaderHTMLRenderer(foldingEnabled FoldingEnabled, opts ...html.Option) renderer.NodeRenderer {
+func NewAlertsHeaderHTMLRenderer(foldingEnabled FoldingEnabled, defaultIcons int, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHeaderHTMLRenderer{
 		Config:      html.NewConfig(),
 		FoldingEnabled: foldingEnabled,
+		DefaultIcons: defaultIcons,
+		titleCaser: cases.Title(language.English, cases.Compact),
 	}
 	for _, opt := range opts {
 		opt.SetHTMLOption(&r.Config)
@@ -61,10 +66,10 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 	endHTML := ""
 
 	if bool(r.FoldingEnabled) && shouldFold {
-		startHTML = fmt.Sprintf(`<summary class="gh-alert-title callout-title">` + "\n")
+		startHTML = fmt.Sprintf(`<summary class="callout-title">` + "\n")
 		endHTML = "\n</summary>\n"
 	} else {
-		startHTML = `<div class="gh-alert-title callout-title">` + "\n"
+		startHTML = `<div class="callout-title">` + "\n"
 		endHTML = "\n</div>\n"
 	}
 
@@ -79,7 +84,7 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 				w.WriteString(icon)
 				// Check if the kind indicates no icon should be rendered.
 				// if it's not a "no icon" kind, we can try to find a default icon.
-			} else if !constants.IsNoIconKind(kind) {
+			} else if !utils.IsNoIconKind(kind) {
 				for _, v := range []string{"note", "info", "default"} {
 					icon, ok = r.Icons[v]
 					if ok {
