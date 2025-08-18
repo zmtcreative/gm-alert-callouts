@@ -34,15 +34,10 @@
 		],
 		"grammars": [
 			{
-				"language": "alertcallouts-icons",
+				"language": "zmtc.alertcallouts-icons",
 				"scopeName": "source.alertcallouts-icons",
 				"path": "./syntaxes/alertcallouts-icons.tmLanguage.json"
 			}
 		]
-	},
-	"__metadata": {
-		"installedTimestamp": 1755359705467,
-		"targetPlatform": "undefined",
-		"size": 16957
 	}
 }
