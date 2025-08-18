@@ -10,6 +10,7 @@ import (
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer/html"
 )
 
 //go:embed assets/css/alertcallouts-gfmplus.css
@@ -54,6 +55,9 @@ func CreateGoldmarkInstance(opt createOptions) goldmark.Markdown {
 			parser.WithAttribute(),     // Enable attributes for nodes
 		),
 		goldmark.WithExtensions(),
+		goldmark.WithRendererOptions(
+			html.WithUnsafe(),
+		),
 	}
 
 	// Add GFM-related extensions and PHP Markdown Extensions if enabled
