@@ -3,6 +3,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/ZMT-Creative/gm-alert-callouts.svg)](https://pkg.go.dev/github.com/ZMT-Creative/gm-alert-callouts)
 [![Go version](https://img.shields.io/github/go-mod/go-version/ZMT-Creative/gm-alert-callouts)](https://github.com/ZMT-Creative/gm-alert-callouts)
 [![License](https://img.shields.io/github/license/ZMT-Creative/gm-alert-callouts)](./LICENSE.md)
+[![GitHub Release](https://img.shields.io/github/v/release/ZMT-Creative/gm-alert-callouts?sort=semver&display_name=release)](https://github.com/ZMT-Creative/gm-alert-callouts/releases/latest)
 
 A [Goldmark](https://github.com/yuin/goldmark) extension that provides support for GitHub-style alerts and Obsidian-style callouts with customizable icons and folding functionality.
 
