@@ -34,6 +34,9 @@ pre:has(code[class^="language"]) {
   border: 1px solid var(--border-color);
   border-radius: 6px;
   background-color: var(--inline-code-bg);
+  & code {
+    background-color: transparent;
+  }
 }
 
 .callout {
@@ -159,3 +162,8 @@ details.callout[open] > summary::after {
   font-size: 1.2em;
   content: "\2BC6";
 }
+
+code {
+  background-color: var(--inline-code-bg);
+}
+
