@@ -90,6 +90,14 @@ This pre-configured extension includes:
 - Folding functionality enabled
 - Ready-to-use configuration
 
+> [!IMPORTANT]
+>
+> When adding custom icons and icon sets in `gm-alert-callouts` you are **only** inserting the icon
+> code into the HTML output. You still need to create the necessary CSS styling to format the final
+> alert/callout style. An example of a CSS style file for the `GFM Plus` built-in icon set can be
+> found in the `examples/assets/css/alertcallouts-gfmplus.css` file. This should provide a starting point
+> for customizing the styling for your project.
+
 ## Supported Markdown Syntax
 
 ### Basic Alerts
