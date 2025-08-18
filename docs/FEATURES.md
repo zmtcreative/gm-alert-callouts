@@ -453,8 +453,9 @@ If an alert type has no configured icon:
 
 ### Invalid Alert Types
 
-Invalid or unrecognized alert types:
+Invalid alert types:
 
+- Alert types can only contain letters, numbers and underscores (no dashes or other punctuation)
 - Fall back to standard blockquote rendering
 - Goldmark's default blockquote parser handles the content
 
