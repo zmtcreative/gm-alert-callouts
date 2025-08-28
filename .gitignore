@@ -29,3 +29,5 @@ go.work.sum
 # Temporary files (scratch folder)
 tmp/**/*
 !tmp/.gitkeep
+scratch/**/*
+!scratch/.gitkeep
