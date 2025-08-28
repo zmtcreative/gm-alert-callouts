@@ -33,7 +33,7 @@ func newMockBufWriter() *mockBufWriter {
 }
 
 func TestNewAlertsHTMLRenderer(t *testing.T) {
-	r := NewAlertsHTMLRenderer(FoldingEnabled(true), constants.ICONS_GFM)
+	r := NewAlertsHTMLRenderer(FoldingEnabled(true), constants.ICONS_GFM_STRICT)
 	if r == nil {
 		t.Fatal("NewAlertsHTMLRenderer returned nil")
 	}
@@ -47,7 +47,7 @@ func TestNewAlertsHTMLRenderer(t *testing.T) {
 		t.Error("FoldingEnabled not set correctly")
 	}
 
-	if alertsRenderer.DefaultIcons != constants.ICONS_GFM {
+	if alertsRenderer.DefaultIcons != constants.ICONS_GFM_STRICT {
 		t.Error("DefaultIcons not set correctly")
 	}
 }
@@ -92,7 +92,15 @@ func TestAlertsHTMLRendererBasicAlert(t *testing.T) {
 		{
 			name:        "Warning alert with GFM icons",
 			folding:     FoldingEnabled(false),
-			defaultIcons: constants.ICONS_GFM,
+			defaultIcons: constants.ICONS_GFM_STRICT,
+			kind:        "warning",
+			expectedDiv: "div",
+			expectedClass: `class="callout callout-warning iconset-gfm"`,
+		},
+		{
+			name:        "Warning alert with GFM icons with Aliases",
+			folding:     FoldingEnabled(false),
+			defaultIcons: constants.ICONS_GFM_WITH_ALIASES,
 			kind:        "warning",
 			expectedDiv: "div",
 			expectedClass: `class="callout callout-warning iconset-gfm"`,

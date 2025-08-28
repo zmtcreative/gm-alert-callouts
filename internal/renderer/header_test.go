@@ -11,7 +11,7 @@ import (
 )
 
 func TestNewAlertsHeaderHTMLRenderer(t *testing.T) {
-	r := NewAlertsHeaderHTMLRenderer(FoldingEnabled(true), constants.ICONS_GFM)
+	r := NewAlertsHeaderHTMLRenderer(FoldingEnabled(true), constants.ICONS_GFM_STRICT)
 	if r == nil {
 		t.Fatal("NewAlertsHeaderHTMLRenderer returned nil")
 	}
@@ -25,7 +25,7 @@ func TestNewAlertsHeaderHTMLRenderer(t *testing.T) {
 		t.Error("FoldingEnabled not set correctly")
 	}
 
-	if headerRenderer.DefaultIcons != constants.ICONS_GFM {
+	if headerRenderer.DefaultIcons != constants.ICONS_GFM_STRICT {
 		t.Error("DefaultIcons not set correctly")
 	}
 }

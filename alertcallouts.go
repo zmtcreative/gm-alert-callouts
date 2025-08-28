@@ -16,17 +16,21 @@ import (
 	utils "github.com/ZMT-Creative/gm-alert-callouts/internal/utilities"
 )
 
+//go:embed assets/alertcallouts-gfm-strict.icons
+var alertCalloutsIconsGFMStrict string
+
+//go:embed assets/alertcallouts-gfm-with-aliases.icons
+var alertCalloutsIconsGFMWithAliases string
+
 //go:embed assets/alertcallouts-gfmplus.icons
 var alertCalloutsIconsGFMPlus string
-
-//go:embed assets/alertcallouts-gfm.icons
-var alertCalloutsIconsGFM string
 
 //go:embed assets/alertcallouts-obsidian.icons
 var alertCalloutsIconsObsidian string
 
+var _ = alertCalloutsIconsGFMStrict
+var _ = alertCalloutsIconsGFMWithAliases
 var _ = alertCalloutsIconsGFMPlus
-var _ = alertCalloutsIconsGFM
 var _ = alertCalloutsIconsObsidian
 
 type alertCalloutsOptions struct {
@@ -58,8 +62,24 @@ func WithIcon(kind, icon string) Option {
 // UseGFMIcons sets the icon map to the GFM (GitHub Flavored Markdown) icon set.
 func UseGFMIcons() Option {
 	return func(opts *alertCalloutsOptions) {
-		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsGFM)
-		opts.defaultIcons = constants.ICONS_GFM
+		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMStrict)
+		opts.defaultIcons = constants.ICONS_GFM_STRICT
+		opts.FoldingEnabled = false
+	}
+}
+
+func UseGFMStrictIcons() Option {
+	return func(opts *alertCalloutsOptions) {
+		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMStrict)
+		opts.defaultIcons = constants.ICONS_GFM_STRICT
+		opts.FoldingEnabled = false
+	}
+}
+
+func UseGFMWithAliasesIcons() Option {
+	return func(opts *alertCalloutsOptions) {
+		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMWithAliases)
+		opts.defaultIcons = constants.ICONS_GFM_WITH_ALIASES
 	}
 }
 
@@ -96,7 +116,7 @@ func CreateIconsMap(iconData string) map[string]string {
 // AlertCallouts will initialize the extension with Folding Enabled and the basic GFM icon set
 // This can be initialized using the `goldmark.WithExtensions(alertcallouts.AlertCallouts)` syntax
 var AlertCallouts = NewAlertCallouts(
-	UseGFMIcons(),
+	UseGFMWithAliasesIcons(),
 	WithFolding(true),
 )
 

@@ -91,7 +91,9 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 
 	iconset := ""
 	switch r.DefaultIcons {
-	case constants.ICONS_GFM:
+	case constants.ICONS_GFM_STRICT:
+		iconset = " iconset-gfm"
+	case constants.ICONS_GFM_WITH_ALIASES:
 		iconset = " iconset-gfm"
 	case constants.ICONS_GFM_PLUS:
 		iconset = " iconset-gfmplus"
