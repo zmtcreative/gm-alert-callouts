@@ -16,14 +16,16 @@ import (
 type AlertsHTMLRenderer struct {
 	html.Config
 	FoldingEnabled
+	CustomAlertsEnabled
 	DefaultIcons int
 }
 
-func NewAlertsHTMLRenderer(foldingEnabled FoldingEnabled, defaultIcons int, opts ...html.Option) renderer.NodeRenderer {
+func NewAlertsHTMLRenderer(foldingEnabled FoldingEnabled, defaultIcons int, customAlertsEnabled CustomAlertsEnabled, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHTMLRenderer{
 		Config:         html.NewConfig(),
 		FoldingEnabled: foldingEnabled,
 		DefaultIcons:   defaultIcons,
+		CustomAlertsEnabled: customAlertsEnabled,
 	}
 	for _, opt := range opts {
 		opt.SetHTMLOption(&r.Config)

@@ -11,7 +11,7 @@ import (
 )
 
 func TestNewAlertsHeaderHTMLRenderer(t *testing.T) {
-	r := NewAlertsHeaderHTMLRenderer(FoldingEnabled(true), constants.ICONS_GFM_STRICT)
+	r := NewAlertsHeaderHTMLRenderer(FoldingEnabled(true), constants.ICONS_GFM_STRICT, CustomAlertsEnabled(true))
 	if r == nil {
 		t.Fatal("NewAlertsHeaderHTMLRenderer returned nil")
 	}
@@ -36,7 +36,7 @@ func TestNewAlertsHeaderHTMLRendererWithIcons(t *testing.T) {
 		"warning": "<svg>warning-icon</svg>",
 	}
 
-	r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE)
+	r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
 	if r == nil {
 		t.Fatal("NewAlertsHeaderHTMLRendererWithIcons returned nil")
 	}
@@ -60,7 +60,7 @@ func TestNewAlertsHeaderHTMLRendererWithIcons(t *testing.T) {
 }
 
 func TestAlertsHeaderHTMLRendererRegisterFuncs(t *testing.T) {
-	r := NewAlertsHeaderHTMLRenderer(FoldingEnabled(false), constants.ICONS_NONE)
+	r := NewAlertsHeaderHTMLRenderer(FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
 
 	registrations := make(map[gast.NodeKind]renderer.NodeRendererFunc)
 	mockRegisterer := &mockNodeRendererFuncRegisterer{
@@ -118,7 +118,7 @@ func TestAlertsHeaderHTMLRendererBasicHeader(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			r := NewAlertsHeaderHTMLRenderer(tc.folding, constants.ICONS_NONE)
+			r := NewAlertsHeaderHTMLRenderer(tc.folding, constants.ICONS_NONE, CustomAlertsEnabled(true))
 
 			node := createMockHeaderNode("note", tc.shouldFold, "")
 
@@ -187,7 +187,7 @@ func TestAlertsHeaderHTMLRendererWithIcons(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE)
+			r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
 
 			node := createMockHeaderNode(tc.kind, false, "")
 
@@ -215,7 +215,7 @@ func TestAlertsHeaderHTMLRendererNoIconKinds(t *testing.T) {
 
 	for _, kind := range testCases {
 		t.Run("No icon for "+kind, func(t *testing.T) {
-			r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE)
+			r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
 
 			node := createMockHeaderNode(kind, false, "")
 
@@ -235,7 +235,7 @@ func TestAlertsHeaderHTMLRendererNoIconKinds(t *testing.T) {
 }
 
 func TestAlertsHeaderHTMLRendererTitleCasing(t *testing.T) {
-	r := NewAlertsHeaderHTMLRendererWithIcons(Icons{}, FoldingEnabled(false), constants.ICONS_NONE)
+	r := NewAlertsHeaderHTMLRendererWithIcons(Icons{}, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
 
 	testCases := []struct {
 		name         string
@@ -304,7 +304,7 @@ func TestAlertsHeaderHTMLRendererIconFallback(t *testing.T) {
 		"info": "<svg>info-icon</svg>", // has info but not note
 	}
 
-	r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE)
+	r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
 
 	// Test fallback to 'note' when specific kind not found
 	node := createMockHeaderNode("unknown", false, "")

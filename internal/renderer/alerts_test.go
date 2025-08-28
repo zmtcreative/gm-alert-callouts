@@ -33,7 +33,7 @@ func newMockBufWriter() *mockBufWriter {
 }
 
 func TestNewAlertsHTMLRenderer(t *testing.T) {
-	r := NewAlertsHTMLRenderer(FoldingEnabled(true), constants.ICONS_GFM_STRICT)
+	r := NewAlertsHTMLRenderer(FoldingEnabled(true), constants.ICONS_GFM_STRICT, CustomAlertsEnabled(true))
 	if r == nil {
 		t.Fatal("NewAlertsHTMLRenderer returned nil")
 	}
@@ -53,7 +53,7 @@ func TestNewAlertsHTMLRenderer(t *testing.T) {
 }
 
 func TestAlertsHTMLRendererRegisterFuncs(t *testing.T) {
-	r := NewAlertsHTMLRenderer(FoldingEnabled(false), constants.ICONS_NONE)
+	r := NewAlertsHTMLRenderer(FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(true))
 
 	// Create a mock registerer to capture what gets registered
 	registrations := make(map[gast.NodeKind]renderer.NodeRendererFunc)
@@ -76,6 +76,7 @@ func TestAlertsHTMLRendererBasicAlert(t *testing.T) {
 	testCases := []struct {
 		name        string
 		folding     FoldingEnabled
+		customAlerts CustomAlertsEnabled
 		defaultIcons int
 		kind        string
 		expectedDiv string
@@ -84,6 +85,7 @@ func TestAlertsHTMLRendererBasicAlert(t *testing.T) {
 		{
 			name:        "Basic note alert without folding",
 			folding:     FoldingEnabled(false),
+			customAlerts: CustomAlertsEnabled(true),
 			defaultIcons: constants.ICONS_NONE,
 			kind:        "note",
 			expectedDiv: "div",
@@ -92,6 +94,7 @@ func TestAlertsHTMLRendererBasicAlert(t *testing.T) {
 		{
 			name:        "Warning alert with GFM icons",
 			folding:     FoldingEnabled(false),
+			customAlerts: CustomAlertsEnabled(true),
 			defaultIcons: constants.ICONS_GFM_STRICT,
 			kind:        "warning",
 			expectedDiv: "div",
@@ -100,6 +103,7 @@ func TestAlertsHTMLRendererBasicAlert(t *testing.T) {
 		{
 			name:        "Warning alert with GFM icons with Aliases",
 			folding:     FoldingEnabled(false),
+			customAlerts: CustomAlertsEnabled(true),
 			defaultIcons: constants.ICONS_GFM_WITH_ALIASES,
 			kind:        "warning",
 			expectedDiv: "div",
@@ -108,6 +112,7 @@ func TestAlertsHTMLRendererBasicAlert(t *testing.T) {
 		{
 			name:        "Info alert with GFM Plus icons",
 			folding:     FoldingEnabled(false),
+			customAlerts: CustomAlertsEnabled(true),
 			defaultIcons: constants.ICONS_GFM_PLUS,
 			kind:        "info",
 			expectedDiv: "div",
@@ -116,6 +121,7 @@ func TestAlertsHTMLRendererBasicAlert(t *testing.T) {
 		{
 			name:        "Tip alert with Obsidian icons",
 			folding:     FoldingEnabled(false),
+			customAlerts: CustomAlertsEnabled(true),
 			defaultIcons: constants.ICONS_OBSIDIAN,
 			kind:        "tip",
 			expectedDiv: "div",
@@ -125,7 +131,7 @@ func TestAlertsHTMLRendererBasicAlert(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			r := NewAlertsHTMLRenderer(tc.folding, tc.defaultIcons)
+			r := NewAlertsHTMLRenderer(tc.folding, tc.defaultIcons, tc.customAlerts)
 
 			// Create mock alert node
 			node := createMockAlertNode(tc.kind, false, false)
@@ -216,7 +222,7 @@ func TestAlertsHTMLRendererFoldableAlerts(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			r := NewAlertsHTMLRenderer(tc.folding, constants.ICONS_NONE)
+			r := NewAlertsHTMLRenderer(tc.folding, constants.ICONS_NONE, CustomAlertsEnabled(true))
 
 			node := createMockAlertNode("note", tc.closed, tc.shouldFold)
 
@@ -253,7 +259,7 @@ func TestAlertsHTMLRendererFoldableAlerts(t *testing.T) {
 }
 
 func TestAlertsHTMLRendererNoIconKind(t *testing.T) {
-	r := NewAlertsHTMLRenderer(FoldingEnabled(false), constants.ICONS_NONE)
+	r := NewAlertsHTMLRenderer(FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
 
 	testCases := []struct {
 		name     string
@@ -322,7 +328,7 @@ func TestAlertsHTMLRendererNoIconKind(t *testing.T) {
 }
 
 func TestAlertsHTMLRendererTitleCleaning(t *testing.T) {
-	r := NewAlertsHTMLRenderer(FoldingEnabled(false), constants.ICONS_NONE)
+	r := NewAlertsHTMLRenderer(FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
 
 	testCases := []struct {
 		name     string

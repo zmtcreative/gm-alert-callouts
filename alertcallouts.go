@@ -36,6 +36,7 @@ var _ = alertCalloutsIconsObsidian
 type alertCalloutsOptions struct {
 	alertRenderer.Icons
 	alertRenderer.FoldingEnabled
+	alertRenderer.CustomAlertsEnabled
 	defaultIcons int
 }
 
@@ -60,19 +61,17 @@ func WithIcon(kind, icon string) Option {
 }
 
 // UseGFMIcons sets the icon map to the GFM (GitHub Flavored Markdown) icon set.
+// DEPRECATED: Use UseGFMStrictIcons instead.
 func UseGFMIcons() Option {
-	return func(opts *alertCalloutsOptions) {
-		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMStrict)
-		opts.defaultIcons = constants.ICONS_GFM_STRICT
-		opts.FoldingEnabled = false
-	}
+	return UseGFMStrictIcons()
 }
 
 func UseGFMStrictIcons() Option {
 	return func(opts *alertCalloutsOptions) {
 		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMStrict)
 		opts.defaultIcons = constants.ICONS_GFM_STRICT
-		opts.FoldingEnabled = false
+		opts.FoldingEnabled = alertRenderer.FoldingEnabled(false)
+		opts.CustomAlertsEnabled = alertRenderer.CustomAlertsEnabled(false)
 	}
 }
 
@@ -80,6 +79,8 @@ func UseGFMWithAliasesIcons() Option {
 	return func(opts *alertCalloutsOptions) {
 		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMWithAliases)
 		opts.defaultIcons = constants.ICONS_GFM_WITH_ALIASES
+		opts.FoldingEnabled = alertRenderer.FoldingEnabled(false)
+		opts.CustomAlertsEnabled = alertRenderer.CustomAlertsEnabled(false)
 	}
 }
 
@@ -88,6 +89,8 @@ func UseGFMPlusIcons() Option {
 	return func(opts *alertCalloutsOptions) {
 		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMPlus)
 		opts.defaultIcons = constants.ICONS_GFM_PLUS
+		opts.FoldingEnabled = alertRenderer.FoldingEnabled(true)
+		opts.CustomAlertsEnabled = alertRenderer.CustomAlertsEnabled(true)
 	}
 }
 
@@ -96,6 +99,8 @@ func UseObsidianIcons() Option {
 	return func(opts *alertCalloutsOptions) {
 		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsObsidian)
 		opts.defaultIcons = constants.ICONS_OBSIDIAN
+		opts.FoldingEnabled = alertRenderer.FoldingEnabled(true)
+		opts.CustomAlertsEnabled = alertRenderer.CustomAlertsEnabled(true)
 	}
 }
 
@@ -103,6 +108,12 @@ func UseObsidianIcons() Option {
 func WithFolding(enable bool) Option {
 	return func(opts *alertCalloutsOptions) {
 		opts.FoldingEnabled = alertRenderer.FoldingEnabled(enable)
+	}
+}
+
+func WithCustomAlerts(enable bool) Option {
+	return func(opts *alertCalloutsOptions) {
+		opts.CustomAlertsEnabled = alertRenderer.CustomAlertsEnabled(enable)
 	}
 }
 
@@ -126,6 +137,7 @@ func NewAlertCallouts(options ...Option) *alertCalloutsOptions {
 	opts := &alertCalloutsOptions{
 		Icons:          make(map[string]string),
 		FoldingEnabled: true,
+		CustomAlertsEnabled: true,
 		defaultIcons:   constants.ICONS_NONE,
 	}
 
@@ -146,8 +158,8 @@ func (e *alertCalloutsOptions) Extend(m goldmark.Markdown) {
 	)
 	m.Renderer().AddOptions(
 		renderer.WithNodeRenderers(
-			util.Prioritized(alertRenderer.NewAlertsHTMLRenderer(e.FoldingEnabled, e.defaultIcons), 0),
-			util.Prioritized(alertRenderer.NewAlertsHeaderHTMLRendererWithIcons(e.Icons, e.FoldingEnabled, e.defaultIcons), 0),
+			util.Prioritized(alertRenderer.NewAlertsHTMLRenderer(e.FoldingEnabled, e.defaultIcons, e.CustomAlertsEnabled), 0),
+			util.Prioritized(alertRenderer.NewAlertsHeaderHTMLRendererWithIcons(e.Icons, e.FoldingEnabled, e.defaultIcons, e.CustomAlertsEnabled), 0),
 			util.Prioritized(alertRenderer.NewAlertsBodyHTMLRenderer(), 0),
 		),
 	)

@@ -16,20 +16,23 @@ import (
 
 type Icons map[string]string
 type FoldingEnabled bool
+type CustomAlertsEnabled bool
 
 type AlertsHeaderHTMLRenderer struct {
 	html.Config
 	Icons
 	FoldingEnabled
+	CustomAlertsEnabled
 	DefaultIcons int
 	titleCaser cases.Caser
 }
 
-func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, foldingEnabled FoldingEnabled, defaultIcons int, opts ...html.Option) renderer.NodeRenderer {
+func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, foldingEnabled FoldingEnabled, defaultIcons int, customAlertsEnabled CustomAlertsEnabled, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHeaderHTMLRenderer{
 		Config:     html.NewConfig(),
 		Icons:      icons,
 		FoldingEnabled: foldingEnabled,
+		CustomAlertsEnabled: customAlertsEnabled,
 		DefaultIcons: defaultIcons,
 		titleCaser: cases.Title(language.English, cases.Compact),
 	}
@@ -39,11 +42,12 @@ func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, foldingEnabled FoldingEna
 	return r
 }
 
-func NewAlertsHeaderHTMLRenderer(foldingEnabled FoldingEnabled, defaultIcons int, opts ...html.Option) renderer.NodeRenderer {
+func NewAlertsHeaderHTMLRenderer(foldingEnabled FoldingEnabled, defaultIcons int, customAlertsEnabled CustomAlertsEnabled, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHeaderHTMLRenderer{
 		Config:      html.NewConfig(),
 		FoldingEnabled: foldingEnabled,
 		DefaultIcons: defaultIcons,
+		CustomAlertsEnabled: customAlertsEnabled,
 		titleCaser: cases.Title(language.English, cases.Compact),
 	}
 	for _, opt := range opts {
