@@ -17,10 +17,10 @@ import (
 
 var mdIconEmptySVG = goldmark.New(
 	goldmark.WithExtensions(
-		&alertCalloutsOptions{
-			Icons: map[string]string{"note": "<svg></svg>"},
-			FoldingEnabled: true,
-		},
+		NewAlertCallouts(
+			WithIcons(map[string]string{"note": "<svg></svg>"}),
+			WithFolding(true),
+		),
 	),
 )
 
@@ -137,10 +137,10 @@ func TestASTNodeCreation(t *testing.T) {
 
 // Extension registration test
 func TestExtensionRegistration(t *testing.T) {
-	ext := &alertCalloutsOptions{
-		Icons:          map[string]string{"test": "icon"},
-		FoldingEnabled: false,
-	}
+	ext := NewAlertCallouts(
+		WithIcons(map[string]string{"test": "icon"}),
+		WithFolding(false),
+	)
 
 	md := goldmark.New(goldmark.WithExtensions(ext))
 

@@ -33,7 +33,7 @@ func newMockBufWriter() *mockBufWriter {
 }
 
 func TestNewAlertsHTMLRenderer(t *testing.T) {
-	r := NewAlertsHTMLRenderer(FoldingEnabled(true), constants.ICONS_GFM_STRICT, CustomAlertsEnabled(true))
+	r := NewAlertsHTMLRenderer(make(map[string]string), true, constants.ICONS_GFM_STRICT, true, false)
 	if r == nil {
 		t.Fatal("NewAlertsHTMLRenderer returned nil")
 	}
@@ -43,7 +43,7 @@ func TestNewAlertsHTMLRenderer(t *testing.T) {
 		t.Fatal("NewAlertsHTMLRenderer did not return *AlertsHTMLRenderer")
 	}
 
-	if alertsRenderer.FoldingEnabled != FoldingEnabled(true) {
+	if alertsRenderer.FoldingEnabled != true {
 		t.Error("FoldingEnabled not set correctly")
 	}
 
@@ -53,7 +53,7 @@ func TestNewAlertsHTMLRenderer(t *testing.T) {
 }
 
 func TestAlertsHTMLRendererRegisterFuncs(t *testing.T) {
-	r := NewAlertsHTMLRenderer(FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(true))
+	r := NewAlertsHTMLRenderer(make(map[string]string), false, constants.ICONS_NONE, true, false)
 
 	// Create a mock registerer to capture what gets registered
 	registrations := make(map[gast.NodeKind]renderer.NodeRendererFunc)
@@ -74,64 +74,70 @@ func TestAlertsHTMLRendererRegisterFuncs(t *testing.T) {
 
 func TestAlertsHTMLRendererBasicAlert(t *testing.T) {
 	testCases := []struct {
-		name        string
-		folding     FoldingEnabled
-		customAlerts CustomAlertsEnabled
+		name         string
+		folding      bool
+		customAlerts bool
 		defaultIcons int
-		kind        string
-		expectedDiv string
+		allowNOICON  bool
+		kind         string
+		expectedDiv  string
 		expectedClass string
 	}{
 		{
-			name:        "Basic note alert without folding",
-			folding:     FoldingEnabled(false),
-			customAlerts: CustomAlertsEnabled(true),
+			name:         "Basic note alert without folding",
+			folding:      false,
+			customAlerts: true,
 			defaultIcons: constants.ICONS_NONE,
-			kind:        "note",
-			expectedDiv: "div",
+			allowNOICON:  false,
+			kind:         "note",
+			expectedDiv:  "div",
 			expectedClass: `class="callout callout-note"`,
 		},
 		{
-			name:        "Warning alert with GFM icons",
-			folding:     FoldingEnabled(false),
-			customAlerts: CustomAlertsEnabled(true),
+			name:         "Warning alert with GFM icons",
+			folding:      false,
+			customAlerts: true,
 			defaultIcons: constants.ICONS_GFM_STRICT,
-			kind:        "warning",
-			expectedDiv: "div",
+			allowNOICON:  false,
+			kind:         "warning",
+			expectedDiv:  "div",
 			expectedClass: `class="callout callout-warning iconset-gfm"`,
 		},
 		{
-			name:        "Warning alert with GFM icons with Aliases",
-			folding:     FoldingEnabled(false),
-			customAlerts: CustomAlertsEnabled(true),
+			name:         "Warning alert with GFM icons with Aliases",
+			folding:      false,
+			customAlerts: true,
 			defaultIcons: constants.ICONS_GFM_WITH_ALIASES,
-			kind:        "warning",
-			expectedDiv: "div",
+			allowNOICON:  false,
+			kind:         "warning",
+			expectedDiv:  "div",
 			expectedClass: `class="callout callout-warning iconset-gfm"`,
 		},
 		{
-			name:        "Info alert with GFM Plus icons",
-			folding:     FoldingEnabled(false),
-			customAlerts: CustomAlertsEnabled(true),
+			name:         "Info alert with GFM Plus icons",
+			folding:      false,
+			customAlerts: true,
 			defaultIcons: constants.ICONS_GFM_PLUS,
-			kind:        "info",
-			expectedDiv: "div",
+			allowNOICON:  false,
+			kind:         "info",
+			expectedDiv:  "div",
 			expectedClass: `class="callout callout-info iconset-gfmplus"`,
 		},
 		{
-			name:        "Tip alert with Obsidian icons",
-			folding:     FoldingEnabled(false),
-			customAlerts: CustomAlertsEnabled(true),
+			name:         "Tip alert with Obsidian icons",
+			folding:      false,
+			customAlerts: true,
 			defaultIcons: constants.ICONS_OBSIDIAN,
-			kind:        "tip",
-			expectedDiv: "div",
+			allowNOICON:  false,
+			kind:         "tip",
+			expectedDiv:  "div",
 			expectedClass: `class="callout callout-tip iconset-obsidian"`,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			r := NewAlertsHTMLRenderer(tc.folding, tc.defaultIcons, tc.customAlerts)
+			r := NewAlertsHTMLRenderer(make(map[string]string), tc.folding, tc.defaultIcons, tc.customAlerts, tc.allowNOICON)
 
 			// Create mock alert node
 			node := createMockAlertNode(tc.kind, false, false)
@@ -179,50 +185,50 @@ func TestAlertsHTMLRendererBasicAlert(t *testing.T) {
 
 func TestAlertsHTMLRendererFoldableAlerts(t *testing.T) {
 	testCases := []struct {
-		name        string
-		folding     FoldingEnabled
-		closed      bool
-		shouldFold  bool
-		expectedTag string
+		name         string
+		folding      bool
+		closed       bool
+		shouldFold   bool
+		expectedTag  string
 		expectedOpen string
 	}{
 		{
-			name:        "Foldable closed alert",
-			folding:     FoldingEnabled(true),
-			closed:      true,
-			shouldFold:  true,
-			expectedTag: "details",
+			name:         "Foldable closed alert",
+			folding:      true,
+			closed:       true,
+			shouldFold:   true,
+			expectedTag:  "details",
 			expectedOpen: "",
 		},
 		{
-			name:        "Foldable open alert",
-			folding:     FoldingEnabled(true),
-			closed:      false,
-			shouldFold:  true,
-			expectedTag: "details",
+			name:         "Foldable open alert",
+			folding:      true,
+			closed:       false,
+			shouldFold:   true,
+			expectedTag:  "details",
 			expectedOpen: " open",
 		},
 		{
-			name:        "Non-foldable alert with folding enabled",
-			folding:     FoldingEnabled(true),
-			closed:      false,
-			shouldFold:  false,
-			expectedTag: "div",
+			name:         "Non-foldable alert with folding enabled",
+			folding:      true,
+			closed:       false,
+			shouldFold:   false,
+			expectedTag:  "div",
 			expectedOpen: "",
 		},
 		{
-			name:        "Alert with folding disabled",
-			folding:     FoldingEnabled(false),
-			closed:      true,
-			shouldFold:  true,
-			expectedTag: "div",
+			name:         "Alert with folding disabled",
+			folding:      false,
+			closed:       true,
+			shouldFold:   true,
+			expectedTag:  "div",
 			expectedOpen: "",
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			r := NewAlertsHTMLRenderer(tc.folding, constants.ICONS_NONE, CustomAlertsEnabled(true))
+			r := NewAlertsHTMLRenderer(make(map[string]string), tc.folding, constants.ICONS_NONE, true, false)
 
 			node := createMockAlertNode("note", tc.closed, tc.shouldFold)
 
@@ -258,8 +264,9 @@ func TestAlertsHTMLRendererFoldableAlerts(t *testing.T) {
 	}
 }
 
-func TestAlertsHTMLRendererNoIconKind(t *testing.T) {
-	r := NewAlertsHTMLRenderer(FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
+func TestAlertsHTMLRendererNoIconKindWithIconMap(t *testing.T) {
+	i := map[string]string{"noicon": "<svg></svg>"}
+	r := NewAlertsHTMLRenderer(i, false, constants.ICONS_NONE, false, true)
 
 	testCases := []struct {
 		name     string
@@ -268,34 +275,16 @@ func TestAlertsHTMLRendererNoIconKind(t *testing.T) {
 		expected string
 	}{
 		{
-			name:     "No icon with title",
+			name:     "NOICON with title",
 			kind:     "noicon",
 			title:    "Custom Alert",
-			expected: "custom-alert", // should use cleaned title
+			expected: "noicon", // should use cleaned title
 		},
 		{
-			name:     "No_icon with title",
-			kind:     "no_icon",
-			title:    "Another Custom",
-			expected: "another-custom",
-		},
-		{
-			name:     "Nil with title",
-			kind:     "nil",
-			title:    "Nil Alert",
-			expected: "nil-alert",
-		},
-		{
-			name:     "Null with title",
-			kind:     "null",
-			title:    "Null Alert",
-			expected: "null-alert",
-		},
-		{
-			name:     "No icon without title",
+			name:     "NOICON with no title",
 			kind:     "noicon",
 			title:    "",
-			expected: "default", // should be default
+			expected: "noicon",
 		},
 	}
 
@@ -327,51 +316,36 @@ func TestAlertsHTMLRendererNoIconKind(t *testing.T) {
 	}
 }
 
-func TestAlertsHTMLRendererTitleCleaning(t *testing.T) {
-	r := NewAlertsHTMLRenderer(FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
+func TestAlertsHTMLRendererNoIconKindEmptyIconMap(t *testing.T) {
+	r := NewAlertsHTMLRenderer(make(map[string]string), false, constants.ICONS_NONE, false, true)
 
 	testCases := []struct {
 		name     string
+		kind     string
 		title    string
 		expected string
 	}{
 		{
-			name:     "Title with HTML tags",
-			title:    "Alert <strong>with</strong> HTML",
-			expected: "alert-with-html",
+			name:     "NOICON with title",
+			kind:     "noicon",
+			title:    "Custom Alert",
+			expected: "undefined", // should use cleaned title
 		},
 		{
-			name:     "Title with markdown",
-			title:    "Alert **with** *markdown*",
-			expected: "alert-with-markdown",
-		},
-		{
-			name:     "Title with links",
-			title:    "Alert [with](link) content",
-			expected: "alert-content", // Links are removed, leaving "Alert  content" -> "alert-content"
-		},
-		{
-			name:     "Title with code",
-			title:    "Alert `with code` content",
-			expected: "alert-content", // Code is removed, leaving "Alert  content" -> "alert-content"
-		},
-		{
-			name:     "Title with multiple spaces",
-			title:    "Alert   with    spaces",
-			expected: "alert-with-spaces",
-		},
-		{
-			name:     "Complex title",
-			title:    "**Complex** [Title](link) with `code` and <em>HTML</em>",
-			expected: "complex-with-and-html", // All markdown/HTML removed, multiple spaces collapsed
+			name:     "NOICON with no title",
+			kind:     "noicon",
+			title:    "",
+			expected: "undefined",
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			node := ast.NewAlerts()
-			node.SetAttributeString("kind", []byte("noicon"))
-			node.SetAttributeString("title", []byte(tc.title))
+			node.SetAttributeString("kind", []byte(tc.kind))
+			if tc.title != "" {
+				node.SetAttributeString("title", []byte(tc.title))
+			}
 			node.SetAttributeString("closed", false)
 			node.SetAttributeString("shouldfold", false)
 
@@ -385,6 +359,9 @@ func TestAlertsHTMLRendererTitleCleaning(t *testing.T) {
 			html := writer.String()
 			if !strings.Contains(html, "callout-"+tc.expected) {
 				t.Errorf("Expected callout-%s class, got: %s", tc.expected, html)
+			}
+			if !strings.Contains(html, `data-callout="`+tc.expected+`"`) {
+				t.Errorf("Expected data-callout=%s, got: %s", tc.expected, html)
 			}
 		})
 	}

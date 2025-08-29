@@ -13,6 +13,8 @@ var mdGFMPlus = goldmark.New(
 		NewAlertCallouts(
 			UseGFMPlusIcons(),
 			WithFolding(true),
+			WithCustomAlerts(true),
+			WithAllowNOICON(true),
 		),
 	),
 )
@@ -251,23 +253,25 @@ func TestGFMPlusCustomTitles(t *testing.T) {
 			desc: "No Icon Callout with No Title",
 			md: `> [!NoIcon]
 > This creates a No Icon Callout with No Title, but will be styled using default styling.`,
-			html: `<div class="callout callout-default iconset-gfmplus" data-callout="default"><div class="callout-title">
-<p class="callout-title-text">Noicon</p>
+			html: `<div class="callout callout-noicon iconset-gfmplus" data-callout="noicon"><div class="callout-title">
+<svg></svg><p class="callout-title-text"></p>
 </div>
 <div class="callout-body"><p>This creates a No Icon Callout with No Title, but will be styled using default styling.</p>
 </div>
-</div>`,
+</div>
+`,
 		},
 		{
 			desc: "No Icon Callout with Unrecognized Custom Title",
 			md: `> [!NoIcon] FooBar
 > This creates a No Icon Callout with a custom title, but will be styled using the default styling`,
-			html: `<div class="callout callout-foobar iconset-gfmplus" data-callout="foobar"><div class="callout-title">
-<p class="callout-title-text">FooBar</p>
+			html: `<div class="callout callout-noicon iconset-gfmplus" data-callout="noicon"><div class="callout-title">
+<svg></svg><p class="callout-title-text">FooBar</p>
 </div>
 <div class="callout-body"><p>This creates a No Icon Callout with a custom title, but will be styled using the default styling</p>
 </div>
-</div>`,
+</div>
+`,
 		},
 		{
 			desc: "No Icon Callout with Recognized Custom Title",
@@ -275,12 +279,13 @@ func TestGFMPlusCustomTitles(t *testing.T) {
 > This creates a Warning Callout without the Warning Icon, but will be styled using ` + "`" + `data-callout="warning"` + "`" + `
 > rather than the default styling, because 'warning' is a defined callout name.`,
 			html: `<div class="callout callout-warning iconset-gfmplus" data-callout="warning"><div class="callout-title">
-<p class="callout-title-text">Warning</p>
+<svg></svg><p class="callout-title-text">Warning</p>
 </div>
 <div class="callout-body"><p>This creates a Warning Callout without the Warning Icon, but will be styled using <code>data-callout=&quot;warning&quot;</code>
 rather than the default styling, because 'warning' is a defined callout name.</p>
 </div>
-</div>`,
+</div>
+`,
 		},
 	}
 

@@ -13,15 +13,16 @@ func TestNewAlertCalloutsOptions(t *testing.T) {
 			t.Fatal("NewAlertCallouts() returned nil")
 		}
 
-		if ext.Icons == nil {
+		config := ext.GetConfig()
+		if config.Icons == nil {
 			t.Error("Expected Icons to be initialized as empty map")
 		}
 
-		if len(ext.Icons) != 0 {
-			t.Errorf("Expected empty Icons map, got %d items", len(ext.Icons))
+		if len(config.Icons) != 0 {
+			t.Errorf("Expected empty Icons map, got %d items", len(config.Icons))
 		}
 
-		if ext.FoldingEnabled != true {
+		if config.FoldingEnabled != true {
 			t.Error("Expected FoldingEnabled to be true by default")
 		}
 	})
@@ -29,12 +30,12 @@ func TestNewAlertCalloutsOptions(t *testing.T) {
 	t.Run("With single icon option", func(t *testing.T) {
 		ext := NewAlertCallouts(WithIcon("note", "<svg>note icon</svg>"))
 
-		if len(ext.Icons) != 1 {
-			t.Errorf("Expected 1 icon, got %d", len(ext.Icons))
+		if len(ext.GetConfig().Icons) != 1 {
+			t.Errorf("Expected 1 icon, got %d", len(ext.GetConfig().Icons))
 		}
 
-		if ext.Icons["note"] != "<svg>note icon</svg>" {
-			t.Errorf("Expected note icon, got %s", ext.Icons["note"])
+		if ext.GetConfig().Icons["note"] != "<svg>note icon</svg>" {
+			t.Errorf("Expected note icon, got %s", ext.GetConfig().Icons["note"])
 		}
 	})
 
@@ -47,13 +48,13 @@ func TestNewAlertCalloutsOptions(t *testing.T) {
 
 		ext := NewAlertCallouts(WithIcons(icons))
 
-		if len(ext.Icons) != 3 {
-			t.Errorf("Expected 3 icons, got %d", len(ext.Icons))
+		if len(ext.GetConfig().Icons) != 3 {
+			t.Errorf("Expected 3 icons, got %d", len(ext.GetConfig().Icons))
 		}
 
 		for kind, expected := range icons {
-			if ext.Icons[kind] != expected {
-				t.Errorf("Expected %s icon to be %s, got %s", kind, expected, ext.Icons[kind])
+			if ext.GetConfig().Icons[kind] != expected {
+				t.Errorf("Expected %s icon to be %s, got %s", kind, expected, ext.GetConfig().Icons[kind])
 			}
 		}
 	})
@@ -61,7 +62,7 @@ func TestNewAlertCalloutsOptions(t *testing.T) {
 	t.Run("Disable folding", func(t *testing.T) {
 		ext := NewAlertCallouts(WithFolding(false))
 
-		if ext.FoldingEnabled != false {
+		if ext.GetConfig().FoldingEnabled != false {
 			t.Error("Expected FoldingEnabled to be false")
 		}
 	})
@@ -75,19 +76,19 @@ func TestNewAlertCalloutsOptions(t *testing.T) {
 			WithIcon("important", "<svg>important</svg>"),
 		)
 
-		if len(ext.Icons) != 2 {
-			t.Errorf("Expected 2 icons, got %d", len(ext.Icons))
+		if len(ext.GetConfig().Icons) != 2 {
+			t.Errorf("Expected 2 icons, got %d", len(ext.GetConfig().Icons))
 		}
 
-		if ext.Icons["tip"] != "<svg>tip</svg>" {
-			t.Errorf("Expected tip icon, got %s", ext.Icons["tip"])
+		if ext.GetConfig().Icons["tip"] != "<svg>tip</svg>" {
+			t.Errorf("Expected tip icon, got %s", ext.GetConfig().Icons["tip"])
 		}
 
-		if ext.Icons["important"] != "<svg>important</svg>" {
-			t.Errorf("Expected important icon, got %s", ext.Icons["important"])
+		if ext.GetConfig().Icons["important"] != "<svg>important</svg>" {
+			t.Errorf("Expected important icon, got %s", ext.GetConfig().Icons["important"])
 		}
 
-		if ext.FoldingEnabled != false {
+		if ext.GetConfig().FoldingEnabled != false {
 			t.Error("Expected FoldingEnabled to be false")
 		}
 	})
@@ -95,50 +96,46 @@ func TestNewAlertCalloutsOptions(t *testing.T) {
 
 func TestWithIconOption(t *testing.T) {
 	t.Run("Adds icon to nil map", func(t *testing.T) {
-		opts := &alertCalloutsOptions{}
+		opts := NewAlertCallouts()
 		option := WithIcon("test", "<svg>test</svg>")
 		option(opts)
 
-		if opts.Icons == nil {
+		if opts.GetConfig().Icons == nil {
 			t.Fatal("Expected Icons map to be initialized")
 		}
 
-		if opts.Icons["test"] != "<svg>test</svg>" {
-			t.Errorf("Expected test icon, got %s", opts.Icons["test"])
+		if opts.GetConfig().Icons["test"] != "<svg>test</svg>" {
+			t.Errorf("Expected test icon, got %s", opts.GetConfig().Icons["test"])
 		}
 	})
 
 	t.Run("Adds icon to existing map", func(t *testing.T) {
-		opts := &alertCalloutsOptions{
-			Icons: map[string]string{"existing": "<svg>existing</svg>"},
-		}
+		opts := NewAlertCallouts(WithIcon("existing", "<svg>existing</svg>"))
 
 		option := WithIcon("new", "<svg>new</svg>")
 		option(opts)
 
-		if len(opts.Icons) != 2 {
-			t.Errorf("Expected 2 icons, got %d", len(opts.Icons))
+		if len(opts.GetConfig().Icons) != 2 {
+			t.Errorf("Expected 2 icons, got %d", len(opts.GetConfig().Icons))
 		}
 
-		if opts.Icons["existing"] != "<svg>existing</svg>" {
+		if opts.GetConfig().Icons["existing"] != "<svg>existing</svg>" {
 			t.Error("Existing icon should be preserved")
 		}
 
-		if opts.Icons["new"] != "<svg>new</svg>" {
+		if opts.GetConfig().Icons["new"] != "<svg>new</svg>" {
 			t.Error("New icon should be added")
 		}
 	})
 
 	t.Run("Overwrites existing icon", func(t *testing.T) {
-		opts := &alertCalloutsOptions{
-			Icons: map[string]string{"note": "<svg>old</svg>"},
-		}
+		opts := NewAlertCallouts(WithIcon("note", "<svg>old</svg>"))
 
 		option := WithIcon("note", "<svg>new</svg>")
 		option(opts)
 
-		if opts.Icons["note"] != "<svg>new</svg>" {
-			t.Errorf("Expected icon to be overwritten, got %s", opts.Icons["note"])
+		if opts.GetConfig().Icons["note"] != "<svg>new</svg>" {
+			t.Errorf("Expected icon to be overwritten, got %s", opts.GetConfig().Icons["note"])
 		}
 	})
 }
@@ -150,39 +147,37 @@ func TestWithIconsOption(t *testing.T) {
 			"warning": "<svg>warning</svg>",
 		}
 
-		opts := &alertCalloutsOptions{}
+		opts := NewAlertCallouts()
 		option := WithIcons(icons)
 		option(opts)
 
-		if len(opts.Icons) != 2 {
-			t.Errorf("Expected 2 icons, got %d", len(opts.Icons))
+		if len(opts.GetConfig().Icons) != 2 {
+			t.Errorf("Expected 2 icons, got %d", len(opts.GetConfig().Icons))
 		}
 
 		for kind, expected := range icons {
-			if opts.Icons[kind] != expected {
-				t.Errorf("Expected %s icon to be %s, got %s", kind, expected, opts.Icons[kind])
+			if opts.GetConfig().Icons[kind] != expected {
+				t.Errorf("Expected %s icon to be %s, got %s", kind, expected, opts.GetConfig().Icons[kind])
 			}
 		}
 	})
 
 	t.Run("Replaces existing icons", func(t *testing.T) {
-		opts := &alertCalloutsOptions{
-			Icons: map[string]string{"old": "<svg>old</svg>"},
-		}
+		opts := NewAlertCallouts(WithIcon("old", "<svg>old</svg>"))
 
 		newIcons := map[string]string{"new": "<svg>new</svg>"}
 		option := WithIcons(newIcons)
 		option(opts)
 
-		if len(opts.Icons) != 1 {
-			t.Errorf("Expected 1 icon, got %d", len(opts.Icons))
+		if len(opts.GetConfig().Icons) != 1 {
+			t.Errorf("Expected 1 icon, got %d", len(opts.GetConfig().Icons))
 		}
 
-		if opts.Icons["new"] != "<svg>new</svg>" {
+		if opts.GetConfig().Icons["new"] != "<svg>new</svg>" {
 			t.Error("Expected new icon")
 		}
 
-		if _, exists := opts.Icons["old"]; exists {
+		if _, exists := opts.GetConfig().Icons["old"]; exists {
 			t.Error("Expected old icon to be removed")
 		}
 	})
@@ -190,21 +185,21 @@ func TestWithIconsOption(t *testing.T) {
 
 func TestWithFoldingOption(t *testing.T) {
 	t.Run("Enables folding", func(t *testing.T) {
-		opts := &alertCalloutsOptions{}
+		opts := NewAlertCallouts()
 		option := WithFolding(true)
 		option(opts)
 
-		if opts.FoldingEnabled != true {
+		if opts.GetConfig().FoldingEnabled != true {
 			t.Error("Expected FoldingEnabled to be true")
 		}
 	})
 
 	t.Run("Disables folding", func(t *testing.T) {
-		opts := &alertCalloutsOptions{}
+		opts := NewAlertCallouts()
 		option := WithFolding(false)
 		option(opts)
 
-		if opts.FoldingEnabled != false {
+		if opts.GetConfig().FoldingEnabled != false {
 			t.Error("Expected FoldingEnabled to be false")
 		}
 	})
@@ -214,14 +209,14 @@ func TestIconSetOptions(t *testing.T) {
 	t.Run("UseGFMIcons", func(t *testing.T) {
 		ext := NewAlertCallouts(UseGFMIcons())
 
-		if len(ext.Icons) == 0 {
+		if len(ext.GetConfig().Icons) == 0 {
 			t.Error("Expected GFM icons to be loaded")
 		}
 
 		// Check for some common GFM alert types
 		expectedTypes := []string{"note", "tip", "important", "warning", "caution"}
 		for _, alertType := range expectedTypes {
-			if _, exists := ext.Icons[alertType]; !exists {
+			if _, exists := ext.GetConfig().Icons[alertType]; !exists {
 				t.Errorf("Expected GFM icons to include %s", alertType)
 			}
 		}
@@ -230,7 +225,7 @@ func TestIconSetOptions(t *testing.T) {
 	t.Run("UseGFMPlusIcons", func(t *testing.T) {
 		ext := NewAlertCallouts(UseGFMPlusIcons())
 
-		if len(ext.Icons) == 0 {
+		if len(ext.GetConfig().Icons) == 0 {
 			t.Error("Expected GFM Plus icons to be loaded")
 		}
 	})
@@ -238,7 +233,7 @@ func TestIconSetOptions(t *testing.T) {
 	t.Run("UseObsidianIcons", func(t *testing.T) {
 		ext := NewAlertCallouts(UseObsidianIcons())
 
-		if len(ext.Icons) == 0 {
+		if len(ext.GetConfig().Icons) == 0 {
 			t.Error("Expected Obsidian icons to be loaded")
 		}
 	})

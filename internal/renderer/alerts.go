@@ -2,11 +2,9 @@ package renderer
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
-	utils "github.com/ZMT-Creative/gm-alert-callouts/internal/utilities"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
@@ -15,17 +13,21 @@ import (
 
 type AlertsHTMLRenderer struct {
 	html.Config
-	FoldingEnabled
-	CustomAlertsEnabled
-	DefaultIcons int
+	Icons               map[string]string
+	FoldingEnabled      bool
+	CustomAlertsEnabled bool
+	DefaultIcons        int
+	AllowNOICON         bool
 }
 
-func NewAlertsHTMLRenderer(foldingEnabled FoldingEnabled, defaultIcons int, customAlertsEnabled CustomAlertsEnabled, opts ...html.Option) renderer.NodeRenderer {
+func NewAlertsHTMLRenderer(icons map[string]string, foldingEnabled bool, defaultIcons int, customAlertsEnabled bool, allowNOICON bool, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHTMLRenderer{
-		Config:         html.NewConfig(),
-		FoldingEnabled: foldingEnabled,
-		DefaultIcons:   defaultIcons,
+		Config:              html.NewConfig(),
+		Icons:               icons,
+		FoldingEnabled:      foldingEnabled,
+		DefaultIcons:        defaultIcons,
 		CustomAlertsEnabled: customAlertsEnabled,
+		AllowNOICON:         allowNOICON,
 	}
 	for _, opt := range opts {
 		opt.SetHTMLOption(&r.Config)
@@ -38,46 +40,77 @@ func (r *AlertsHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegister
 }
 
 func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
-	alertType := ""
-	rawTitle := ""
+	alertType := "undefined"
 	if t, ok := node.AttributeString("kind"); ok {
 		if typeBytes, isBytes := t.([]uint8); isBytes {
 			alertType = strings.ToLower(string(typeBytes))
 		} else if typeStr, isStr := t.(string); isStr {
 			alertType = strings.ToLower(typeStr)
 		}
-		// Check if the alertType is "noicon" or one of its variants (none, nil or null)
-		if utils.IsNoIconKind(alertType) {
-			// If the alertType is "noicon", we want to use the "title" if it exists
-			// but we need to set the alertType to "default" in case there isn't a title
-			alertType = "default"
+
+		_, ok := r.Icons[alertType]
+		if !ok {
+			if !r.CustomAlertsEnabled {
+				alertType = "undefined"
+			} else if !r.AllowNOICON && alertType == "noicon" {
+				alertType = "undefined"
+			}
+		} else if alertType == "noicon" {
+			if r.AllowNOICON {
+				alertType = "noicon"
+			} else {
+				alertType = "undefined"
+			}
+		}
+
+		if r.CustomAlertsEnabled && (alertType == "undefined" || alertType == "noicon") {
+			rawTitle := ""
 			if rt, ok := node.AttributeString("title"); ok {
 				if typeBytes, isBytes := rt.([]uint8); isBytes {
 					rawTitle = strings.ToLower(string(typeBytes))
 				} else if typeStr, isStr := rt.(string); isStr {
 					rawTitle = strings.ToLower(typeStr)
 				}
-				// If we have a rawTitle, we can use it
-				// If not, we can just use existing alertType of "default" as a fallback
-				if rawTitle != "" {
-					// Create regular expressions for cleaning up the title for use in the HTML output
-					reHTML := regexp.MustCompile(`<[^>]+>`)
-					reWS := regexp.MustCompile(`\s+`)
-					reMDInline := regexp.MustCompile(`\*\*|\*|__|_|~~|\\`)
-					reMDLinks := regexp.MustCompile(`!?\[(.*?)\]\((.*?)\)`)
-					reMDCode := regexp.MustCompile("`{1,3}[^`]*`{1,3}")
-					// Clean up the raw title using the regular expressions
-					rawTitle = reHTML.ReplaceAllString(rawTitle, "")
-					rawTitle = reMDInline.ReplaceAllString(rawTitle, "")
-					rawTitle = reMDLinks.ReplaceAllString(rawTitle, "")
-					rawTitle = reMDCode.ReplaceAllString(rawTitle, "")
-					rawTitle = strings.TrimSpace(rawTitle)
-					rawTitle = reWS.ReplaceAllString(rawTitle, "-")
-					// Set the alert type to the cleaned-up title
-					alertType = rawTitle
-				}
+			}
+
+			_, ok = r.Icons[rawTitle]
+			if ok {
+				alertType = rawTitle
 			}
 		}
+
+		// // Check if the alertType is "noicon" or one of its variants (none, nil or null)
+		// if utils.IsNoIconKind(alertType) {
+		// 	// If the alertType is "noicon", we want to use the "title" if it exists
+		// 	// but we need to set the alertType to "default" in case there isn't a title
+		// 	alertType = "default"
+		// 	if rt, ok := node.AttributeString("title"); ok {
+		// 		if typeBytes, isBytes := rt.([]uint8); isBytes {
+		// 			rawTitle = strings.ToLower(string(typeBytes))
+		// 		} else if typeStr, isStr := rt.(string); isStr {
+		// 			rawTitle = strings.ToLower(typeStr)
+		// 		}
+		// 		// If we have a rawTitle, we can use it
+		// 		// If not, we can just use existing alertType of "default" as a fallback
+		// 		if rawTitle != "" {
+		// 			// Create regular expressions for cleaning up the title for use in the HTML output
+		// 			reHTML := regexp.MustCompile(`<[^>]+>`)
+		// 			reWS := regexp.MustCompile(`\s+`)
+		// 			reMDInline := regexp.MustCompile(`\*\*|\*|__|_|~~|\\`)
+		// 			reMDLinks := regexp.MustCompile(`!?\[(.*?)\]\((.*?)\)`)
+		// 			reMDCode := regexp.MustCompile("`{1,3}[^`]*`{1,3}")
+		// 			// Clean up the raw title using the regular expressions
+		// 			rawTitle = reHTML.ReplaceAllString(rawTitle, "")
+		// 			rawTitle = reMDInline.ReplaceAllString(rawTitle, "")
+		// 			rawTitle = reMDLinks.ReplaceAllString(rawTitle, "")
+		// 			rawTitle = reMDCode.ReplaceAllString(rawTitle, "")
+		// 			rawTitle = strings.TrimSpace(rawTitle)
+		// 			rawTitle = reWS.ReplaceAllString(rawTitle, "-")
+		// 			// Set the alert type to the cleaned-up title
+		// 			alertType = rawTitle
+		// 		}
+		// 	}
+		// }
 	}
 
 	open := " open"
@@ -106,7 +139,7 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 	startHTML := ""
 	endHTML := ""
 
-	if bool(r.FoldingEnabled) && shouldFold {
+	if r.FoldingEnabled && shouldFold {
 		startHTML = fmt.Sprintf(`<details class="callout callout-foldable callout-%s%s" data-callout="%s"%s>`, alertType, iconset, alertType, open)
 		endHTML = "\n</details>\n"
 	} else {

@@ -101,49 +101,49 @@ func TestGFMStrictPrimaryCallouts(t *testing.T) {
 func TestGFMStrictAliasCallouts(t *testing.T) {
 	testCases := []TestCase{
 		{
-			desc: "This uses the INFO alias but renders as a note callout icon.",
+			desc: "This uses the undefined INFO alias.",
 			md: `> [!INFO]
-> This uses the "info" alias but renders as a note callout.`,
-			html: `<div class="callout callout-info iconset-gfm" data-callout="info"><div class="callout-title">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">Info</p>
+> This uses the "info" alias.`,
+			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
+<p class="callout-title-text">[!Info]</p>
 </div>
-<div class="callout-body"><p>This uses the &quot;info&quot; alias but renders as a note callout.</p>
-</div>
-</div>
-`,
-		},
-		{
-			desc: "This uses the HINT alias but renders as a note callout icon.",
-			md: `> [!HINT]
-> This uses the "hint" alias but renders as a note callout.`,
-			html: `<div class="callout callout-hint iconset-gfm" data-callout="hint"><div class="callout-title">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">Hint</p>
-</div>
-<div class="callout-body"><p>This uses the &quot;hint&quot; alias but renders as a note callout.</p>
+<div class="callout-body"><p>This uses the &quot;info&quot; alias.</p>
 </div>
 </div>
 `,
 		},
 		{
-			desc: "This uses the WARN alias but renders as a note callout icon.",
+			desc: "Undefined HINT alias with a Tip custom title.",
+			md: `> [!HINT] Tip
+> This uses the "hint" alias with a custom title.`,
+			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
+<p class="callout-title-text">[!HINT] Tip</p>
+</div>
+<div class="callout-body"><p>This uses the &quot;hint&quot; alias with a custom title.</p>
+</div>
+</div>
+`,
+		},
+		{
+			desc: "This uses the undefined WARN alias.",
 			md: `> [!WARN]
-> This uses the "warn" alias but renders as a note callout.`,
-			html: `<div class="callout callout-warn iconset-gfm" data-callout="warn"><div class="callout-title">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">Warn</p>
+> This uses the "warn" alias.`,
+			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
+<p class="callout-title-text">[!Warn]</p>
 </div>
-<div class="callout-body"><p>This uses the &quot;warn&quot; alias but renders as a note callout.</p>
+<div class="callout-body"><p>This uses the &quot;warn&quot; alias.</p>
 </div>
 </div>
 `,
 		},
 		{
-			desc: "This uses the ERROR alias but renders as a note callout icon.",
+			desc: "This uses the undefined ERROR alias.",
 			md: `> [!ERROR]
-> This uses the "error" alias but renders as a note callout.`,
-			html: `<div class="callout callout-error iconset-gfm" data-callout="error"><div class="callout-title">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">Error</p>
+> This uses the "error" alias.`,
+			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
+<p class="callout-title-text">[!Error]</p>
 </div>
-<div class="callout-body"><p>This uses the &quot;error&quot; alias but renders as a note callout.</p>
+<div class="callout-body"><p>This uses the &quot;error&quot; alias.</p>
 </div>
 </div>
 `,
@@ -204,11 +204,11 @@ func TestGFMStrictFoldingExamples(t *testing.T) {
 func TestGFMStrictCustomTitles(t *testing.T) {
 	testCases := []TestCase{
 		{
-			desc: "Use Existing Icon with Custom Title",
+			desc: "Using Undefined SUCCESS alias with a custom title",
 			md: `> [!SUCCESS] Mission Accomplished
 > You can override the default title with any custom text.`,
-			html: `<div class="callout callout-success iconset-gfm" data-callout="success"><div class="callout-title">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">Mission Accomplished</p>
+			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
+<p class="callout-title-text">[!SUCCESS] Mission Accomplished</p>
 </div>
 <div class="callout-body"><p>You can override the default title with any custom text.</p>
 </div>
@@ -216,11 +216,11 @@ func TestGFMStrictCustomTitles(t *testing.T) {
 `,
 		},
 		{
-			desc: "Custom Title rendered As-Is",
+			desc: "Using Undefined SUCCESS alias with custom title rendered As-Is",
 			md: `> [!SUCCESS] MiSsIoN AcCoMpLiShEd
 > You can override the default title with any custom text.`,
-			html: `<div class="callout callout-success iconset-gfm" data-callout="success"><div class="callout-title">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">MiSsIoN AcCoMpLiShEd</p>
+			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
+<p class="callout-title-text">[!SUCCESS] MiSsIoN AcCoMpLiShEd</p>
 </div>
 <div class="callout-body"><p>You can override the default title with any custom text.</p>
 </div>
@@ -228,64 +228,54 @@ func TestGFMStrictCustomTitles(t *testing.T) {
 `,
 		},
 		{
-			desc: "Unknown Callout",
+			desc: "Using Undefined FOO Callout",
 			md: `> [!FOO]
 > You can use an unrecognized entry for the callout.`,
-			html: `<div class="callout callout-foo iconset-gfm" data-callout="foo"><div class="callout-title">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">Foo</p>
+			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
+<p class="callout-title-text">[!Foo]</p>
 </div>
 <div class="callout-body"><p>You can use an unrecognized entry for the callout.</p>
 </div>
-</div>`,
+</div>
+`,
 		},
 		{
-			desc: "TLDR alias with custom title",
-			md: `> [!TLDR] tl;dr
-> This uses the "tldr" alias as before but uses the custom title of 'tl;dr' instead.
->
-> (*see [Custom Titles](#custom-titles) for more examples of custom titles*)`,
-			html: `<div class="callout callout-tldr iconset-gfm" data-callout="tldr"><div class="callout-title">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">tl;dr</p>
-</div>
-<div class="callout-body"><p>This uses the &quot;tldr&quot; alias as before but uses the custom title of 'tl;dr' instead.</p>
-<p>(<em>see <a href="#custom-titles">Custom Titles</a> for more examples of custom titles</em>)</p>
-</div>
-</div>`,
-		},
-		{
-			desc: "No Icon Callout with No Title",
+			desc: "Disallowed NOICON Callout",
 			md: `> [!NoIcon]
-> This creates a No Icon Callout with No Title, but will be styled using default styling.`,
-			html: `<div class="callout callout-default iconset-gfm" data-callout="default"><div class="callout-title">
-<p class="callout-title-text">Noicon</p>
+> This is a disallowed NOICON callout.`,
+			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
+<p class="callout-title-text">[!NOICON]</p>
 </div>
-<div class="callout-body"><p>This creates a No Icon Callout with No Title, but will be styled using default styling.</p>
+<div class="callout-body"><p>This is a disallowed NOICON callout.</p>
 </div>
-</div>`,
+</div>
+`,
 		},
 		{
-			desc: "No Icon Callout with Unrecognized Custom Title",
+			desc: "Disallowed NOICON Callout with Unrecognized Custom Title",
 			md: `> [!NoIcon] FooBar
 > This creates a No Icon Callout with a custom title, but will be styled using the default styling`,
-			html: `<div class="callout callout-foobar iconset-gfm" data-callout="foobar"><div class="callout-title">
-<p class="callout-title-text">FooBar</p>
+			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
+<p class="callout-title-text">[!NOICON] FooBar</p>
 </div>
 <div class="callout-body"><p>This creates a No Icon Callout with a custom title, but will be styled using the default styling</p>
 </div>
-</div>`,
+</div>
+`,
 		},
 		{
-			desc: "No Icon Callout with Recognized Custom Title",
+			desc: "Disallowed NOICON Callout with Recognized Custom Title",
 			md: `> [!NoIcon] Warning
 > This creates a Warning Callout without the Warning Icon, but will be styled using ` + "`" + `data-callout="warning"` + "`" + `
 > rather than the default styling, because 'warning' is a defined callout name.`,
-			html: `<div class="callout callout-warning iconset-gfm" data-callout="warning"><div class="callout-title">
-<p class="callout-title-text">Warning</p>
+			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
+<p class="callout-title-text">[!NOICON] Warning</p>
 </div>
 <div class="callout-body"><p>This creates a Warning Callout without the Warning Icon, but will be styled using <code>data-callout=&quot;warning&quot;</code>
 rather than the default styling, because 'warning' is a defined callout name.</p>
 </div>
-</div>`,
+</div>
+`,
 		},
 	}
 

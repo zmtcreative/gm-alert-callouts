@@ -11,7 +11,7 @@ import (
 )
 
 func TestNewAlertsHeaderHTMLRenderer(t *testing.T) {
-	r := NewAlertsHeaderHTMLRenderer(FoldingEnabled(true), constants.ICONS_GFM_STRICT, CustomAlertsEnabled(true))
+	r := NewAlertsHeaderHTMLRenderer(nil, true, constants.ICONS_GFM_STRICT, true, false)
 	if r == nil {
 		t.Fatal("NewAlertsHeaderHTMLRenderer returned nil")
 	}
@@ -21,7 +21,7 @@ func TestNewAlertsHeaderHTMLRenderer(t *testing.T) {
 		t.Fatal("NewAlertsHeaderHTMLRenderer did not return *AlertsHeaderHTMLRenderer")
 	}
 
-	if headerRenderer.FoldingEnabled != FoldingEnabled(true) {
+	if headerRenderer.FoldingEnabled != true {
 		t.Error("FoldingEnabled not set correctly")
 	}
 
@@ -46,7 +46,7 @@ func TestNewAlertsHeaderHTMLRendererWithIcons(t *testing.T) {
 		t.Fatal("NewAlertsHeaderHTMLRendererWithIcons did not return *AlertsHeaderHTMLRenderer")
 	}
 
-	if headerRenderer.FoldingEnabled != FoldingEnabled(false) {
+	if headerRenderer.FoldingEnabled != false {
 		t.Error("FoldingEnabled not set correctly")
 	}
 
@@ -60,7 +60,7 @@ func TestNewAlertsHeaderHTMLRendererWithIcons(t *testing.T) {
 }
 
 func TestAlertsHeaderHTMLRendererRegisterFuncs(t *testing.T) {
-	r := NewAlertsHeaderHTMLRenderer(FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
+	r := NewAlertsHeaderHTMLRenderer(nil, false, constants.ICONS_NONE, false, false)
 
 	registrations := make(map[gast.NodeKind]renderer.NodeRendererFunc)
 	mockRegisterer := &mockNodeRendererFuncRegisterer{
@@ -81,35 +81,35 @@ func TestAlertsHeaderHTMLRendererRegisterFuncs(t *testing.T) {
 func TestAlertsHeaderHTMLRendererBasicHeader(t *testing.T) {
 	testCases := []struct {
 		name          string
-		folding       FoldingEnabled
+		folding       bool
 		shouldFold    bool
 		expectedStart string
 		expectedEnd   string
 	}{
 		{
 			name:          "Non-foldable header",
-			folding:       FoldingEnabled(false),
+			folding:       false,
 			shouldFold:    false,
 			expectedStart: `<div class="callout-title">`,
 			expectedEnd:   "</div>",
 		},
 		{
 			name:          "Foldable header",
-			folding:       FoldingEnabled(true),
+			folding:       true,
 			shouldFold:    true,
 			expectedStart: `<summary class="callout-title">`,
 			expectedEnd:   "</summary>",
 		},
 		{
 			name:          "Non-foldable with folding disabled",
-			folding:       FoldingEnabled(false),
+			folding:       false,
 			shouldFold:    true,
 			expectedStart: `<div class="callout-title">`,
 			expectedEnd:   "</div>",
 		},
 		{
 			name:          "Non-foldable alert with folding enabled",
-			folding:       FoldingEnabled(true),
+			folding:       true,
 			shouldFold:    false,
 			expectedStart: `<div class="callout-title">`,
 			expectedEnd:   "</div>",
@@ -118,7 +118,7 @@ func TestAlertsHeaderHTMLRendererBasicHeader(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			r := NewAlertsHeaderHTMLRenderer(tc.folding, constants.ICONS_NONE, CustomAlertsEnabled(true))
+			r := NewAlertsHeaderHTMLRenderer(nil, tc.folding, constants.ICONS_NONE, true, false)
 
 			node := createMockHeaderNode("note", tc.shouldFold, "")
 
@@ -179,9 +179,9 @@ func TestAlertsHeaderHTMLRendererWithIcons(t *testing.T) {
 			expectedIcon: "<svg class='warning-icon'>Warning</svg>",
 		},
 		{
-			name:         "Unknown kind with default fallback",
+			name:         "Unknown kind with no icon",
 			kind:         "unknown",
-			expectedIcon: "<svg class='note-icon'>Note</svg>", // Falls back to note first
+			expectedIcon: "", // Falls back to note first
 		},
 	}
 
@@ -200,35 +200,6 @@ func TestAlertsHeaderHTMLRendererWithIcons(t *testing.T) {
 			html := writer.String()
 			if !strings.Contains(html, tc.expectedIcon) {
 				t.Errorf("Expected icon %s, got: %s", tc.expectedIcon, html)
-			}
-		})
-	}
-}
-
-func TestAlertsHeaderHTMLRendererNoIconKinds(t *testing.T) {
-	icons := Icons{
-		"note":    "<svg>note-icon</svg>",
-		"default": "<svg>default-icon</svg>",
-	}
-
-	testCases := []string{"noicon", "no_icon", "none", "nil", "null"}
-
-	for _, kind := range testCases {
-		t.Run("No icon for "+kind, func(t *testing.T) {
-			r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
-
-			node := createMockHeaderNode(kind, false, "")
-
-			writer := newMockBufWriter()
-			_, err := r.(*AlertsHeaderHTMLRenderer).renderAlertsHeader(writer, []byte{}, node, true)
-			if err != nil {
-				t.Fatalf("Unexpected error: %v", err)
-			}
-
-			html := writer.String()
-			// Should not contain any icons for noicon kinds
-			if strings.Contains(html, "<svg>") {
-				t.Errorf("Expected no icon for kind %s, but found icon in: %s", kind, html)
 			}
 		})
 	}
@@ -304,7 +275,7 @@ func TestAlertsHeaderHTMLRendererIconFallback(t *testing.T) {
 		"info": "<svg>info-icon</svg>", // has info but not note
 	}
 
-	r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
+	r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(true))
 
 	// Test fallback to 'note' when specific kind not found
 	node := createMockHeaderNode("unknown", false, "")

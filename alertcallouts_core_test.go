@@ -12,10 +12,10 @@ import (
 func TestAlertCalloutsCore(t *testing.T) {
 	mdTest := goldmark.New(
 		goldmark.WithExtensions(
-			&alertCalloutsOptions{
-				Icons:          map[string]string{"note": "<svg></svg>", "info": "<svg></svg>", "warning": "<svg></svg>", "tip": "<svg></svg>"},
-				FoldingEnabled: true,
-			},
+			NewAlertCallouts(
+				WithIcons(map[string]string{"note": "<svg></svg>", "info": "<svg></svg>", "warning": "<svg></svg>", "tip": "<svg></svg>"}),
+				WithFolding(true),
+			),
 		),
 	)
 
@@ -115,10 +115,10 @@ Content here</p>
 func TestASTNodeCreationCore(t *testing.T) {
 	mdTest := goldmark.New(
 		goldmark.WithExtensions(
-			&alertCalloutsOptions{
-				Icons:          map[string]string{"note": "<svg></svg>", "warning": "<svg></svg>", "info": "<svg></svg>"},
-				FoldingEnabled: true,
-			},
+			NewAlertCallouts(
+				WithIcons(map[string]string{"note": "<svg></svg>", "warning": "<svg></svg>", "info": "<svg></svg>"}),
+				WithFolding(true),
+			),
 		),
 	)
 
@@ -149,10 +149,10 @@ func TestASTNodeCreationCore(t *testing.T) {
 
 // Test extension registration
 func TestExtensionRegistrationCore(t *testing.T) {
-	ext := &alertCalloutsOptions{
-		Icons:          map[string]string{"test": "icon"},
-		FoldingEnabled: false,
-	}
+	ext := NewAlertCallouts(
+		WithIcons(map[string]string{"test": "icon"}),
+		WithFolding(false),
+	)
 
 	md := goldmark.New(goldmark.WithExtensions(ext))
 
@@ -171,10 +171,10 @@ func TestExtensionRegistrationCore(t *testing.T) {
 func BenchmarkSimpleAlertCore(b *testing.B) {
 	mdTest := goldmark.New(
 		goldmark.WithExtensions(
-			&alertCalloutsOptions{
-				Icons:          map[string]string{"info": "<svg></svg>"},
-				FoldingEnabled: true,
-			},
+			NewAlertCallouts(
+				WithIcons(map[string]string{"info": "<svg></svg>"}),
+				WithFolding(true),
+			),
 		),
 	)
 
@@ -193,10 +193,10 @@ func BenchmarkSimpleAlertCore(b *testing.B) {
 func BenchmarkComplexAlertCore(b *testing.B) {
 	mdTest := goldmark.New(
 		goldmark.WithExtensions(
-			&alertCalloutsOptions{
-				Icons:          map[string]string{"warning": "<svg></svg>"},
-				FoldingEnabled: true,
-			},
+			NewAlertCallouts(
+				WithIcons(map[string]string{"warning": "<svg></svg>"}),
+				WithFolding(true),
+			),
 		),
 	)
 

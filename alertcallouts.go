@@ -33,11 +33,19 @@ var _ = alertCalloutsIconsGFMWithAliases
 var _ = alertCalloutsIconsGFMPlus
 var _ = alertCalloutsIconsObsidian
 
+// Config holds all configuration options for alert callouts rendering.
+// This struct is passed to renderer constructors to avoid long parameter lists
+// and make it easy to add new options without breaking function signatures.
+type Config struct {
+	Icons               map[string]string // Icon map for different alert types
+	FoldingEnabled      bool              // Whether folding functionality is enabled
+	CustomAlertsEnabled bool              // Whether custom alert types are allowed
+	DefaultIcons        int               // Which default icon set to use (constants.ICONS_*)
+	AllowNOICON         bool              // Whether to allow NOICON alert types (example of new option)
+}
+
 type alertCalloutsOptions struct {
-	alertRenderer.Icons
-	alertRenderer.FoldingEnabled
-	alertRenderer.CustomAlertsEnabled
-	defaultIcons int
+	config Config
 }
 
 // Option is a functional option for configuring alertCalloutsOptions.
@@ -46,17 +54,17 @@ type Option func(*alertCalloutsOptions)
 // WithIcons sets the icons map for alert callouts.
 func WithIcons(icons map[string]string) Option {
 	return func(opts *alertCalloutsOptions) {
-		opts.Icons = icons
+		opts.config.Icons = icons
 	}
 }
 
 // WithIcon adds a single icon to the icons map for alert callouts.
 func WithIcon(kind, icon string) Option {
 	return func(opts *alertCalloutsOptions) {
-		if opts.Icons == nil {
-			opts.Icons = make(map[string]string)
+		if opts.config.Icons == nil {
+			opts.config.Icons = make(map[string]string)
 		}
-		opts.Icons[kind] = icon
+		opts.config.Icons[kind] = icon
 	}
 }
 
@@ -68,52 +76,67 @@ func UseGFMIcons() Option {
 
 func UseGFMStrictIcons() Option {
 	return func(opts *alertCalloutsOptions) {
-		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMStrict)
-		opts.defaultIcons = constants.ICONS_GFM_STRICT
-		opts.FoldingEnabled = alertRenderer.FoldingEnabled(false)
-		opts.CustomAlertsEnabled = alertRenderer.CustomAlertsEnabled(false)
+		opts.config.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMStrict)
+		opts.config.DefaultIcons = constants.ICONS_GFM_STRICT
+		opts.config.FoldingEnabled = false
+		opts.config.CustomAlertsEnabled = false
+		opts.config.AllowNOICON = false
 	}
 }
 
 func UseGFMWithAliasesIcons() Option {
 	return func(opts *alertCalloutsOptions) {
-		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMWithAliases)
-		opts.defaultIcons = constants.ICONS_GFM_WITH_ALIASES
-		opts.FoldingEnabled = alertRenderer.FoldingEnabled(false)
-		opts.CustomAlertsEnabled = alertRenderer.CustomAlertsEnabled(false)
+		opts.config.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMWithAliases)
+		opts.config.DefaultIcons = constants.ICONS_GFM_WITH_ALIASES
+		opts.config.FoldingEnabled = false
+		opts.config.CustomAlertsEnabled = false
+		opts.config.AllowNOICON = false
 	}
 }
 
 // UseGFMPlusIcons sets the icon map to the GFM Plus icon set (essentially a melding of GFM and Obsidian).
 func UseGFMPlusIcons() Option {
 	return func(opts *alertCalloutsOptions) {
-		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMPlus)
-		opts.defaultIcons = constants.ICONS_GFM_PLUS
-		opts.FoldingEnabled = alertRenderer.FoldingEnabled(true)
-		opts.CustomAlertsEnabled = alertRenderer.CustomAlertsEnabled(true)
+		opts.config.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMPlus)
+		opts.config.DefaultIcons = constants.ICONS_GFM_PLUS
+		opts.config.FoldingEnabled = true
+		opts.config.CustomAlertsEnabled = true
+		opts.config.AllowNOICON = true
+		opts.config.Icons["noicon"] = `<svg></svg>`
 	}
 }
 
 // UseObsidianIcons sets the icon map to the Obsidian-style icon set.
 func UseObsidianIcons() Option {
 	return func(opts *alertCalloutsOptions) {
-		opts.Icons = utils.CreateIconsMap(alertCalloutsIconsObsidian)
-		opts.defaultIcons = constants.ICONS_OBSIDIAN
-		opts.FoldingEnabled = alertRenderer.FoldingEnabled(true)
-		opts.CustomAlertsEnabled = alertRenderer.CustomAlertsEnabled(true)
+		opts.config.Icons = utils.CreateIconsMap(alertCalloutsIconsObsidian)
+		opts.config.DefaultIcons = constants.ICONS_OBSIDIAN
+		opts.config.FoldingEnabled = true
+		opts.config.CustomAlertsEnabled = true
+		opts.config.AllowNOICON = false
 	}
 }
 
 // WithFolding sets the folding functionality for alert callouts.
 func WithFolding(enable bool) Option {
 	return func(opts *alertCalloutsOptions) {
-		opts.FoldingEnabled = alertRenderer.FoldingEnabled(enable)
+		opts.config.FoldingEnabled = enable
 	}
 }
 
 func WithCustomAlerts(enable bool) Option {
 	return func(opts *alertCalloutsOptions) {
-		opts.CustomAlertsEnabled = alertRenderer.CustomAlertsEnabled(enable)
+		opts.config.CustomAlertsEnabled = enable
+	}
+}
+
+// WithAllowNOICON sets whether to allow NOICON alert types (example of new option).
+func WithAllowNOICON(enable bool) Option {
+	return func(opts *alertCalloutsOptions) {
+		opts.config.AllowNOICON = enable
+		if enable {
+			opts.config.Icons["noicon"] = `<svg></svg>`
+		}
 	}
 }
 
@@ -135,10 +158,13 @@ var AlertCallouts = NewAlertCallouts(
 // This follows the standard Goldmark extension initialization pattern.
 func NewAlertCallouts(options ...Option) *alertCalloutsOptions {
 	opts := &alertCalloutsOptions{
-		Icons:          make(map[string]string),
-		FoldingEnabled: true,
-		CustomAlertsEnabled: true,
-		defaultIcons:   constants.ICONS_NONE,
+		config: Config{
+			Icons:               make(map[string]string),
+			FoldingEnabled:      true,
+			CustomAlertsEnabled: true,
+			DefaultIcons:        constants.ICONS_NONE,
+			AllowNOICON:         true, // Default to true for backward compatibility
+		},
 	}
 
 	for _, option := range options {
@@ -146,6 +172,12 @@ func NewAlertCallouts(options ...Option) *alertCalloutsOptions {
 	}
 
 	return opts
+}
+
+// GetConfig returns the internal configuration for testing purposes.
+// This method should not be used in production code.
+func (e *alertCalloutsOptions) GetConfig() *Config {
+	return &e.config
 }
 
 // Extend implements goldmark.Extender.
@@ -158,8 +190,8 @@ func (e *alertCalloutsOptions) Extend(m goldmark.Markdown) {
 	)
 	m.Renderer().AddOptions(
 		renderer.WithNodeRenderers(
-			util.Prioritized(alertRenderer.NewAlertsHTMLRenderer(e.FoldingEnabled, e.defaultIcons, e.CustomAlertsEnabled), 0),
-			util.Prioritized(alertRenderer.NewAlertsHeaderHTMLRendererWithIcons(e.Icons, e.FoldingEnabled, e.defaultIcons, e.CustomAlertsEnabled), 0),
+			util.Prioritized(alertRenderer.NewAlertsHTMLRenderer(e.config.Icons, e.config.FoldingEnabled, e.config.DefaultIcons, e.config.CustomAlertsEnabled, e.config.AllowNOICON), 0),
+			util.Prioritized(alertRenderer.NewAlertsHeaderHTMLRenderer(e.config.Icons, e.config.FoldingEnabled, e.config.DefaultIcons, e.config.CustomAlertsEnabled, e.config.AllowNOICON), 0),
 			util.Prioritized(alertRenderer.NewAlertsBodyHTMLRenderer(), 0),
 		),
 	)
