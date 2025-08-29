@@ -202,7 +202,7 @@ func TestObsidianPrimaryCallouts(t *testing.T) {
 	}
 }
 
-// TestObsidianAliasCallouts tests alias callouts that reference primary callouts
+// TestObsidianAliasCallouts tests some alias callouts that reference primary callouts
 func TestObsidianAliasCallouts(t *testing.T) {
 	testCases := []TestCase{
 		{
@@ -282,13 +282,49 @@ func TestObsidianFoldingExamples(t *testing.T) {
 `,
 		},
 		{
-			desc: "Open by Default folding (Explicit)",
+			desc: "Open by Default folding",
 			md: `> [!IMPORTANT]+
 > This important callout is explicitly marked as open by default with the plus sign.`,
 			html: `<details class="callout callout-foldable callout-important iconset-obsidian" data-callout="important" open><summary class="callout-title">
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-flame"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg><p class="callout-title-text">Important</p>
 </summary>
 <div class="callout-body"><p>This important callout is explicitly marked as open by default with the plus sign.</p>
+</div>
+</details>
+`,
+		},
+		{
+			desc: "Open by Default folding Custom Alert",
+			md: `> [!ZEPHYR]+
+> This custom callout is marked as open by default with the plus sign.`,
+			html: `<details class="callout callout-foldable callout-zephyr iconset-obsidian" data-callout="zephyr" open><summary class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg><p class="callout-title-text">Zephyr</p>
+</summary>
+<div class="callout-body"><p>This custom callout is marked as open by default with the plus sign.</p>
+</div>
+</details>
+`,
+		},
+		{
+			desc: "Open by Default folding Custom Alert with Recognized Title",
+			md: `> [!ZEPHYR]+ Warning
+> This custom callout is marked as open by default with the plus sign.`,
+			html: `<details class="callout callout-foldable callout-warning iconset-obsidian" data-callout="warning" open><summary class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg><p class="callout-title-text">Warning</p>
+</summary>
+<div class="callout-body"><p>This custom callout is marked as open by default with the plus sign.</p>
+</div>
+</details>
+`,
+		},
+		{
+			desc: "Open by Default folding Recognized Alert with Recognized Title",
+			md: `> [!Danger]+ Warning
+> This danger callout is marked as open by default with the plus sign.`,
+			html: `<details class="callout callout-foldable callout-danger iconset-obsidian" data-callout="danger" open><summary class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-zap"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path></svg><p class="callout-title-text">Warning</p>
+</summary>
+<div class="callout-body"><p>This danger callout is marked as open by default with the plus sign.</p>
 </div>
 </details>
 `,
