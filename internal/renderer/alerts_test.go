@@ -316,8 +316,8 @@ func TestAlertsHTMLRendererNoIconKindWithIconMap(t *testing.T) {
 	}
 }
 
-func TestAlertsHTMLRendererNoIconKindEmptyIconMap(t *testing.T) {
-	r := NewAlertsHTMLRenderer(make(map[string]string), false, constants.ICONS_NONE, false, true)
+func TestAlertsHTMLRendererNoIconKindDisabled(t *testing.T) {
+	r := NewAlertsHTMLRenderer(make(map[string]string), false, constants.ICONS_NONE, false, false)
 
 	testCases := []struct {
 		name     string

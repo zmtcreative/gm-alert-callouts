@@ -98,7 +98,7 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 		if icon != "" {
 			startHTML += icon
 		} else if r.CustomAlertsEnabled {
-			for _, v := range []string{"note", "info", "tip", "question", "default", "icon", "svg"} {
+			for _, v := range []string{"default", "note", "info", "tip", "question", "icon", "svg"} {
 				deficon, ok := r.Icons[v]
 				if ok {
 					startHTML += deficon

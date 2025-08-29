@@ -19,6 +19,17 @@ var mdObsidian = goldmark.New(
 	),
 )
 
+var mdObsidianWithNOICON = goldmark.New(
+	goldmark.WithExtensions(
+		NewAlertCallouts(
+			UseObsidianIcons(),
+			WithFolding(true),
+			WithCustomAlerts(true),
+			WithAllowNOICON(true),
+		),
+	),
+)
+
 // TestObsidianPrimaryCallouts tests the primary callouts from the GFM Plus icon set
 func TestObsidianPrimaryCallouts(t *testing.T) {
 	testCases := []TestCase{
@@ -296,7 +307,7 @@ func TestObsidianFoldingExamples(t *testing.T) {
 }
 
 // TestObsidianCustomTitles tests custom titles functionality with GFM Plus callouts
-func TestObsidianCustomTitles(t *testing.T) {
+func TestObsidianCustomTitlesNoIconDisabled(t *testing.T) {
 	testCases := []TestCase{
 		{
 			desc: "Use Existing Icon with Custom Title",
@@ -350,7 +361,7 @@ func TestObsidianCustomTitles(t *testing.T) {
 `,
 		},
 		{
-			desc: "No Icon Callout with No Title",
+			desc: "NOICON Callout with No Title",
 			md: `> [!NoIcon]
 > This creates a No Icon Callout with No Title, but will be styled using default styling.`,
 			html: `<div class="callout callout-undefined iconset-obsidian" data-callout="undefined"><div class="callout-title">
@@ -362,7 +373,7 @@ func TestObsidianCustomTitles(t *testing.T) {
 `,
 		},
 		{
-			desc: "No Icon Callout with Unrecognized Custom Title",
+			desc: "NOICON Callout with Unrecognized Custom Title",
 			md: `> [!NoIcon] FooBar
 > This creates a No Icon Callout with a custom title, but will be styled using the default styling`,
 			html: `<div class="callout callout-undefined iconset-obsidian" data-callout="undefined"><div class="callout-title">
@@ -374,11 +385,11 @@ func TestObsidianCustomTitles(t *testing.T) {
 `,
 		},
 		{
-			desc: "No Icon Callout with Recognized Custom Title",
+			desc: "NOICON Callout with Recognized Custom Title",
 			md: `> [!NoIcon] Warning
 > This creates a Warning Callout without the Warning Icon, but will be styled using ` + "`" + `data-callout="warning"` + "`" + `
 > rather than the default styling, because 'warning' is a defined callout name.`,
-			html: `<div class="callout callout-warning iconset-obsidian" data-callout="warning"><div class="callout-title">
+			html: `<div class="callout callout-undefined iconset-obsidian" data-callout="undefined"><div class="callout-title">
 <p class="callout-title-text">[!NOICON] Warning</p>
 </div>
 <div class="callout-body"><p>This creates a Warning Callout without the Warning Icon, but will be styled using <code>data-callout=&quot;warning&quot;</code>
@@ -392,6 +403,60 @@ rather than the default styling, because 'warning' is a defined callout name.</p
 	for _, tc := range testCases {
 		t.Run(tc.desc, func(t *testing.T) {
 			testutil.DoTestCase(mdObsidian, testutil.MarkdownTestCase{
+				Description: tc.desc,
+				Markdown:    tc.md,
+				Expected:    tc.html,
+			}, t)
+		})
+	}
+}
+
+// TestObsidianCustomTitles tests custom titles functionality with GFM Plus callouts
+func TestObsidianNoIconEnabled(t *testing.T) {
+	testCases := []TestCase{
+		{
+			desc: "NOICON Callout with No Title",
+			md: `> [!NoIcon]
+> This creates a NOICON Callout with No Title, with data-callout=noicon.`,
+			html: `<div class="callout callout-noicon iconset-obsidian" data-callout="noicon"><div class="callout-title">
+<svg></svg><p class="callout-title-text"></p>
+</div>
+<div class="callout-body"><p>This creates a NOICON Callout with No Title, with data-callout=noicon.</p>
+</div>
+</div>
+`,
+		},
+		{
+			desc: "NOICON Callout with Unrecognized Custom Title",
+			md: `> [!NoIcon] FooBar
+> This creates a NOICON Callout with a custom title, with data-callout=noicon.`,
+			html: `<div class="callout callout-noicon iconset-obsidian" data-callout="noicon"><div class="callout-title">
+<svg></svg><p class="callout-title-text">FooBar</p>
+</div>
+<div class="callout-body"><p>This creates a NOICON Callout with a custom title, with data-callout=noicon.</p>
+</div>
+</div>
+`,
+		},
+		{
+			desc: "NOICON Callout with Recognized Custom Title",
+			md: `> [!NoIcon] Warning
+> This creates a Warning Callout without the Warning Icon, but will be styled using data-callout=warning
+> rather than the default styling, because 'warning' is a defined callout name.`,
+			html: `<div class="callout callout-warning iconset-obsidian" data-callout="warning"><div class="callout-title">
+<svg></svg><p class="callout-title-text">Warning</p>
+</div>
+<div class="callout-body"><p>This creates a Warning Callout without the Warning Icon, but will be styled using data-callout=warning
+rather than the default styling, because 'warning' is a defined callout name.</p>
+</div>
+</div>
+`,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.desc, func(t *testing.T) {
+			testutil.DoTestCase(mdObsidianWithNOICON, testutil.MarkdownTestCase{
 				Description: tc.desc,
 				Markdown:    tc.md,
 				Expected:    tc.html,
