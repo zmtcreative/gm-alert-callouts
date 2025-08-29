@@ -36,14 +36,14 @@ type Extender interface {
 
 ```go
 var AlertCallouts = NewAlertCallouts(
-    UseGFMIcons(),
+    UseGFMStrictIcons(),
     WithFolding(true),
 )
 ```
 
 A ready-to-use extension instance with sensible defaults:
 
-- GFM (GitHub Flavored Markdown) icon set
+- GFM + Aliases (GitHub Flavored Markdown with some additional aliases) icon set
 - Folding functionality enabled
 
 **Example:**
@@ -88,9 +88,31 @@ All configuration uses functional options that can be passed to `NewAlertCallout
 
 -----
 
-#### `UseGFMIcons() Option`
+#### `UseGFMStrictIcons() Option`
 
-Configures the extension with GitHub Flavored Markdown standard icons.
+Configures the extension with GitHub Flavored Markdown standard icons. Folding and Custom Alerts are disabled by default.
+
+**Included Alert Types:**
+
+- `note`
+- `tip`
+- `important`
+- `warning`
+- `caution`
+
+**Example:**
+
+```go
+extension := alertcallouts.NewAlertCallouts(
+    alertcallouts.UseGFMStrictIcons(),
+)
+```
+
+-----
+
+#### `UseGFMWithAliasesIcons() Option`
+
+Configures the extension with GitHub Flavored Markdown standard icons with some aliases. Folding and Custom Alerts are disabled by default.
 
 **Included Alert Types:**
 
@@ -104,7 +126,7 @@ Configures the extension with GitHub Flavored Markdown standard icons.
 
 ```go
 extension := alertcallouts.NewAlertCallouts(
-    alertcallouts.UseGFMIcons(),
+    alertcallouts.UseGFMWithAliasesIcons(),
 )
 ```
 
@@ -113,6 +135,17 @@ extension := alertcallouts.NewAlertCallouts(
 #### `UseGFMPlusIcons() Option`
 
 Configures the extension with an extended icon set that combines GitHub and Obsidian-style icons for maximum compatibility. This will use the expected GitHub-style icons for the standard five GitHub Alerts, but will use an extended set of icons for other callouts. **If you require strict adherence to Obsidian-style icons, use the `UseObsidianIcons()` option instead.**
+
+This option also enables Folding, Custom Alerts and allows the use of the `[!NOICON]` alert type to render a callout without an icon. If you use a title after the `[!NOICON]` that is a recognized alert type, the styling for that type will be used.
+
+For example:
+
+```markdown
+> [!NOICON] Warning
+> This is a warning!
+```
+
+Would be styled as a `Warning` callout type, but would not have an icon.
 
 **Included Alert Types:**
 
@@ -144,6 +177,8 @@ extension := alertcallouts.NewAlertCallouts(
 #### `UseObsidianIcons() Option`
 
 Configures the extension with Obsidian-compatible icons, ideal for users transitioning from or integrating with Obsidian.
+
+Folding and Custom Alerts are enabled. The `[!NOICON]` option is disabled.
 
 **Included Alert Types:**
 
@@ -246,6 +281,37 @@ extension := alertcallouts.NewAlertCallouts(
 )
 ```
 
+#### `WithCustomAlerts(enable bool) Option`
+
+Enables or disables the use of custom alerts. If the custom alert doesn't have an icon in the iconset, the extension will use the `default`, `note`, `info`, `tip` or `question` icon name (depending on which is availble in the set). The selection will be made in that order, so if you add a custom icon for `default` using the `WithIcon()` function, this icon will be used for any custom alerts.
+
+For example:
+
+```markdown
+> [!CUSTOMIZE]
+> This is a custom alert callout type.
+```
+
+This would render the alert with the `default` icon (or one of the above icons) and the title `Customize` with proper capitalization.
+
+**Parameters:**
+
+- `enable bool`: `true` to enable folding, `false` to disable
+
+**Example:**
+
+```go
+// Enable Custom Alerts
+extension := alertcallouts.NewAlertCallouts(
+    alertcallouts.WithCustomAlerts(true),
+)
+
+// Disable Custom Alerts
+extension := alertcallouts.NewAlertCallouts(
+    alertcallouts.WithCustomAlerts(false),
+)
+```
+
 ## Usage Patterns
 
 ### Basic Alert Integration
@@ -265,7 +331,7 @@ func main() {
     md := goldmark.New(
         goldmark.WithExtensions(
             alertcallouts.NewAlertCallouts(
-                alertcallouts.UseGFMIcons(),
+                alertcallouts.UseGFMStrictIcons(),
                 alertcallouts.WithFolding(true),
             ),
         ),
@@ -437,7 +503,7 @@ Alerts support all standard Markdown elements:
 
 If an alert type has no configured icon:
 
-- The alert renders without an icon
+- If `WithCustomAlerts(true)`, the alert renders without an icon, otherwise the alert will be rendered with the original markdown text (e.g., if you use `[!CUSTOM]` and Custom Alerts are disabled, the text `[!CUSTOM]` will be rendered as the title).
 - HTML structure remains consistent
 - No errors are thrown
 
@@ -447,9 +513,7 @@ If an alert type has no configured icon:
 - Use `[!NOICON] Warning` to render a 'Warning' alert without an icon and will be styled like a
   normal 'Warning' alert (*assuming 'Warning' is a valid alert type*)
 - Use `[!NOICON] UnknownAlertType` to render alert with title 'UnknownAlertType' and no icon
-- Using `[!NOICON]` without a custom title will render the alert with 'Noicon' as the alert title
 - (*run the example code in the `examples` folder for more details*)
-- Variants (case-insensitive): `no_icon`, `none`, `nil` and `null`
 
 ### Invalid Alert Types
 
@@ -466,23 +530,5 @@ Malformed alert syntax gracefully degrades:
 - Missing closing brackets fall back to blockquotes
 - Invalid folding indicators are ignored
 - Content is preserved and rendered normally
-
-## Performance Considerations
-
-### Parser Priority
-
-The extension registers parsers at priority 799, ensuring proper precedence over default blockquote parsing while allowing other extensions to override if needed.
-
-### Memory Usage
-
-- Icon maps are created once during initialization
-- SVG content is stored as strings (consider size for large custom icon sets)
-- Minimal runtime overhead during parsing
-
-### Compatibility
-
-- Requires Go 1.23.0+
-- Compatible with Goldmark v1.4.6+
-- Works alongside standard Goldmark extensions (GFM, footnotes, etc.)
 
 [<-back to README](../README.md)
