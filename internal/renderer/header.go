@@ -56,6 +56,18 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 	var kind string = ""
 	var icon string = ""
 
+	// Create a decision (decide) variable for later
+	var decide int = 0
+	if _, ok := r.Icons["noicon"]; ok {
+		decide += 1
+	}
+	if r.CustomAlertsEnabled {
+		decide += 2
+	}
+	if r.AllowNOICON {
+		decide += 4
+	}
+
 	if t, ok := node.AttributeString("kind"); ok {
 		kind = strings.ToLower(t.(string))
 		icon = r.Icons[kind]
@@ -66,8 +78,6 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 
 	startHTML := ""
 	endHTML := ""
-	// startNoCustomTitle := ""
-	// endNoCustomTitle := ""
 
 	if r.FoldingEnabled && shouldFold {
 		startHTML = fmt.Sprintf(`<summary class="callout-title">` + "\n")
@@ -77,58 +87,58 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 		endHTML = "\n</div>\n"
 	}
 
+
+	if kind == "noicon" {
+		if icon != "" {
+			startHTML += icon
+		} else if r.AllowNOICON {
+			startHTML += `<svg></svg>`
+		}
+	} else {
+		if icon != "" {
+			startHTML += icon
+		} else if r.CustomAlertsEnabled {
+			for _, v := range []string{"note", "info", "tip", "question", "default", "icon", "svg"} {
+				deficon, ok := r.Icons[v]
+				if ok {
+					startHTML += deficon
+					break
+				}
+			}
+		}
+	}
+	startHTML += `<p class="callout-title-text">`
+
+	_, hasTitle := node.AttributeString("title")
+	if kind == "noicon" {
+		// Based on the decision (decide) made earlier, only 0 or 2 will show the kind as invalid
+		// All other values indicate the recognized NOICON callout value and don't render
+		//   any output here
+		if decide == 0 || decide == 2 {
+			startHTML += `[!` + strings.ToUpper(kind) + `]`
+			if hasTitle {
+				startHTML += ` `
+			}
+		}
+	} else {
+		// If there is an icon or if custom alerts are enabled, render the kind or the title
+		if icon != "" || r.CustomAlertsEnabled {
+			// If title isn't set, use kind for the title
+			// NOTE: if title IS set, it is rendered separately as a text node when we 'WalkContinue' at the end
+			if !hasTitle {
+				startHTML += r.titleCaser.String(kind)
+			}
+		} else {
+			// If we've gotten here, this is an invalid callout
+			startHTML += `[!` + strings.ToUpper(kind) + `]`
+			if hasTitle {
+				startHTML += ` `
+			}
+		}
+	}
+
 	if entering {
 		w.WriteString(startHTML)
-		// var kind string = ""
-
-
-		// if t, ok := node.AttributeString("kind"); ok {
-		// 	kind = strings.ToLower(t.(string))
-			// icon, ok := r.Icons[kind]
-			if icon != "" {
-				w.WriteString(icon)
-				// Check if the kind indicates no icon should be rendered.
-				// if it's not a "no icon" kind, we can try to find a default icon.
-			} else if r.CustomAlertsEnabled {
-				if kind != "noicon" {
-					for _, v := range []string{"note", "info", "tip", "question", "default", "icon", "svg"} {
-						deficon, ok := r.Icons[v]
-						if ok {
-							w.WriteString(deficon)
-							break
-						}
-					}
-				}
-			}
-			// else if !r.CustomAlertsEnabled {
-			// 	startNoCustomTitle = `[!`
-			// 	endNoCustomTitle = `]`
-			// }
-			w.WriteString(`<p class="callout-title-text">`)
-
-			if _, ok := node.AttributeString("title"); ok {
-				if !r.CustomAlertsEnabled && (kind != "" && icon == "") {
-					w.WriteString(`[!`)
-					// w.WriteString(r.titleCaser.String(kind))
-					w.WriteString(strings.ToUpper(kind))
-					w.WriteString(`] `)
-				}
-				// do nothing
-			} else {
-				if !r.CustomAlertsEnabled && (kind != "" && icon == "") {
-					w.WriteString(`[!`)
-				}
-				if !r.CustomAlertsEnabled && kind == "noicon" {
-					w.WriteString(strings.ToUpper(kind))
-				} else if kind != "noicon" {
-					w.WriteString(r.titleCaser.String(kind))
-				}
-				if !r.CustomAlertsEnabled && (kind != "" && icon == "") {
-					w.WriteString(`]`)
-				}
-			}
-
-		// }
 	} else {
 		w.WriteString(`</p>`)
 		w.WriteString(endHTML)

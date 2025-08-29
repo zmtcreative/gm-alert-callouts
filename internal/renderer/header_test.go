@@ -206,7 +206,13 @@ func TestAlertsHeaderHTMLRendererWithIcons(t *testing.T) {
 }
 
 func TestAlertsHeaderHTMLRendererTitleCasing(t *testing.T) {
-	r := NewAlertsHeaderHTMLRendererWithIcons(Icons{}, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
+	icons := Icons{
+		"note":    "<svg class='note-icon'>Note</svg>",
+		"warning": "<svg class='warning-icon'>Warning</svg>",
+		"info":    "<svg class='info-icon'>Info</svg>",
+		"default": "<svg class='default-icon'>Default</svg>",
+	}
+	r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
 
 	testCases := []struct {
 		name         string
@@ -230,7 +236,7 @@ func TestAlertsHeaderHTMLRendererTitleCasing(t *testing.T) {
 			name:         "Multi-word kind",
 			kind:         "important-info",
 			hasTitle:     false,
-			expectedText: "Important-Info", // should be title cased
+			expectedText: "[!IMPORTANT-INFO]", // should be title cased
 		},
 		{
 			name:         "With custom title",

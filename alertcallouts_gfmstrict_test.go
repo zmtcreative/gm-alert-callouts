@@ -105,7 +105,7 @@ func TestGFMStrictAliasCallouts(t *testing.T) {
 			md: `> [!INFO]
 > This uses the "info" alias.`,
 			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!Info]</p>
+<p class="callout-title-text">[!INFO]</p>
 </div>
 <div class="callout-body"><p>This uses the &quot;info&quot; alias.</p>
 </div>
@@ -129,7 +129,7 @@ func TestGFMStrictAliasCallouts(t *testing.T) {
 			md: `> [!WARN]
 > This uses the "warn" alias.`,
 			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!Warn]</p>
+<p class="callout-title-text">[!WARN]</p>
 </div>
 <div class="callout-body"><p>This uses the &quot;warn&quot; alias.</p>
 </div>
@@ -141,7 +141,7 @@ func TestGFMStrictAliasCallouts(t *testing.T) {
 			md: `> [!ERROR]
 > This uses the "error" alias.`,
 			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!Error]</p>
+<p class="callout-title-text">[!ERROR]</p>
 </div>
 <div class="callout-body"><p>This uses the &quot;error&quot; alias.</p>
 </div>
@@ -232,7 +232,7 @@ func TestGFMStrictCustomTitles(t *testing.T) {
 			md: `> [!FOO]
 > You can use an unrecognized entry for the callout.`,
 			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!Foo]</p>
+<p class="callout-title-text">[!FOO]</p>
 </div>
 <div class="callout-body"><p>You can use an unrecognized entry for the callout.</p>
 </div>
