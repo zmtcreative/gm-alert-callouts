@@ -180,6 +180,23 @@ func (e *alertCalloutsOptions) GetConfig() *Config {
 	return &e.config
 }
 
+// GetIconKeys returns a slice of all icon keys from the Config.Icons map.
+// This allows access to the icon names without the SVG data, useful for
+// validation, searching, or listing available alert types without the overhead
+// of passing large SVG strings.
+func (c *Config) GetIconKeys() []string {
+	if c.Icons == nil {
+		return []string{}
+	}
+
+	keys := make([]string, 0, len(c.Icons))
+	for key := range c.Icons {
+		keys = append(keys, key)
+	}
+
+	return keys
+}
+
 // Extend implements goldmark.Extender.
 func (e *alertCalloutsOptions) Extend(m goldmark.Markdown) {
 	m.Parser().AddOptions(
