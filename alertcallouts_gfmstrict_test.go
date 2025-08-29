@@ -103,49 +103,41 @@ func TestGFMStrictAliasCallouts(t *testing.T) {
 		{
 			desc: "This uses the undefined INFO alias.",
 			md: `> [!INFO]
-> This uses the "info" alias.`,
-			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!INFO]</p>
-</div>
-<div class="callout-body"><p>This uses the &quot;info&quot; alias.</p>
-</div>
-</div>
+> This uses the INFO alias.`,
+			html: `<blockquote>
+<p>[!INFO]
+This uses the INFO alias.</p>
+</blockquote>
 `,
 		},
 		{
 			desc: "Undefined HINT alias with a Tip custom title.",
 			md: `> [!HINT] Tip
-> This uses the "hint" alias with a custom title.`,
-			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!HINT] Tip</p>
-</div>
-<div class="callout-body"><p>This uses the &quot;hint&quot; alias with a custom title.</p>
-</div>
-</div>
+> Undefined HINT alias with a Tip custom title.`,
+			html: `<blockquote>
+<p>[!HINT] Tip
+Undefined HINT alias with a Tip custom title.</p>
+</blockquote>
 `,
 		},
 		{
 			desc: "This uses the undefined WARN alias.",
 			md: `> [!WARN]
-> This uses the "warn" alias.`,
-			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!WARN]</p>
-</div>
-<div class="callout-body"><p>This uses the &quot;warn&quot; alias.</p>
-</div>
-</div>
+> This uses the undefined WARN alias.`,
+			html: `<blockquote>
+<p>[!WARN]
+This uses the undefined WARN alias.</p>
+</blockquote>
 `,
 		},
 		{
 			desc: "This uses the undefined ERROR alias.",
 			md: `> [!ERROR]
-> This uses the "error" alias.`,
-			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!ERROR]</p>
-</div>
-<div class="callout-body"><p>This uses the &quot;error&quot; alias.</p>
-</div>
-</div>
+> This uses the undefined ERROR alias.`,
+			html: `<blockquote>
+<p>[!ERROR]
+This uses the undefined ERROR alias.</p>
+</blockquote>
 `,
 		},
 	}
@@ -204,77 +196,53 @@ func TestGFMStrictFoldingExamples(t *testing.T) {
 func TestGFMStrictCustomTitles(t *testing.T) {
 	testCases := []TestCase{
 		{
-			desc: "Using Undefined SUCCESS alias with a custom title",
-			md: `> [!SUCCESS] Mission Accomplished
-> You can override the default title with any custom text.`,
-			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!SUCCESS] Mission Accomplished</p>
-</div>
-<div class="callout-body"><p>You can override the default title with any custom text.</p>
-</div>
-</div>
-`,
-		},
-		{
-			desc: "Using Undefined SUCCESS alias with custom title rendered As-Is",
+			desc: "Disallowed Undefined SUCCESS alias with custom title",
 			md: `> [!SUCCESS] MiSsIoN AcCoMpLiShEd
-> You can override the default title with any custom text.`,
-			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!SUCCESS] MiSsIoN AcCoMpLiShEd</p>
-</div>
-<div class="callout-body"><p>You can override the default title with any custom text.</p>
-</div>
-</div>
+> Disallowed Undefined SUCCESS alias with custom title.`,
+			html: `<blockquote>
+<p>[!SUCCESS] MiSsIoN AcCoMpLiShEd
+Disallowed Undefined SUCCESS alias with custom title.</p>
+</blockquote>
 `,
 		},
 		{
-			desc: "Using Undefined FOO Callout",
+			desc: "Disallowed Undefined FOO Callout",
 			md: `> [!FOO]
-> You can use an unrecognized entry for the callout.`,
-			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!FOO]</p>
-</div>
-<div class="callout-body"><p>You can use an unrecognized entry for the callout.</p>
-</div>
-</div>
+> Disallowed Undefined FOO Callout.`,
+			html: `<blockquote>
+<p>[!FOO]
+Disallowed Undefined FOO Callout.</p>
+</blockquote>
 `,
 		},
 		{
 			desc: "Disallowed NOICON Callout",
 			md: `> [!NoIcon]
 > This is a disallowed NOICON callout.`,
-			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!NOICON]</p>
-</div>
-<div class="callout-body"><p>This is a disallowed NOICON callout.</p>
-</div>
-</div>
+			html: `<blockquote>
+<p>[!NoIcon]
+This is a disallowed NOICON callout.</p>
+</blockquote>
 `,
 		},
 		{
 			desc: "Disallowed NOICON Callout with Unrecognized Custom Title",
 			md: `> [!NoIcon] FooBar
-> This creates a No Icon Callout with a custom title, but will be styled using the default styling`,
-			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!NOICON] FooBar</p>
-</div>
-<div class="callout-body"><p>This creates a No Icon Callout with a custom title, but will be styled using the default styling</p>
-</div>
-</div>
+> Disallowed NOICON Callout with Unrecognized Custom Title`,
+			html: `<blockquote>
+<p>[!NoIcon] FooBar
+Disallowed NOICON Callout with Unrecognized Custom Title</p>
+</blockquote>
 `,
 		},
 		{
 			desc: "Disallowed NOICON Callout with Recognized Custom Title",
 			md: `> [!NoIcon] Warning
-> This creates a Warning Callout without the Warning Icon, but will be styled using ` + "`" + `data-callout="warning"` + "`" + `
-> rather than the default styling, because 'warning' is a defined callout name.`,
-			html: `<div class="callout callout-undefined iconset-gfm" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!NOICON] Warning</p>
-</div>
-<div class="callout-body"><p>This creates a Warning Callout without the Warning Icon, but will be styled using <code>data-callout=&quot;warning&quot;</code>
-rather than the default styling, because 'warning' is a defined callout name.</p>
-</div>
-</div>
+> Disallowed NOICON Callout with Recognized Custom Title`,
+			html: `<blockquote>
+<p>[!NoIcon] Warning
+Disallowed NOICON Callout with Recognized Custom Title</p>
+</blockquote>
 `,
 		},
 	}

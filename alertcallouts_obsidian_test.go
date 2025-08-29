@@ -361,41 +361,33 @@ func TestObsidianCustomTitlesNoIconDisabled(t *testing.T) {
 `,
 		},
 		{
-			desc: "NOICON Callout with No Title",
+			desc: "Disallowed NOICON Callout with No Title",
 			md: `> [!NoIcon]
-> This creates a No Icon Callout with No Title, but will be styled using default styling.`,
-			html: `<div class="callout callout-undefined iconset-obsidian" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!NOICON]</p>
-</div>
-<div class="callout-body"><p>This creates a No Icon Callout with No Title, but will be styled using default styling.</p>
-</div>
-</div>
+> Disallowed NOICON Callout with No Title`,
+			html: `<blockquote>
+<p>[!NoIcon]
+Disallowed NOICON Callout with No Title</p>
+</blockquote>
 `,
 		},
 		{
-			desc: "NOICON Callout with Unrecognized Custom Title",
+			desc: "Disallowed NOICON Callout with Unrecognized Custom Title",
 			md: `> [!NoIcon] FooBar
-> This creates a No Icon Callout with a custom title, but will be styled using the default styling`,
-			html: `<div class="callout callout-undefined iconset-obsidian" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!NOICON] FooBar</p>
-</div>
-<div class="callout-body"><p>This creates a No Icon Callout with a custom title, but will be styled using the default styling</p>
-</div>
-</div>
+> Disallowed NOICON Callout with Unrecognized Custom Title`,
+			html: `<blockquote>
+<p>[!NoIcon] FooBar
+Disallowed NOICON Callout with Unrecognized Custom Title</p>
+</blockquote>
 `,
 		},
 		{
-			desc: "NOICON Callout with Recognized Custom Title",
+			desc: "Disallowed NOICON Callout with Recognized Custom Title",
 			md: `> [!NoIcon] Warning
-> This creates a Warning Callout without the Warning Icon, but will be styled using ` + "`" + `data-callout="warning"` + "`" + `
-> rather than the default styling, because 'warning' is a defined callout name.`,
-			html: `<div class="callout callout-undefined iconset-obsidian" data-callout="undefined"><div class="callout-title">
-<p class="callout-title-text">[!NOICON] Warning</p>
-</div>
-<div class="callout-body"><p>This creates a Warning Callout without the Warning Icon, but will be styled using <code>data-callout=&quot;warning&quot;</code>
-rather than the default styling, because 'warning' is a defined callout name.</p>
-</div>
-</div>
+> Disallowed NOICON Callout with Recognized Custom Title`,
+			html: `<blockquote>
+<p>[!NoIcon] Warning
+Disallowed NOICON Callout with Recognized Custom Title</p>
+</blockquote>
 `,
 		},
 	}

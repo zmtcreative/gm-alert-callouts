@@ -262,7 +262,7 @@ func createMockAlertsParentWithChild(kind string) gast.Node {
 
 func TestAlertsHeaderParserIntegration(t *testing.T) {
 	// Test the complete flow from alert parser to header parser
-	alertsParser := &alertParser{}
+	alertsParser := &alertParser{[]string{"note", "warning", "info", "tip"}, false, false}
 	headerParser := &alertHeaderParser{}
 	pc := parser.NewContext()
 

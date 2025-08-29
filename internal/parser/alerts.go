@@ -2,6 +2,7 @@ package parser
 
 import (
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/ast"
@@ -13,12 +14,20 @@ import (
 	"github.com/yuin/goldmark/util"
 )
 
-type alertParser struct{}
+type alertParser struct{
+	IconList []string
+	CustomAlertsEnabled bool
+	AllowNOICON bool
+}
 
 var defaultAlertsParser = &alertParser{}
 
-func NewAlertsParser() parser.BlockParser {
-	return defaultAlertsParser
+func NewAlertsParser(iconList []string, customAlertsEnabled bool, allowNOICON bool) parser.BlockParser {
+	return &alertParser{
+		IconList:            iconList,
+		CustomAlertsEnabled: customAlertsEnabled,
+		AllowNOICON:        allowNOICON,
+	}
 }
 
 func (b *alertParser) Trigger() []byte {
@@ -90,6 +99,16 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 	shouldFold := 1
 	if (len(closed) == 0 && len(opened) == 0) {
 		shouldFold = 0;
+	}
+
+	lckind := strings.ToLower(string(kind))
+	if !b.AllowNOICON && lckind == "noicon" {
+		return nil, parser.NoChildren
+	}
+	if !b.CustomAlertsEnabled {
+		if !slices.Contains(b.IconList, lckind) {
+			return nil, parser.NoChildren
+		}
 	}
 
 	alert := ast.NewAlerts()

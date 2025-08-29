@@ -201,7 +201,7 @@ func (c *Config) GetIconKeys() []string {
 func (e *alertCalloutsOptions) Extend(m goldmark.Markdown) {
 	m.Parser().AddOptions(
 		parser.WithBlockParsers(
-			util.Prioritized(alertParser.NewAlertsParser(), 799),
+			util.Prioritized(alertParser.NewAlertsParser(e.config.GetIconKeys(), e.config.CustomAlertsEnabled, e.config.AllowNOICON), 799),
 			util.Prioritized(alertParser.NewAlertsHeaderParser(), 799),
 		),
 	)
