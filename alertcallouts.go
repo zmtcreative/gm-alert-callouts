@@ -102,7 +102,7 @@ func UseGFMPlusIcons() Option {
 		opts.config.FoldingEnabled = true
 		opts.config.CustomAlertsEnabled = true
 		opts.config.AllowNOICON = true
-		opts.config.Icons["noicon"] = `<svg></svg>`
+		// opts.config.Icons["noicon"] = `<span style="display: none;"></span>`
 	}
 }
 

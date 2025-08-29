@@ -92,7 +92,7 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 		if icon != "" {
 			startHTML += icon
 		} else if r.AllowNOICON {
-			startHTML += `<svg></svg>`
+			startHTML += `<span style="display: none;"></span>`
 		}
 	} else {
 		if icon != "" {
