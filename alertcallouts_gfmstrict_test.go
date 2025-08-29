@@ -153,17 +153,85 @@ This uses the undefined ERROR alias.</p>
 	}
 }
 
-// TestGFMStrictFoldingExamples tests the folding functionality with GFM Strict callouts
-func TestGFMStrictFoldingExamples(t *testing.T) {
+// TestGFMStrictFoldingDisabledExamples the default GFM Strict callouts without Folding Enabled
+func TestGFMStrictFoldingDisabledExamples(t *testing.T) {
 	testCases := []TestCase{
 		{
 			desc: "Closed by Default folding",
-			md: `> [!IMPORTANT]-
-> This important callout is closed by default due to the minus sign.`,
+			md: `> [!TIP]-
+> This tip callout is closed by default due to the minus sign.`,
 			html: `<details class="callout callout-foldable callout-important iconset-gfm" data-callout="important"><summary class="callout-title">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square-warning-icon lucide-message-square-warning"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M12 7v2"/><path d="M12 13h.01"/></svg><p class="callout-title-text">Important</p>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb-icon lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><p class="callout-title-text">Important</p>
 </summary>
 <div class="callout-body"><p>This important callout is closed by default due to the minus sign.</p>
+</div>
+</details>
+`,
+		},
+		{
+			desc: "Open by Default folding (Explicit)",
+			md: `> [!IMPORTANT]+
+> This important callout is explicitly marked as open by default with the plus sign.`,
+			html: `<blockquote>
+<p>[!IMPORTANT]+
+This important callout is explicitly marked as open by default with the plus sign.</p>
+</blockquote>
+`,
+		},
+		{
+			desc: "Open by Default folding Custom Alert",
+			md: `> [!ZEPHYR]+
+> This custom callout is marked as open by default with the plus sign.`,
+			html: `<blockquote>
+<p>[!ZEPHYR]+
+This custom callout is marked as open by default with the plus sign.</p>
+</blockquote>
+`,
+		},
+		{
+			desc: "Closed by Default folding Custom Alert with Recognized Title",
+			md: `> [!Caution]- Warning
+> This custom callout is marked as closed by default with the minus sign.`,
+			html: `<blockquote>
+<p>[!Caution]- Warning
+This custom callout is marked as closed by default with the minus sign.</p>
+</blockquote>
+`,
+		},
+		{
+			desc: "Open by Default folding Recognized Alert with Recognized Title",
+			md: `> [!Caution]+ Warning
+> This danger callout is marked as open by default with the plus sign.`,
+			html: `<blockquote>
+<p>[!Caution]+ Warning
+This danger callout is marked as open by default with the plus sign.</p>
+</blockquote>
+`,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.desc, func(t *testing.T) {
+			testutil.DoTestCase(mdGFMStrict, testutil.MarkdownTestCase{
+				Description: tc.desc,
+				Markdown:    tc.md,
+				Expected:    tc.html,
+			}, t)
+		})
+	}
+}
+
+// TestGFMStrictFoldingEnabledExamples tests the folding functionality with GFM Strict callouts
+func TestGFMStrictFoldingEnabledExamples(t *testing.T) {
+	testCases := []TestCase{
+		{
+			desc: "Closed by Default folding",
+			md: `> [!Tip]-
+> This tip callout is closed by default due to the minus sign.`,
+			html: `<details class="callout callout-foldable callout-tip iconset-gfm" data-callout="tip"><summary class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb-icon lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><p class="callout-title-text">Important</p>
+</summary>
+<div class="callout-body"><p>This tip callout is closed by default due to the minus sign.</p>
 </div>
 </details>
 `,
@@ -178,6 +246,36 @@ func TestGFMStrictFoldingExamples(t *testing.T) {
 <div class="callout-body"><p>This important callout is explicitly marked as open by default with the plus sign.</p>
 </div>
 </details>`,
+		},
+		{
+			desc: "Open by Default folding Custom Alert",
+			md: `> [!ZEPHYR]+
+> This custom callout is marked as open by default with the plus sign.`,
+			html: `<blockquote>
+<p>[!ZEPHYR]+
+This custom callout is marked as open by default with the plus sign.</p>
+</blockquote>
+`,
+		},
+		{
+			desc: "Open by Default folding Custom Alert with Recognized Title",
+			md: `> [!ZEPHYR]+ Warning
+> This custom callout is marked as open by default with the plus sign.`,
+			html: `<blockquote>
+<p>[!ZEPHYR]+ Warning
+This custom callout is marked as open by default with the plus sign.</p>
+</blockquote>
+`,
+		},
+		{
+			desc: "Open by Default folding Recognized Alert with Recognized Title",
+			md: `> [!Caution]+ Warning
+> This danger callout is marked as open by default with the plus sign.`,
+			html: `<blockquote>
+<p>[!Caution]+ Warning
+This danger callout is marked as open by default with the plus sign.</p>
+</blockquote>
+`,
 		},
 	}
 
