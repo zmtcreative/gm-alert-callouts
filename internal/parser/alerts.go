@@ -35,6 +35,7 @@ func (b *alertParser) Trigger() []byte {
 	return []byte{'>'}
 }
 
+// Regex updated to support Unicode in <kind> value
 var regex = regexp.MustCompile(`^\[!(?P<kind>\p{L}[\p{L}\p{N}_-]*)\](?:(?P<closed>-{0,1})|(?P<opened>[+]{0,1}))($|\s+(?P<title>.*))`)
 
 func (b *alertParser) process(reader text.Reader) (bool, int) {
