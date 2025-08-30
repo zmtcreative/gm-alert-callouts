@@ -94,6 +94,33 @@ Content here</p>
 </blockquote>`,
 		},
 		{
+			desc: "Invalid alert name - names CANNOT start with a number",
+			md: `> [!1tip]
+> Content here`,
+			html: `<blockquote>
+<p>[!1tip]
+Content here</p>
+</blockquote>`,
+		},
+		{
+			desc: "Invalid alert name - names CANNOT start with a dash",
+			md: `> [!-tip]
+> Content here`,
+			html: `<blockquote>
+<p>[!-tip]
+Content here</p>
+</blockquote>`,
+		},
+		{
+			desc: "Invalid alert name - names CANNOT start with an underscore",
+			md: `> [!_tip]
+> Content here`,
+			html: `<blockquote>
+<p>[!_tip]
+Content here</p>
+</blockquote>`,
+		},
+		{
 			desc: "Not an alert (regular blockquote)",
 			md:   `> This is a blockquote`,
 			html: `<blockquote>

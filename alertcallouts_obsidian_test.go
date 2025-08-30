@@ -290,8 +290,7 @@ func TestObsidianFoldingExamples(t *testing.T) {
 </summary>
 <div class="callout-body"><p>This important callout is explicitly marked as open by default with the plus sign.</p>
 </div>
-</details>
-`,
+</details>`,
 		},
 		{
 			desc: "Open by Default folding Custom Alert",
@@ -460,4 +459,3 @@ NoIcon prefix with NO CALLOUT - Disallowed - generates a blockquote</p>
 		})
 	}
 }
-
