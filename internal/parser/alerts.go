@@ -35,7 +35,7 @@ func (b *alertParser) Trigger() []byte {
 	return []byte{'>'}
 }
 
-var regex = regexp.MustCompile(`^\[!(?P<kind>[\w][\w-]+)\](?:(?P<closed>-{0,1})|(?P<opened>[+]{0,1}))($|\s+(?P<title>.*))`)
+var regex = regexp.MustCompile(`^\[!(?P<kind>\p{L}[\p{L}\p{N}_-]*)\](?:(?P<closed>-{0,1})|(?P<opened>[+]{0,1}))($|\s+(?P<title>.*))`)
 
 func (b *alertParser) process(reader text.Reader) (bool, int) {
 	// This is slightly modified code from https://github.com/yuin/goldmark.git
