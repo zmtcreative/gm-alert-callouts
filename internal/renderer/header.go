@@ -80,6 +80,8 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 	shouldFold := false
 	var kind string = ""
 	var icon string = ""
+	var noicon bool = false
+
 
 	if t, ok := node.AttributeString("kind"); ok {
 		kind = strings.ToLower(t.(string))
@@ -88,6 +90,10 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 	if t, ok := node.AttributeString("shouldfold"); ok {
 		shouldFold = bool(t.(bool))
 	}
+	if t, ok := node.AttributeString("noicon"); ok {
+		noicon = bool(t.(bool))
+	}
+
 
 	startHTML := ""
 	endHTML := ""
@@ -100,31 +106,38 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 		endHTML = "\n</div>\n"
 	}
 
-	// if the icon value is not empty, use the icon
-	// else if custom alerts are enabled, use a fallback icon
-	if icon != "" {
-		startHTML += icon
-	} else if r.CustomAlertsEnabled {
-		for _, v := range constants.FALLBACK_ICON_LIST {
-			deficon, ok := r.Icons[v]
-			if ok {
-				startHTML += deficon
-				break
+	// if AllowNOICON is set AND the alert had the 'noicon-' or 'noicon_' prefix...
+	if r.AllowNOICON && noicon {
+		// We'll place an empty span here to represent the empty icon space, just in case we need to
+		// use CSS on this spot in the output (not sure it's necessary, but just being thorough for now).
+		startHTML += `<span class="callout-title-noicon" style="display: none;"></span>`
+	} else {
+		// if the icon value is not empty, use the icon
+		// else if custom alerts are enabled, use a fallback icon
+		if icon != "" {
+			startHTML += icon
+		} else if r.CustomAlertsEnabled {
+			for _, v := range constants.FALLBACK_ICON_LIST {
+				deficon, ok := r.Icons[v]
+				if ok {
+					startHTML += deficon
+					break
+				}
 			}
 		}
-	} // if we get here, don't place any icon in startHTML
+	}
 
 	startHTML += `<p class="callout-title-text">`
 
 	_, hasTitle := node.AttributeString("title")
 
-	if kind == "noicon" {
-		// If there is no title, render a hidden span
-		if !hasTitle {
-			startHTML += `<span class="callout-title-noicon" style="display: none;"></span>`
-		}
-		// If there is a title, render it as normal (it will be rendered as a text node when we 'WalkContinue' at the end)
-	} else {
+	// if kind == "noicon" {
+	// 	// If there is no title, render a hidden span
+	// 	if !hasTitle {
+	// 		startHTML += `<span class="callout-title-noicon" style="display: none;"></span>`
+	// 	}
+	// 	// If there is a title, render it as normal (it will be rendered as a text node when we 'WalkContinue' at the end)
+	// } else {
 		// If there is an icon or if custom alerts are enabled, render the kind or the title
 		if icon != "" || r.CustomAlertsEnabled {
 			// If title isn't set, use kind for the title
@@ -134,12 +147,15 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 			}
 		} else {
 			// If we've gotten here, this is an invalid callout
+			// Note-to-Self: Because the parser phase SHOULD catch any kind value that doesn't have
+			//   an icon when CustomAlerts is disabled, this part should never run, but keeping it
+			//   here for now.
 			startHTML += `[!` + strings.ToUpper(kind) + `]`
 			if hasTitle {
 				startHTML += ` `
 			}
 		}
-	}
+	// }
 
 	if entering {
 		w.WriteString(startHTML)

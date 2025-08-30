@@ -8,7 +8,7 @@ import (
 
 func TestIconConstants(t *testing.T) {
 	t.Run("Icon constants are distinct", func(t *testing.T) {
-		constants := []int{ICONS_NONE, ICONS_GFM_STRICT, ICONS_GFM_WITH_ALIASES, ICONS_GFM_PLUS, ICONS_OBSIDIAN}
+		constants := []int{ICONS_NONE, ICONS_GFM, ICONS_HYBRID, ICONS_OBSIDIAN}
 
 		// Check that all constants are different
 		for i := 0; i < len(constants); i++ {
@@ -25,19 +25,15 @@ func TestIconConstants(t *testing.T) {
 			t.Errorf("Expected ICONS_NONE to be 0, got %d", ICONS_NONE)
 		}
 
-		if ICONS_GFM_STRICT <= ICONS_NONE {
-			t.Errorf("Expected ICONS_GFM_STRICT to be greater than ICONS_NONE, got %d", ICONS_GFM_STRICT)
+		if ICONS_GFM <= ICONS_NONE {
+			t.Errorf("Expected ICONS_GFM_STRICT to be greater than ICONS_NONE, got %d", ICONS_GFM)
 		}
 
-		if ICONS_GFM_WITH_ALIASES <= ICONS_GFM_STRICT {
-			t.Errorf("Expected ICONS_GFM_WITH_ALIASES to be greater than ICONS_GFM_STRICT, got %d", ICONS_GFM_WITH_ALIASES)
+		if ICONS_HYBRID <= ICONS_GFM {
+			t.Errorf("Expected ICONS_GFM_PLUS to be greater than ICONS_GFM_WITH_ALIASES, got %d", ICONS_HYBRID)
 		}
 
-		if ICONS_GFM_PLUS <= ICONS_GFM_WITH_ALIASES {
-			t.Errorf("Expected ICONS_GFM_PLUS to be greater than ICONS_GFM_WITH_ALIASES, got %d", ICONS_GFM_PLUS)
-		}
-
-		if ICONS_OBSIDIAN <= ICONS_GFM_PLUS {
+		if ICONS_OBSIDIAN <= ICONS_HYBRID {
 			t.Errorf("Expected ICONS_OBSIDIAN to be greater than ICONS_GFM_PLUS, got %d", ICONS_OBSIDIAN)
 		}
 	})
@@ -92,18 +88,16 @@ func TestNodeKinds(t *testing.T) {
 func TestIconConstantUsage(t *testing.T) {
 	t.Run("Can use constants for comparison", func(t *testing.T) {
 		// Test that constants can be used in switch statements and comparisons
-		testValue := ICONS_GFM_STRICT
+		testValue := ICONS_GFM
 
 		var result string
 		switch testValue {
 		case ICONS_NONE:
 			result = "none"
-		case ICONS_GFM_STRICT:
+		case ICONS_GFM:
 			result = "gfm"
-		case ICONS_GFM_WITH_ALIASES:
-			result = "gfm"
-		case ICONS_GFM_PLUS:
-			result = "gfm_plus"
+		case ICONS_HYBRID:
+			result = "hybrid"
 		case ICONS_OBSIDIAN:
 			result = "obsidian"
 		default:
@@ -116,12 +110,12 @@ func TestIconConstantUsage(t *testing.T) {
 	})
 
 	t.Run("Constants work in conditional logic", func(t *testing.T) {
-		if ICONS_GFM_PLUS == ICONS_NONE {
-			t.Error("GFM_PLUS should not equal NONE")
+		if ICONS_HYBRID == ICONS_NONE {
+			t.Error("ICONS_HYBRID should not equal ICONS_NONE")
 		}
 
-		if ICONS_OBSIDIAN < ICONS_GFM_PLUS {
-			t.Error("OBSIDIAN should be greater than GFM_PLUS")
+		if ICONS_OBSIDIAN < ICONS_HYBRID {
+			t.Error("ICONS_OBSIDIAN should be greater than ICONS_HYBRID")
 		}
 	})
 }

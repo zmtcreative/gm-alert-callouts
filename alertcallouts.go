@@ -19,18 +19,14 @@ import (
 //go:embed assets/alertcallouts-gfm-strict.icons
 var alertCalloutsIconsGFMStrict string
 
-//go:embed assets/alertcallouts-gfm-with-aliases.icons
-var alertCalloutsIconsGFMWithAliases string
-
-//go:embed assets/alertcallouts-gfmplus.icons
-var alertCalloutsIconsGFMPlus string
+//go:embed assets/alertcallouts-hybrid.icons
+var alertCalloutsIconsHybrid string
 
 //go:embed assets/alertcallouts-obsidian.icons
 var alertCalloutsIconsObsidian string
 
 var _ = alertCalloutsIconsGFMStrict
-var _ = alertCalloutsIconsGFMWithAliases
-var _ = alertCalloutsIconsGFMPlus
+var _ = alertCalloutsIconsHybrid
 var _ = alertCalloutsIconsObsidian
 
 // Config holds all configuration options for alert callouts rendering.
@@ -69,7 +65,7 @@ func WithIcon(kind, icon string) Option {
 }
 
 // UseGFMIcons sets the icon map to the GFM (GitHub Flavored Markdown) icon set.
-// DEPRECATED: Use UseGFMStrictIcons instead.
+// DEPRECATED: Use UseGFMStrictIcons() instead.
 func UseGFMIcons() Option {
 	return UseGFMStrictIcons()
 }
@@ -77,32 +73,35 @@ func UseGFMIcons() Option {
 func UseGFMStrictIcons() Option {
 	return func(opts *alertCalloutsOptions) {
 		opts.config.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMStrict)
-		opts.config.DefaultIcons = constants.ICONS_GFM_STRICT
+		opts.config.DefaultIcons = constants.ICONS_GFM
 		opts.config.FoldingEnabled = false
 		opts.config.CustomAlertsEnabled = false
 		opts.config.AllowNOICON = false
 	}
 }
 
+// UseGFMWithAliasesIcons sets the GFM with extra aliases
+// DEPRECATED: Use UseHybridIcons() instead
 func UseGFMWithAliasesIcons() Option {
-	return func(opts *alertCalloutsOptions) {
-		opts.config.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMWithAliases)
-		opts.config.DefaultIcons = constants.ICONS_GFM_WITH_ALIASES
-		opts.config.FoldingEnabled = false
-		opts.config.CustomAlertsEnabled = false
-		opts.config.AllowNOICON = false
-	}
+	return UseHybridIcons()
+}
+
+// UseGFMPlusIcons sets the GFMPlus + Aliases that mimic some Obsidian callouts but
+//   still use the default five (5) GFM Alerts
+// DEPRECATED: Use UseHybridIcons() instead
+func UseGFMPlusIcons() Option {
+	return UseHybridIcons()
 }
 
 // UseGFMPlusIcons sets the icon map to the GFM Plus icon set (essentially a melding of GFM and Obsidian).
-func UseGFMPlusIcons() Option {
+func UseHybridIcons() Option {
 	return func(opts *alertCalloutsOptions) {
-		opts.config.Icons = utils.CreateIconsMap(alertCalloutsIconsGFMPlus)
-		opts.config.DefaultIcons = constants.ICONS_GFM_PLUS
+		opts.config.Icons = utils.CreateIconsMap(alertCalloutsIconsHybrid)
+		opts.config.DefaultIcons = constants.ICONS_HYBRID
 		opts.config.FoldingEnabled = true
 		opts.config.CustomAlertsEnabled = true
 		opts.config.AllowNOICON = true
-		// opts.config.Icons["noicon"] = `<span style="display: none;"></span>`
+		// opts.config.Icons["noicon"] = `<span class="callout-title-noicon" style="display: none;"></span>`
 	}
 }
 
@@ -131,13 +130,13 @@ func WithCustomAlerts(enable bool) Option {
 	}
 }
 
-// WithAllowNOICON sets whether to allow NOICON alert types (example of new option).
+// WithAllowNOICON sets whether to allow NOICON prefix to alert types.
+// This is a rendering option -- the parser will ALWAYS strip the 'noicon-' or 'noicon_' prefix
+//   during the parsing phase and set the 'noicon' attribute on the node. It's the renderer
+//   that will use this 'AllowNOICON' option to decide how to handle icons.
 func WithAllowNOICON(enable bool) Option {
 	return func(opts *alertCalloutsOptions) {
 		opts.config.AllowNOICON = enable
-		if enable {
-			opts.config.Icons["noicon"] = `<svg></svg>`
-		}
 	}
 }
 
@@ -148,7 +147,7 @@ func CreateIconsMap(iconData string) map[string]string {
 	return utils.CreateIconsMap(iconData)
 }
 
-// AlertCallouts will initialize the extension with Folding Enabled and the basic GFM icon set
+// AlertCallouts will initialize the extension with the basic GFM icon set
 // This can be initialized using the `goldmark.WithExtensions(alertcallouts.AlertCallouts)` syntax
 var AlertCallouts = NewAlertCallouts(
 	UseGFMStrictIcons(),
@@ -159,11 +158,11 @@ var AlertCallouts = NewAlertCallouts(
 func NewAlertCallouts(options ...Option) *alertCalloutsOptions {
 	opts := &alertCalloutsOptions{
 		config: Config{
-			Icons:               make(map[string]string),
-			FoldingEnabled:      true,
-			CustomAlertsEnabled: true,
-			DefaultIcons:        constants.ICONS_NONE,
-			AllowNOICON:         true, // Default to true for backward compatibility
+			Icons:               make(map[string]string),  // Empty iconset (user will need to add icons)
+			FoldingEnabled:      true,                     // Folding enabled
+			CustomAlertsEnabled: true,                     // CustomAlerts enabled
+			DefaultIcons:        constants.ICONS_NONE,     // User will supply the iconset
+			AllowNOICON:         true,                     // Default to true
 		},
 	}
 

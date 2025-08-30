@@ -82,6 +82,11 @@ func (b *alertHeaderParser) Open(parent gast.Node, reader text.Reader, pc parser
 	if t, ok := parent.AttributeString("shouldfold"); ok {
 		alert.SetAttributeString("shouldfold", t)
 	}
+	// Set the 'noicon' attribute if it is set in the parent
+	// We'll need this value in the rendering process to supress icon use
+	if t, ok := parent.AttributeString("noicon"); ok {
+		alert.SetAttributeString("noicon", t)
+	}
 
 	return alert, parser.NoChildren
 }
