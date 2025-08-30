@@ -52,9 +52,15 @@ func CreateIconsMap(icondata string) map[string]string {
 			parts := strings.SplitN(line, "->", 2)
 			if len(parts) == 2 {
 				alias := strings.TrimSpace(parts[0])
+				alias = strings.ToLower(alias)
 				primary := strings.TrimSpace(parts[1])
+				primary = strings.ToLower(primary)
 
-				// Validate alias and primary values match [\w]+ pattern
+				if strings.HasPrefix(alias, "noicon-") || strings.HasPrefix(alias, "noicon_") {
+					continue // 'noicon-' and 'noicon_' prefixes are reserved
+				}
+
+				// Validate alias and primary values match wordRegex pattern
 				if !wordRegex.MatchString(alias) || !wordRegex.MatchString(primary) {
 					continue // Skip invalid alias entries
 				}
@@ -79,9 +85,14 @@ func CreateIconsMap(icondata string) map[string]string {
 		parts := strings.SplitN(line, "|", 2)
 		if len(parts) == 2 {
 			key := strings.TrimSpace(parts[0])
+			key = strings.ToLower(key)
 			svg := strings.TrimSpace(parts[1])
 
-			// Validate key matches [\w]+ pattern
+			if strings.HasPrefix(key, "noicon-") || strings.HasPrefix(key, "noicon_") {
+				continue // 'noicon-' and 'noicon_' prefixes are reserved
+			}
+
+			// Validate key matches wordRegex pattern
 			if !wordRegex.MatchString(key) {
 				continue // Skip invalid key entries
 			}
@@ -98,7 +109,13 @@ func CreateIconsMap(icondata string) map[string]string {
 			parts := strings.SplitN(line, "->", 2)
 			if len(parts) == 2 {
 				alias := strings.TrimSpace(parts[0])
+				alias = strings.ToLower(alias)
 				primary := strings.TrimSpace(parts[1])
+				primary = strings.ToLower(primary)
+
+				if strings.HasPrefix(alias, "noicon-") || strings.HasPrefix(alias, "noicon_") {
+					continue // 'noicon-' and 'noicon_' prefixes are reserved
+				}
 
 				// Validate alias and primary values match [\w]+ pattern
 				if !wordRegex.MatchString(alias) || !wordRegex.MatchString(primary) {

@@ -2,6 +2,7 @@ package utilities
 
 import (
 	"regexp"
+	"strings"
 	"testing"
 )
 
@@ -318,6 +319,7 @@ note|<svg>note-icon</svg>
 tip|<svg>tip-icon</svg>
 warning|<svg>warning-icon</svg>
 info_2|<svg>info2-icon</svg>
+test-case|<svg>invalid-icon</svg>
 Test123|<svg>test123-icon</svg>
 你好|<svg>你好-icon</svg>
 
@@ -326,32 +328,34 @@ info->note
 hints->tip
 
 # Invalid entries (should be skipped)
-no-icon|<svg>invalid-icon</svg>
-test-case|<svg>invalid-icon</svg>
 my@icon|<svg>invalid-icon</svg>
 icon with spaces|<svg>invalid-icon</svg>
 -myicon|<svg>invalid-icon</svg>
 _myicon|<svg>invalid-icon</svg>
 _你好|<svg>invalid-icon</svg>
+noicon-note|<svg>invalid-icon</svg>
+noicon_note|<svg>invalid-icon</svg>
 
 # Invalid aliases (should be skipped)
-no-alias->note
 info->no-primary
 special@alias->note
+info>noicon-note
 `
 
 	iconMap := CreateIconsMap(testData)
 
 	// Test that valid entries are included
-	validKeys := []string{"note", "tip", "warning", "info_2", "Test123", "info", "hints", "no-icon", "test-case", "no-alias", "你好"}
+	validKeys := []string{"note", "tip", "warning", "info_2", "Test123", "info", "hints", "test-case", "你好"}
 	for _, key := range validKeys {
+		// need to lowercase the key here for testing
+		key = strings.ToLower(key)
 		if _, exists := iconMap[key]; !exists {
 			t.Errorf("Expected valid key '%s' to exist in iconMap", key)
 		}
 	}
 
 	// Test that invalid entries are excluded
-	invalidKeys := []string{"my@icon", "icon with spaces", "special@alias", "-myicon", "_myicon", "_你好"}
+	invalidKeys := []string{"my@icon", "icon with spaces", "noicon-note", "noicon_note", "special@alias", "-myicon", "_myicon", "_你好"}
 	for _, key := range invalidKeys {
 		if _, exists := iconMap[key]; exists {
 			t.Errorf("Expected invalid key '%s' to be excluded from iconMap", key)
@@ -364,7 +368,7 @@ special@alias->note
 	}
 
 	// Verify counts
-	expectedCount := len(validKeys) // 10 valid entries total
+	expectedCount := len(validKeys)
 	if len(iconMap) != expectedCount {
 		t.Errorf("Expected iconMap to have %d entries, got %d. Keys: %v", expectedCount, len(iconMap), getKeys(iconMap))
 	}
