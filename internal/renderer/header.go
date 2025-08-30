@@ -117,12 +117,22 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 		if icon != "" {
 			startHTML += icon
 		} else if r.CustomAlertsEnabled {
+			found := false
 			for _, v := range constants.FALLBACK_ICON_LIST {
 				deficon, ok := r.Icons[v]
 				if ok {
 					startHTML += deficon
+					found = true
 					break
 				}
+			}
+			// If all else fails, generate an empty span as a placeholder for the icon
+			// Note: This should never happen with the built-in iconsets.
+			//       However, for custom iconsets provided by the user, they may not use
+			//       alert names that match the predefined set of fallbacks. To be consistent,
+			//       SOMETHING should be output where the icon would go.
+			if !found {
+				startHTML += `<span class="callout-title-noicon" style="display: none;"></span>`
 			}
 		}
 	}
@@ -131,31 +141,23 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 
 	_, hasTitle := node.AttributeString("title")
 
-	// if kind == "noicon" {
-	// 	// If there is no title, render a hidden span
-	// 	if !hasTitle {
-	// 		startHTML += `<span class="callout-title-noicon" style="display: none;"></span>`
-	// 	}
-	// 	// If there is a title, render it as normal (it will be rendered as a text node when we 'WalkContinue' at the end)
-	// } else {
-		// If there is an icon or if custom alerts are enabled, render the kind or the title
-		if icon != "" || r.CustomAlertsEnabled {
-			// If title isn't set, use kind for the title
-			// NOTE: if title IS set, it is rendered separately as a text node when we 'WalkContinue' at the end
-			if !hasTitle {
-				startHTML += r.titleCaser.String(kind)
-			}
-		} else {
-			// If we've gotten here, this is an invalid callout
-			// Note-to-Self: Because the parser phase SHOULD catch any kind value that doesn't have
-			//   an icon when CustomAlerts is disabled, this part should never run, but keeping it
-			//   here for now.
-			startHTML += `[!` + strings.ToUpper(kind) + `]`
-			if hasTitle {
-				startHTML += ` `
-			}
+	// If there is an icon or if custom alerts are enabled, render the kind or the title
+	if icon != "" || r.CustomAlertsEnabled {
+		// If title isn't set, use kind for the title
+		// NOTE: if title IS set, it is rendered separately as a text node when we 'WalkContinue' at the end
+		if !hasTitle {
+			startHTML += r.titleCaser.String(kind)
 		}
-	// }
+	} else {
+		// If we've gotten here, this is an invalid callout
+		// Note: Because the parser phase SHOULD catch any kind value that doesn't have
+		//   an icon when CustomAlerts is disabled, this part should never run, but keeping it
+		//   here for now.
+		startHTML += `[!` + strings.ToUpper(kind) + `]`
+		if hasTitle {
+			startHTML += ` `
+		}
+	}
 
 	if entering {
 		w.WriteString(startHTML)

@@ -325,6 +325,32 @@ func TestAlertsHeaderHTMLRendererIconFallback(t *testing.T) {
 	}
 }
 
+// TestAlertsHeaderHTMLRendererIconFallbackNotInList tests to make sure iconsets that don't contain any of the
+// defined FALLBACK_ICON_LIST names get handled correctly
+func TestAlertsHeaderHTMLRendererIconFallbackNotInList(t *testing.T) {
+	icons := Icons{
+		"foo": "<svg>info-icon</svg>", // has no icon on the FALLBACK_ICON_LIST
+	}
+
+	r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(true))
+
+	// Test fallback to 'note' when specific kind not found
+	node := createMockHeaderNode("unknown", false, "")
+
+	writer := newMockBufWriter()
+	_, err := r.(*AlertsHeaderHTMLRenderer).renderAlertsHeader(writer, []byte{}, node, true)
+	if err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+
+	html := writer.String()
+	// Since 'unknown' kind is not in icons, and 'note' is not available either,
+	// and 'info' is available, it should fall back to 'info'
+	if !strings.Contains(html, `<span class="callout-title-noicon" style="display: none;"></span>`) {
+		t.Errorf("Expected special emtpy span for no icon, got: %s", html)
+	}
+}
+
 // Helper function to create mock header nodes
 func createMockHeaderNode(kind string, shouldFold bool, title string) gast.Node {
 	node := ast.NewAlertsHeader()
