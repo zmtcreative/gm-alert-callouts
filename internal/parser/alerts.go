@@ -106,7 +106,7 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 	if !b.CustomAlertsEnabled {
 		if !(slices.Contains(b.IconList, lckind)) {
 			return nil, parser.NoChildren
-		} else if title != nil {
+		} else if len(title) > 0 {
 			return nil, parser.NoChildren
 		} else if !b.FoldingEnabled && (len(closed) != 0 || len(opened) != 0) {
 			return nil, parser.NoChildren
