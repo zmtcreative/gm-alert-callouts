@@ -329,13 +329,13 @@ func TestAlertsHTMLRendererNoIconKindDisabled(t *testing.T) {
 			name:     "NOICON with title",
 			kind:     "noicon",
 			title:    "Custom Alert",
-			expected: "undefined", // should use cleaned title
+			expected: "noicon", // should use cleaned title
 		},
 		{
 			name:     "NOICON with no title",
 			kind:     "noicon",
 			title:    "",
-			expected: "undefined",
+			expected: "noicon",
 		},
 	}
 

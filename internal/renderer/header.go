@@ -56,17 +56,17 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 	var kind string = ""
 	var icon string = ""
 
-	// Create a decision (decide) variable for later
-	var decide int = 0
-	if _, ok := r.Icons["noicon"]; ok {
-		decide += 1
-	}
-	if r.CustomAlertsEnabled {
-		decide += 2
-	}
-	if r.AllowNOICON {
-		decide += 4
-	}
+	// // Create a decision (decide) variable for later
+	// var decide int = 0
+	// if _, ok := r.Icons["noicon"]; ok {
+	// 	decide += 1
+	// }
+	// if r.CustomAlertsEnabled {
+	// 	decide += 2
+	// }
+	// if r.AllowNOICON {
+	// 	decide += 4
+	// }
 
 	if t, ok := node.AttributeString("kind"); ok {
 		kind = strings.ToLower(t.(string))
@@ -87,39 +87,51 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 		endHTML = "\n</div>\n"
 	}
 
-
-	if kind == "noicon" {
-		if icon != "" {
-			startHTML += icon
-		} else if r.AllowNOICON {
-			startHTML += `<span style="display: none;"></span>`
-		}
-	} else {
-		if icon != "" {
-			startHTML += icon
-		} else if r.CustomAlertsEnabled {
-			for _, v := range []string{"default", "note", "info", "tip", "question", "icon", "svg"} {
-				deficon, ok := r.Icons[v]
-				if ok {
-					startHTML += deficon
-					break
-				}
+	// if the icon value is not empty, use the icon
+	// else if custom alerts are enabled, use a fallback icon
+	if icon != "" {
+		startHTML += icon
+	} else if r.CustomAlertsEnabled {
+		for _, v := range constants.FALLBACK_ICON_LIST {
+			deficon, ok := r.Icons[v]
+			if ok {
+				startHTML += deficon
+				break
 			}
 		}
-	}
+	} // if we get here, don't place any icon in startHTML
+
+
+	// if kind == "noicon" {
+	// 	if icon != "" {
+	// 		startHTML += icon
+	// 	} else if r.AllowNOICON {
+	// 		startHTML += `<span style="display: none;"></span>`
+	// 	}
+	// } else {
+	// 	if icon != "" {
+	// 		startHTML += icon
+	// 	} else if r.CustomAlertsEnabled {
+	// 		for _, v := range constants.FALLBACK_ICON_LIST {
+	// 			deficon, ok := r.Icons[v]
+	// 			if ok {
+	// 				startHTML += deficon
+	// 				break
+	// 			}
+	// 		}
+	// 	}
+	// }
+
 	startHTML += `<p class="callout-title-text">`
 
 	_, hasTitle := node.AttributeString("title")
+
 	if kind == "noicon" {
-		// Based on the decision (decide) made earlier, only 0 or 2 will show the kind as invalid
-		// All other values indicate the recognized NOICON callout value and don't render
-		//   any output here
-		if decide == 0 || decide == 2 {
-			startHTML += `[!` + strings.ToUpper(kind) + `]`
-			if hasTitle {
-				startHTML += ` `
-			}
+		// If there is no title, render a hidden span
+		if !hasTitle {
+			startHTML += `<span class="callout-title-noicon" style="display: none;"></span>`
 		}
+		// If there is a title, render it as normal (it will be rendered as a text node when we 'WalkContinue' at the end)
 	} else {
 		// If there is an icon or if custom alerts are enabled, render the kind or the title
 		if icon != "" || r.CustomAlertsEnabled {

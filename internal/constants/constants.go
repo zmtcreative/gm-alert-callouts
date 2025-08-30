@@ -12,6 +12,8 @@ const (
 	ICONS_OBSIDIAN
 )
 
+var FALLBACK_ICON_LIST = []string{"default", "icon", "custom", "note", "info"}
+
 // Node kinds for different alert components
 var (
 	// KindAlerts is the NodeKind for the alert block.

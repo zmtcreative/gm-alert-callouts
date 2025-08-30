@@ -15,11 +15,32 @@ import (
 	"github.com/yuin/goldmark/testutil"
 )
 
-var mdIconEmptySVG = goldmark.New(
+var iconSet = map[string]string{
+	"note": `<svg class="note"></svg>`,
+	"info": `<svg class="info"></svg>`,
+	"warning": `<svg class="warning"></svg>`,
+	"tip": `<svg class="tip"></svg>`,
+	"caution": `<svg class="caution"></svg>`,
+	"important": `<svg class="important"></svg>`,
+}
+
+var mdIconSimpleSVG = goldmark.New(
 	goldmark.WithExtensions(
 		NewAlertCallouts(
-			WithIcons(map[string]string{"note": "<svg></svg>"}),
+			WithIcons(iconSet),
+			WithCustomAlerts(true),
 			WithFolding(true),
+		),
+	),
+)
+
+var mdIconGFMStrict = goldmark.New(
+	goldmark.WithExtensions(
+		NewAlertCallouts(
+			// WithIcons(map[string]string{"note": "<svg></svg>"}),
+			// WithCustomAlerts(true),
+			// WithFolding(true),
+			UseGFMStrictIcons(),
 		),
 	),
 )
@@ -36,11 +57,11 @@ func TestAlerts(t *testing.T) {
 		{
 			desc: "Basic alert",
 			md: `> [!note]
-> Simple alert content`,
+> Simple alert note content`,
 			html: `<div class="callout callout-note" data-callout="note"><div class="callout-title">
-<svg></svg><p class="callout-title-text">Note</p>
+<svg class="note"></svg><p class="callout-title-text">Note</p>
 </div>
-<div class="callout-body"><p>Simple alert content</p>
+<div class="callout-body"><p>Simple alert note content</p>
 </div>
 </div>`,
 		},
@@ -48,7 +69,7 @@ func TestAlerts(t *testing.T) {
 			desc: "Alert with custom title",
 			md:   `> [!info] Custom Title`,
 			html: `<div class="callout callout-info" data-callout="info"><div class="callout-title">
-<svg></svg><p class="callout-title-text">Custom Title</p>
+<svg class="info"></svg><p class="callout-title-text">Custom Title</p>
 </div>
 
 </div>`,
@@ -58,7 +79,7 @@ func TestAlerts(t *testing.T) {
 			md: `> [!warning]- Closed alert
 > Content here`,
 			html: `<details class="callout callout-foldable callout-warning" data-callout="warning"><summary class="callout-title">
-<svg></svg><p class="callout-title-text">Closed alert</p>
+<svg class="warning"></svg><p class="callout-title-text">Closed alert</p>
 </summary>
 <div class="callout-body"><p>Content here</p>
 </div>
@@ -86,7 +107,7 @@ func TestAlerts(t *testing.T) {
 > - Item one
 > - Item two`,
 			html: `<div class="callout callout-tip" data-callout="tip"><div class="callout-title">
-<svg></svg><p class="callout-title-text">Tip</p>
+<svg class="tip"></svg><p class="callout-title-text">Tip</p>
 </div>
 <div class="callout-body"><ul>
 <li>Item one</li>
@@ -99,7 +120,7 @@ func TestAlerts(t *testing.T) {
 
 	for _, tc := range essentialTests {
 		t.Run(tc.desc, func(t *testing.T) {
-			testutil.DoTestCase(mdIconEmptySVG, testutil.MarkdownTestCase{
+			testutil.DoTestCase(mdIconSimpleSVG, testutil.MarkdownTestCase{
 				Description: tc.desc,
 				Markdown:    tc.md,
 				Expected:    tc.html,
@@ -123,7 +144,7 @@ func TestASTNodeCreation(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			var buf strings.Builder
-			err := mdIconEmptySVG.Convert([]byte(tc.md), &buf)
+			err := mdIconSimpleSVG.Convert([]byte(tc.md), &buf)
 			if err != nil {
 				t.Errorf("Failed to parse markdown: %s, error: %v", tc.md, err)
 			}
@@ -162,7 +183,7 @@ func BenchmarkSimpleAlert(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		var buf strings.Builder
-		err := mdIconEmptySVG.Convert([]byte(md), &buf)
+		err := mdIconSimpleSVG.Convert([]byte(md), &buf)
 		if err != nil {
 			b.Error("Failed to parse")
 		}
@@ -182,7 +203,7 @@ func BenchmarkComplexAlert(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		var buf strings.Builder
-		err := mdIconEmptySVG.Convert([]byte(md), &buf)
+		err := mdIconSimpleSVG.Convert([]byte(md), &buf)
 		if err != nil {
 			b.Error("Failed to parse")
 		}

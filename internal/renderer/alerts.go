@@ -42,8 +42,8 @@ func (r *AlertsHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegister
 func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
 	var alertType = ""
 	var icon string = ""
-	var rawTitle = ""
-	var hasTitle bool = false
+	// var rawTitle = ""
+	// var hasTitle bool = false
 
 	// Create a decision (decide) variable for later
 	var decide int = 0
@@ -66,8 +66,6 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 		icon = r.Icons[alertType]
 	}
 
-
-
 	open := " open"
 	if t, ok := node.AttributeString("closed"); ok {
 		if bool(t.(bool)) {
@@ -80,14 +78,14 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 		shouldFold = bool(t.(bool))
 	}
 
-	if rt, ok := node.AttributeString("title"); ok {
-		if typeBytes, isBytes := rt.([]uint8); isBytes {
-			rawTitle = strings.ToLower(string(typeBytes))
-		} else if typeStr, isStr := rt.(string); isStr {
-			rawTitle = strings.ToLower(typeStr)
-		}
-		hasTitle = true
-	}
+	// if rt, ok := node.AttributeString("title"); ok {
+	// 	if typeBytes, isBytes := rt.([]uint8); isBytes {
+	// 		rawTitle = strings.ToLower(string(typeBytes))
+	// 	} else if typeStr, isStr := rt.(string); isStr {
+	// 		rawTitle = strings.ToLower(typeStr)
+	// 	}
+	// 	hasTitle = true
+	// }
 
 	iconset := ""
 	switch r.DefaultIcons {
@@ -103,25 +101,46 @@ func (r *AlertsHTMLRenderer) renderAlerts(w util.BufWriter, source []byte, node 
 
 	startHTML := ""
 	endHTML := ""
+	var _ = icon
 
-	if alertType == "noicon" {
-		if decide == 0 || decide == 2 {
-			alertType = "undefined"
-		} else if _, ok := r.Icons[rawTitle]; ok {
-			alertType = rawTitle
-		}
-	} else if alertType != "" {
-		if icon == "" {
-			if !r.CustomAlertsEnabled {
-				alertType = "undefined"
-			} else if hasTitle {
-				if _, ok := r.Icons[rawTitle]; ok {
-					alertType = rawTitle
-				}
-			}
-		}
-		// if the icon is not empty, we already have alertType set
-	}
+	// if r.CustomAlertsEnabled {
+	// 	// if icon == "" {
+	// 	// 	for _, v := range constants.FALLBACK_ICON_LIST {
+	// 	// 		_, ok := r.Icons[v]
+	// 	// 		if ok {
+	// 	// 			alertType = v
+	// 	// 			break
+	// 	// 		}
+	// 	// 	}
+	// 	// } else
+
+	// 	if (alertType == "noicon") {
+	// 		if hasTitle {
+	// 			if _, ok := r.Icons[rawTitle]; ok {
+	// 				alertType = rawTitle
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+	// if alertType == "noicon" {
+	// 	if decide == 0 || decide == 2 {
+	// 		alertType = "undefined"
+	// 	} else if _, ok := r.Icons[rawTitle]; ok {
+	// 		alertType = rawTitle
+	// 	}
+	// } else if alertType != "" {
+	// 	if icon == "" {
+	// 		if !r.CustomAlertsEnabled {
+	// 			alertType = "undefined"
+	// 		} else if hasTitle {
+	// 			if _, ok := r.Icons[rawTitle]; ok {
+	// 				alertType = rawTitle
+	// 			}
+	// 		}
+	// 	}
+	// 	// if the icon is not empty, we already have alertType set
+	// }
 
 	// Old code
 	// if t, ok := node.AttributeString("kind"); ok {

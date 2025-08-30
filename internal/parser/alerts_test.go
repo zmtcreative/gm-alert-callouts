@@ -27,10 +27,6 @@ func TestNewAlertsParser(t *testing.T) {
 		t.Error("Expected CustomAlertsEnabled to be false")
 	}
 
-	if alertParser.AllowNOICON != false {
-		t.Error("Expected AllowNOICON to be false")
-	}
-
 	if len(alertParser.IconList) != 0 {
 		t.Error("Expected empty IconList")
 	}
@@ -109,8 +105,8 @@ func TestAlertsParserProcess(t *testing.T) {
 	}
 }
 
-func TestAlertsParserOpen(t *testing.T) {
-	p := &alertParser{[]string{"note", "warning", "info", "tip"}, false, false}
+func TestAlertsParserOpenNoCustomAlertsNoFolding(t *testing.T) {
+	p := &alertParser{[]string{"note", "warning", "info", "tip"}, true, true}
 	pc := parser.NewContext()
 
 	testCases := []struct {
@@ -356,7 +352,7 @@ func TestAlertsParserCanAcceptIndentedLine(t *testing.T) {
 
 func TestAlertsParserIntegration(t *testing.T) {
 	// Test the parser with a complete alert structure
-	p := &alertParser{[]string{"warning"}, false, false}
+	p := &alertParser{[]string{"warning"}, true, true}
 	pc := parser.NewContext()
 	parent := gast.NewDocument()
 

@@ -18,17 +18,16 @@ type alertParser struct{
 	IconList []string
 	FoldingEnabled bool
 	CustomAlertsEnabled bool
-	AllowNOICON bool
 }
 
 var defaultAlertsParser = &alertParser{}
+var _ = defaultAlertsParser
 
-func NewAlertsParser(iconList []string, foldingEnabled bool, customAlertsEnabled bool, allowNOICON bool) parser.BlockParser {
+func NewAlertsParser(iconList []string, foldingEnabled bool, customAlertsEnabled bool) parser.BlockParser {
 	return &alertParser{
 		IconList:            iconList,
 		FoldingEnabled:      foldingEnabled,
 		CustomAlertsEnabled: customAlertsEnabled,
-		AllowNOICON:        allowNOICON,
 	}
 }
 
@@ -36,7 +35,7 @@ func (b *alertParser) Trigger() []byte {
 	return []byte{'>'}
 }
 
-var regex = regexp.MustCompile(`^\[!(?P<kind>[\w]+)\](?:(?P<closed>-{0,1})|(?P<opened>[+]{0,1}))($|\s+(?P<title>.*))`)
+var regex = regexp.MustCompile(`^\[!(?P<kind>[\w][\w-]+)\](?:(?P<closed>-{0,1})|(?P<opened>[+]{0,1}))($|\s+(?P<title>.*))`)
 
 func (b *alertParser) process(reader text.Reader) (bool, int) {
 	// This is slightly modified code from https://github.com/yuin/goldmark.git
@@ -104,19 +103,18 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 	}
 
 	lckind := strings.ToLower(string(kind))
-	// if !b.AllowNOICON && lckind == "noicon" {
-	// 	if !b.CustomAlertsEnabled {
-	// 		return nil, parser.NoChildren
-	// 	}
-	// }
 	if !b.CustomAlertsEnabled {
-		if !slices.Contains(b.IconList, lckind) {
+		if !(slices.Contains(b.IconList, lckind)) {
 			return nil, parser.NoChildren
 		} else if title != nil {
 			return nil, parser.NoChildren
 		} else if !b.FoldingEnabled && (len(closed) != 0 || len(opened) != 0) {
 			return nil, parser.NoChildren
 		}
+	} else if !b.FoldingEnabled {
+		shouldFold = 0
+		closed = nil
+		opened = nil
 	}
 
 	alert := ast.NewAlerts()

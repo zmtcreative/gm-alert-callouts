@@ -8,23 +8,13 @@ import (
 )
 
 // Test extension using GFMStrict icons and folding enabled
-var mdGFMStrictWithFolding = goldmark.New(
-	goldmark.WithExtensions(
-		NewAlertCallouts(
-			UseGFMStrictIcons(),
-			WithFolding(true),
-		),
-	),
-)
+var acxGFMStrictWithFolding = NewAlertCallouts(UseGFMStrictIcons(), WithFolding(true))
+var mdGFMStrictWithFolding = goldmark.New(goldmark.WithExtensions(acxGFMStrictWithFolding))
+
 
 // Test extension using GFMStrict icons and folding should be disabled by default
-var mdGFMStrict = goldmark.New(
-	goldmark.WithExtensions(
-		NewAlertCallouts(
-			UseGFMStrictIcons(),
-		),
-	),
-)
+var acxGFMStrict = NewAlertCallouts(UseGFMStrictIcons())
+var mdGFMStrict = goldmark.New(goldmark.WithExtensions(acxGFMStrict))
 
 // TestGFMPlusPrimaryCallouts tests the primary callouts from the GFM Plus icon set
 func TestGFMStrictPrimaryCallouts(t *testing.T) {

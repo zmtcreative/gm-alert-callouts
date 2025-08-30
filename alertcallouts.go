@@ -151,8 +151,7 @@ func CreateIconsMap(iconData string) map[string]string {
 // AlertCallouts will initialize the extension with Folding Enabled and the basic GFM icon set
 // This can be initialized using the `goldmark.WithExtensions(alertcallouts.AlertCallouts)` syntax
 var AlertCallouts = NewAlertCallouts(
-	UseGFMWithAliasesIcons(),
-	WithFolding(true),
+	UseGFMStrictIcons(),
 )
 
 // NewAlertCallouts creates a new AlertCallouts extension with the given options.
@@ -202,7 +201,7 @@ func (c *Config) GetIconKeys() []string {
 func (e *alertCalloutsOptions) Extend(m goldmark.Markdown) {
 	m.Parser().AddOptions(
 		parser.WithBlockParsers(
-			util.Prioritized(alertParser.NewAlertsParser(e.config.GetIconKeys(), e.config.FoldingEnabled, e.config.CustomAlertsEnabled, e.config.AllowNOICON), 799),
+			util.Prioritized(alertParser.NewAlertsParser(e.config.GetIconKeys(), e.config.FoldingEnabled, e.config.CustomAlertsEnabled), 799),
 			util.Prioritized(alertParser.NewAlertsHeaderParser(), 799),
 		),
 	)

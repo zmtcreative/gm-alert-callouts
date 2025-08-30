@@ -58,6 +58,7 @@ func TestAlertCalloutsIntegration(t *testing.T) {
 		result := output.String()
 		if !strings.Contains(result, "callout") {
 			t.Error("Expected backwards compatibility to work")
+			t.Error(result)
 		}
 	})
 
