@@ -74,11 +74,22 @@ func TestAlertCalloutsCore(t *testing.T) {
 </div>`,
 		},
 		{
-			desc: "Invalid alert name - names cannot contain dashes",
+			desc: "Valid alert name - names CAN contain dashes - Obsidian allows this",
 			md: `> [!tip-one]
 > Content here`,
+			html: `<div class="callout callout-tip-one" data-callout="tip-one"><div class="callout-title">
+<svg></svg><p class="callout-title-text">Tip-One</p>
+</div>
+<div class="callout-body"><p>Content here</p>
+</div>
+</div>`,
+		},
+		{
+			desc: "Invalid alert name - names CANNOT contain other punctuation or symbols",
+			md: `> [!tip.one]
+> Content here`,
 			html: `<blockquote>
-<p>[!tip-one]
+<p>[!tip.one]
 Content here</p>
 </blockquote>`,
 		},

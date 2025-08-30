@@ -263,19 +263,18 @@ func TestGFMPlusCustomTitles(t *testing.T) {
 </div>`,
 		},
 		{
-			desc: "No Icon Callout with No Title",
+			desc: "NOICON Callout with No Title",
 			md: `> [!NoIcon]
-> This creates a No Icon Callout with No Title, but will be styled using default styling.`,
+> This creates a NOICON Callout with No Title..`,
 			html: `<div class="callout callout-noicon iconset-gfmplus" data-callout="noicon"><div class="callout-title">
-<svg></svg><p class="callout-title-text"></p>
+<svg></svg><p class="callout-title-text"><span class="callout-title-noicon" style="display: none;"></span></p>
 </div>
-<div class="callout-body"><p>This creates a No Icon Callout with No Title, but will be styled using default styling.</p>
+<div class="callout-body"><p>This creates a NOICON Callout with No Title..</p>
 </div>
-</div>
-`,
+</div>`,
 		},
 		{
-			desc: "No Icon Callout with Unrecognized Custom Title",
+			desc: "NOICON Callout with Unrecognized Custom Title",
 			md: `> [!NoIcon] FooBar
 > This creates a No Icon Callout with a custom title, but will be styled using the default styling`,
 			html: `<div class="callout callout-noicon iconset-gfmplus" data-callout="noicon"><div class="callout-title">
@@ -287,18 +286,15 @@ func TestGFMPlusCustomTitles(t *testing.T) {
 `,
 		},
 		{
-			desc: "No Icon Callout with Recognized Custom Title",
+			desc: "NOICON Callout with Recognized Custom Title",
 			md: `> [!NoIcon] Warning
-> This creates a Warning Callout without the Warning Icon, but will be styled using ` + "`" + `data-callout="warning"` + "`" + `
-> rather than the default styling, because 'warning' is a defined callout name.`,
-			html: `<div class="callout callout-warning iconset-gfmplus" data-callout="warning"><div class="callout-title">
+> NOICON Callout with Recognized Custom Title`,
+			html: `<div class="callout callout-noicon iconset-gfmplus" data-callout="noicon"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Warning</p>
 </div>
-<div class="callout-body"><p>This creates a Warning Callout without the Warning Icon, but will be styled using <code>data-callout=&quot;warning&quot;</code>
-rather than the default styling, because 'warning' is a defined callout name.</p>
+<div class="callout-body"><p>NOICON Callout with Recognized Custom Title</p>
 </div>
-</div>
-`,
+</div>`,
 		},
 	}
 
@@ -343,25 +339,23 @@ func TestGFMPlusCustomTitlesWithDefaultIcon(t *testing.T) {
 			desc: "Unknown Callout with Recognized Callout",
 			md: `> [!BAR] Warning
 > You can use an unrecognized entry for the callout and a recognized entry for the custome title.`,
-			html: `<div class="callout callout-warning iconset-gfmplus" data-callout="warning"><div class="callout-title">
+			html: `<div class="callout callout-bar iconset-gfmplus" data-callout="bar"><div class="callout-title">
 <svg class="default-icon"></svg><p class="callout-title-text">Warning</p>
 </div>
 <div class="callout-body"><p>You can use an unrecognized entry for the callout and a recognized entry for the custome title.</p>
 </div>
-</div>
-`,
+</div>`,
 		},
 		{
 			desc: "NOICON Callout with Recognized Callout",
 			md: `> [!NOICON] Warning
 > You can use an unrecognized entry for the callout and a recognized entry for the custome title.`,
-			html: `<div class="callout callout-warning iconset-gfmplus" data-callout="warning"><div class="callout-title">
+			html: `<div class="callout callout-noicon iconset-gfmplus" data-callout="noicon"><div class="callout-title">
 <svg></svg><p class="callout-title-text">Warning</p>
 </div>
 <div class="callout-body"><p>You can use an unrecognized entry for the callout and a recognized entry for the custome title.</p>
 </div>
-</div>
-`,
+</div>`,
 		},
 	}
 

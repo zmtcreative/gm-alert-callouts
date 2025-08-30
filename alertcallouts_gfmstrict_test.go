@@ -150,13 +150,10 @@ func TestGFMStrictFoldingDisabledExamples(t *testing.T) {
 			desc: "Closed by Default folding",
 			md: `> [!TIP]-
 > This tip callout is closed by default due to the minus sign.`,
-			html: `<details class="callout callout-foldable callout-important iconset-gfm" data-callout="important"><summary class="callout-title">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb-icon lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><p class="callout-title-text">Important</p>
-</summary>
-<div class="callout-body"><p>This important callout is closed by default due to the minus sign.</p>
-</div>
-</details>
-`,
+			html: `<blockquote>
+<p>[!TIP]-
+This tip callout is closed by default due to the minus sign.</p>
+</blockquote>`,
 		},
 		{
 			desc: "Open by Default folding (Explicit)",
@@ -219,12 +216,11 @@ func TestGFMStrictFoldingEnabledExamples(t *testing.T) {
 			md: `> [!Tip]-
 > This tip callout is closed by default due to the minus sign.`,
 			html: `<details class="callout callout-foldable callout-tip iconset-gfm" data-callout="tip"><summary class="callout-title">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb-icon lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><p class="callout-title-text">Important</p>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb-icon lucide-lightbulb"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><p class="callout-title-text">Tip</p>
 </summary>
 <div class="callout-body"><p>This tip callout is closed by default due to the minus sign.</p>
 </div>
-</details>
-`,
+</details>`,
 		},
 		{
 			desc: "Open by Default folding (Explicit)",
