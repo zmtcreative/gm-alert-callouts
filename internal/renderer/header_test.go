@@ -8,6 +8,7 @@ import (
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
+	"golang.org/x/text/language"
 )
 
 func TestNewAlertsHeaderHTMLRenderer(t *testing.T) {
@@ -206,48 +207,72 @@ func TestAlertsHeaderHTMLRendererWithIcons(t *testing.T) {
 }
 
 func TestAlertsHeaderHTMLRendererTitleCasing(t *testing.T) {
-	icons := Icons{
-		"note":    "<svg class='note-icon'>Note</svg>",
-		"warning": "<svg class='warning-icon'>Warning</svg>",
-		"info":    "<svg class='info-icon'>Info</svg>",
-		"default": "<svg class='default-icon'>Default</svg>",
-	}
-	r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
-
 	testCases := []struct {
 		name         string
+		lang         language.Tag
 		kind         string
 		hasTitle     bool
 		expectedText string
 	}{
 		{
-			name:         "Note kind without title",
+			name:         "English - Single word",
+			lang:         language.English,
 			kind:         "note",
 			hasTitle:     false,
-			expectedText: "Note", // should be title cased
+			expectedText: "Note",
 		},
 		{
-			name:         "Warning kind without title",
-			kind:         "warning",
-			hasTitle:     false,
-			expectedText: "Warning",
-		},
-		{
-			name:         "Multi-word kind",
+			name:         "English - Hyphenated word",
+			lang:         language.English,
 			kind:         "important-info",
 			hasTitle:     false,
-			expectedText: "[!IMPORTANT-INFO]", // should be title cased
+			expectedText: "Important-Info",
 		},
 		{
-			name:         "With custom title",
+			name:         "Dutch - 'ij' digraph at start",
+			lang:         language.Dutch,
+			kind:         "ijsselmeer",
+			hasTitle:     false,
+			expectedText: "IJsselmeer",
+		},
+		{
+			name:         "Dutch - 'ij' digraph after hyphen",
+			lang:         language.Dutch,
+			kind:         "kijk-ij",
+			hasTitle:     false,
+			expectedText: "Kijk-IJ",
+		},
+		{
+			name:         "Turkish - 'i' to 'İ'",
+			lang:         language.Turkish,
+			kind:         "istanbul",
+			hasTitle:     false,
+			expectedText: "İstanbul",
+		},
+		{
+			name:         "Turkish - 'ı' to 'I'",
+			lang:         language.Turkish,
+			kind:         "ısparta",
+			hasTitle:     false,
+			expectedText: "Isparta",
+		},
+		{
+			name:         "With custom title - no kind casing",
+			lang:         language.English,
 			kind:         "note",
 			hasTitle:     true,
 			expectedText: "", // should not add kind text when title exists
 		},
 	}
 
+	icons := Icons{} // Empty map is fine as we enable CustomAlertsEnabled
+
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
+			// Use the new unexported constructor to inject the language for testing.
+			// CustomAlertsEnabled is true to ensure the titleCaser is always used for kinds without a custom title.
+			r := newAlertsHeaderHTMLRenderer(icons, false, constants.ICONS_NONE, true, false, tc.lang)
+
 			var title string
 			if tc.hasTitle {
 				title = "Custom Title"

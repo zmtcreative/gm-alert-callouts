@@ -2,9 +2,11 @@ package renderer
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
+	"github.com/jeandeaual/go-locale"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
@@ -31,7 +33,30 @@ func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, foldingEnabled FoldingEna
 	return NewAlertsHeaderHTMLRenderer(icons, bool(foldingEnabled), defaultIcons, bool(customAlertsEnabled), true, opts...)
 }
 
+// NewAlertsHeaderHTMLRenderer is the constructor used during normal program operation.
+// This is the public implementation
 func NewAlertsHeaderHTMLRenderer(icons map[string]string, foldingEnabled bool, defaultIcons int, customAlertsEnabled bool, allowNOICON bool, opts ...html.Option) renderer.NodeRenderer {
+	// Detect the user's OS-level locale.
+	userLocale, err := locale.GetLocale()
+	if err != nil {
+		// This is unlikely, but provides a safe fallback.
+		log.Println("Could not detect OS locale, falling back to Undetermined:", err)
+		userLocale = "und"
+	}
+
+	// language.Parse is robust. It returns language.Undetermined on error,
+	// which is a perfect default for title casing. The cases package will
+	// handle this gracefully.
+	tag, _ := language.Parse(userLocale)
+
+	return newAlertsHeaderHTMLRenderer(icons, foldingEnabled, defaultIcons, customAlertsEnabled, allowNOICON, tag, opts...)
+}
+
+// FOR UNIT TESTING ##############################################################################
+// newAlertsHeaderHTMLRenderer is an unexported constructor that allows injecting a language tag.
+// This is the internal implementation used by the public constructors and is essential for writing
+// unit tests that can verify behavior across different languages.
+func newAlertsHeaderHTMLRenderer(icons map[string]string, foldingEnabled bool, defaultIcons int, customAlertsEnabled bool, allowNOICON bool, tag language.Tag, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHeaderHTMLRenderer{
 		Config:              html.NewConfig(),
 		Icons:               icons,
@@ -39,7 +64,7 @@ func NewAlertsHeaderHTMLRenderer(icons map[string]string, foldingEnabled bool, d
 		CustomAlertsEnabled: customAlertsEnabled,
 		DefaultIcons:        defaultIcons,
 		AllowNOICON:         allowNOICON,
-		titleCaser:          cases.Title(language.English, cases.Compact),
+		titleCaser:          cases.Title(tag, cases.Compact),
 	}
 	for _, opt := range opts {
 		opt.SetHTMLOption(&r.Config)
