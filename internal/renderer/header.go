@@ -56,18 +56,6 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 	var kind string = ""
 	var icon string = ""
 
-	// // Create a decision (decide) variable for later
-	// var decide int = 0
-	// if _, ok := r.Icons["noicon"]; ok {
-	// 	decide += 1
-	// }
-	// if r.CustomAlertsEnabled {
-	// 	decide += 2
-	// }
-	// if r.AllowNOICON {
-	// 	decide += 4
-	// }
-
 	if t, ok := node.AttributeString("kind"); ok {
 		kind = strings.ToLower(t.(string))
 		icon = r.Icons[kind]
@@ -100,27 +88,6 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 			}
 		}
 	} // if we get here, don't place any icon in startHTML
-
-
-	// if kind == "noicon" {
-	// 	if icon != "" {
-	// 		startHTML += icon
-	// 	} else if r.AllowNOICON {
-	// 		startHTML += `<span style="display: none;"></span>`
-	// 	}
-	// } else {
-	// 	if icon != "" {
-	// 		startHTML += icon
-	// 	} else if r.CustomAlertsEnabled {
-	// 		for _, v := range constants.FALLBACK_ICON_LIST {
-	// 			deficon, ok := r.Icons[v]
-	// 			if ok {
-	// 				startHTML += deficon
-	// 				break
-	// 			}
-	// 		}
-	// 	}
-	// }
 
 	startHTML += `<p class="callout-title-text">`
 

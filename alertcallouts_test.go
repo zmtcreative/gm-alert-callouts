@@ -34,16 +34,16 @@ var mdIconSimpleSVG = goldmark.New(
 	),
 )
 
-var mdIconGFMStrict = goldmark.New(
-	goldmark.WithExtensions(
-		NewAlertCallouts(
-			// WithIcons(map[string]string{"note": "<svg></svg>"}),
-			// WithCustomAlerts(true),
-			// WithFolding(true),
-			UseGFMStrictIcons(),
-		),
-	),
-)
+// var mdIconGFMStrict = goldmark.New(
+// 	goldmark.WithExtensions(
+// 		NewAlertCallouts(
+// 			// WithIcons(map[string]string{"note": "<svg></svg>"}),
+// 			// WithCustomAlerts(true),
+// 			// WithFolding(true),
+// 			UseGFMStrictIcons(),
+// 		),
+// 	),
+// )
 
 type TestCase struct {
 	desc string
