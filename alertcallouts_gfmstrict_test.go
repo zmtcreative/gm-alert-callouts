@@ -7,17 +7,59 @@ import (
 	"github.com/yuin/goldmark/testutil"
 )
 
+// Test extension using GFMStrict icons and no folding or custom alerts
+var mdGFMStrict = goldmark.New(
+	goldmark.WithExtensions(
+		NewAlertCallouts(
+			UseGFMStrictIcons(),
+			WithFolding(false),
+			WithCustomAlerts(false),
+		),
+	),
+)
+
 // Test extension using GFMStrict icons and folding enabled
-var acxGFMStrictWithFolding = NewAlertCallouts(UseGFMStrictIcons(), WithFolding(true))
-var mdGFMStrictWithFolding = goldmark.New(goldmark.WithExtensions(acxGFMStrictWithFolding))
+var mdGFMStrictWithFolding = goldmark.New(
+	goldmark.WithExtensions(
+		NewAlertCallouts(
+			UseGFMStrictIcons(),
+			WithFolding(true),
+			WithCustomAlerts(false),
+		),
+	),
+)
+
+// Test extension using GFMStrict icons and custom alerts enabled
+var mdGFMStrictWithCustomAlerts = goldmark.New(
+	goldmark.WithExtensions(
+		NewAlertCallouts(
+			UseGFMStrictIcons(),
+			WithFolding(false),
+			WithCustomAlerts(true),
+		),
+	),
+)
+
+// Test extension using GFMStrict icons and custom alerts enabled
+var mdGFMStrictWithFoldingAndCustomAlerts = goldmark.New(
+	goldmark.WithExtensions(
+		NewAlertCallouts(
+			UseGFMStrictIcons(),
+			WithFolding(true),
+			WithCustomAlerts(true),
+		),
+	),
+)
 
 
-// Test extension using GFMStrict icons and folding should be disabled by default
-var acxGFMStrict = NewAlertCallouts(UseGFMStrictIcons())
-var mdGFMStrict = goldmark.New(goldmark.WithExtensions(acxGFMStrict))
 
-// TestGFMPlusPrimaryCallouts tests the primary callouts from the GFM Plus icon set
-func TestGFMStrictPrimaryCallouts(t *testing.T) {
+// ###############################################################################################
+// STRICT: GFMAlerts with no extensions only supports these primary five (5) alert types
+// ###############################################################################################
+
+// TestGFMPlusPrimaryAlerts using the defalt GFMStrict with no extensions
+// Using purely GFMStrict with no extra features, these should product functioning alerts
+func TestGFMStrictPrimaryAlerts(t *testing.T) {
 	testCases := []TestCase{
 		{
 			desc: "Primary Note callout",
@@ -87,11 +129,18 @@ func TestGFMStrictPrimaryCallouts(t *testing.T) {
 	}
 }
 
-// TestGFMStrictAliasCallouts tests alias callouts that reference primary callouts
-func TestGFMStrictAliasCallouts(t *testing.T) {
+// ###############################################################################################
+// STRICT: GFMAlerts with no extensions only support the primary five (5) alert types, so anything
+//         else should output as generic blockquotes (i.e., the parser should ignore them and pass
+//         controll back to Goldmark)
+// ###############################################################################################
+
+// TestGFMStrictUnrecognizedAlerts using the default GFMStrict with no extensions
+// Using purely GFMStrict with no extra features, these should produce blockquote output, not alerts
+func TestGFMStrictAliasAlerts(t *testing.T) {
 	testCases := []TestCase{
 		{
-			desc: "This uses the undefined INFO alias.",
+			desc: "Undefined INFO alert.",
 			md: `> [!INFO]
 > This uses the INFO alias.`,
 			html: `<blockquote>
@@ -101,7 +150,7 @@ This uses the INFO alias.</p>
 `,
 		},
 		{
-			desc: "Undefined HINT alias with a Tip custom title.",
+			desc: "Undefined HINT alert - With Custom Title.",
 			md: `> [!HINT] Tip
 > Undefined HINT alias with a Tip custom title.`,
 			html: `<blockquote>
@@ -111,7 +160,7 @@ Undefined HINT alias with a Tip custom title.</p>
 `,
 		},
 		{
-			desc: "This uses the undefined WARN alias.",
+			desc: "Undefined WARN alert.",
 			md: `> [!WARN]
 > This uses the undefined WARN alias.`,
 			html: `<blockquote>
@@ -121,7 +170,7 @@ This uses the undefined WARN alias.</p>
 `,
 		},
 		{
-			desc: "This uses the undefined ERROR alias.",
+			desc: "Undefined ERROR alert.",
 			md: `> [!ERROR]
 > This uses the undefined ERROR alias.`,
 			html: `<blockquote>
@@ -143,8 +192,9 @@ This uses the undefined ERROR alias.</p>
 	}
 }
 
-// TestGFMStrictFoldingDisabledExamples the default GFM Strict callouts without Folding Enabled
-func TestGFMStrictFoldingDisabledExamples(t *testing.T) {
+// TestGFMStrictNoFoldingNoCustomalerts using the default GFMStrict with no extensions
+// Using purely GFMStrict with no extra features, these should produce blockquote output, not alerts
+func TestGFMStrictNoFoldingNoCustomalerts(t *testing.T) {
 	testCases := []TestCase{
 		{
 			desc: "Closed by Default folding",
@@ -208,11 +258,64 @@ This danger callout is marked as open by default with the plus sign.</p>
 	}
 }
 
-// TestGFMStrictFoldingEnabledExamples tests the folding functionality with GFM Strict callouts
-func TestGFMStrictFoldingEnabledExamples(t *testing.T) {
+// TestGFMStrictCustomTitles using the default GFMStrict with no extensions
+// Using purely GFMStrict with no extra features, these should produce blockquote output, not alerts
+func TestGFMStrictCustomTitles(t *testing.T) {
 	testCases := []TestCase{
 		{
-			desc: "Closed by Default folding",
+			desc: "Unrecognized Alert Type - With Custom Title",
+			md: `> [!SUCCESS] Mission Accomplished
+> Disallowed Undefined SUCCESS alias with custom title.`,
+			html: `<blockquote>
+<p>[!SUCCESS] Mission Accomplished
+Disallowed Undefined SUCCESS alias with custom title.</p>
+</blockquote>
+`,
+		},
+		{
+			desc: "Unrecognized Alert Type - With Custom Title - HaCkEr StYlE TiTlE",
+			md: `> [!SUCCESS] MiSsIoN AcCoMpLiShEd
+> Disallowed Undefined SUCCESS alias with custom title.`,
+			html: `<blockquote>
+<p>[!SUCCESS] MiSsIoN AcCoMpLiShEd
+Disallowed Undefined SUCCESS alias with custom title.</p>
+</blockquote>
+`,
+		},
+		{
+			desc: "Unrecognized NOICON Alert - With Custom Title",
+			md: `> [!NoIcon] FooBar
+> Disallowed NOICON Callout with Unrecognized Custom Title`,
+			html: `<blockquote>
+<p>[!NoIcon] FooBar
+Disallowed NOICON Callout with Unrecognized Custom Title</p>
+</blockquote>
+`,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.desc, func(t *testing.T) {
+			testutil.DoTestCase(mdGFMStrict, testutil.MarkdownTestCase{
+				Description: tc.desc,
+				Markdown:    tc.md,
+				Expected:    tc.html,
+			}, t)
+		})
+	}
+}
+
+// ###############################################################################################
+// EXTENDED: GFMAlerts using Folding and/or CustomAlerts is available if needed, so we test these.
+// ###############################################################################################
+
+// TestGFMStrictWithFolding using the default GFMStrict with folding enabled
+// Using GFMStrict with folding enabled, this should allow folding on the five recognized alert types
+//  but produce blockquotes for unrecognized alerts types or any alert type with a custom title
+func TestGFMStrictWithFolding(t *testing.T) {
+	testCases := []TestCase{
+		{
+			desc: "Recognized Alert Type - Folding CLOSED by default",
 			md: `> [!Tip]-
 > This tip callout is closed by default due to the minus sign.`,
 			html: `<details class="callout callout-foldable callout-tip iconset-gfm" data-callout="tip"><summary class="callout-title">
@@ -223,7 +326,7 @@ func TestGFMStrictFoldingEnabledExamples(t *testing.T) {
 </details>`,
 		},
 		{
-			desc: "Open by Default folding (Explicit)",
+			desc: "Recognized Alert Type - Folding OPEN by default",
 			md: `> [!IMPORTANT]+
 > This important callout is explicitly marked as open by default with the plus sign.`,
 			html: `<details class="callout callout-foldable callout-important iconset-gfm" data-callout="important" open><summary class="callout-title">
@@ -234,7 +337,7 @@ func TestGFMStrictFoldingEnabledExamples(t *testing.T) {
 </details>`,
 		},
 		{
-			desc: "Open by Default folding Custom Alert",
+			desc: "Unrecognized Alert Type - Folding OPEN by default",
 			md: `> [!ZEPHYR]+
 > This custom callout is marked as open by default with the plus sign.`,
 			html: `<blockquote>
@@ -244,7 +347,7 @@ This custom callout is marked as open by default with the plus sign.</p>
 `,
 		},
 		{
-			desc: "Open by Default folding Custom Alert with Recognized Title",
+			desc: "Unrecognized Alert Type - Folding OPEN by default - With Custom Title",
 			md: `> [!ZEPHYR]+ Warning
 > This custom callout is marked as open by default with the plus sign.`,
 			html: `<blockquote>
@@ -254,7 +357,7 @@ This custom callout is marked as open by default with the plus sign.</p>
 `,
 		},
 		{
-			desc: "Open by Default folding Recognized Alert with Recognized Title",
+			desc: "Recognized Alert Type - Folding OPEN by default - With Custom Title",
 			md: `> [!Caution]+ Warning
 > This danger callout is marked as open by default with the plus sign.`,
 			html: `<blockquote>
@@ -276,64 +379,210 @@ This danger callout is marked as open by default with the plus sign.</p>
 	}
 }
 
-// TestGFMStrictCustomTitles tests custom titles functionality with GFM Strict callouts
-func TestGFMStrictCustomTitles(t *testing.T) {
+// TestGFMStrictWithCustomalerts using the default GFMStrict with custom alerts enabled
+// Using GFMStrict with custom alerts enabled, this should allow custom alert types
+//  but produce blockquotes for any alert with folding symbols `+` or `-`
+func TestGFMStrictWithCustomalerts(t *testing.T) {
 	testCases := []TestCase{
 		{
-			desc: "Disallowed Undefined SUCCESS alias with custom title",
-			md: `> [!SUCCESS] MiSsIoN AcCoMpLiShEd
-> Disallowed Undefined SUCCESS alias with custom title.`,
-			html: `<blockquote>
-<p>[!SUCCESS] MiSsIoN AcCoMpLiShEd
-Disallowed Undefined SUCCESS alias with custom title.</p>
-</blockquote>
-`,
+			desc: "Custom Alert Type",
+			md: `> [!Foo]
+> Custom alert type.`,
+			html: `<div class="callout callout-foo iconset-gfm" data-callout="foo"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">Foo</p>
+</div>
+<div class="callout-body"><p>Custom alert type.</p>
+</div>
+</div>`,
 		},
 		{
-			desc: "Disallowed Undefined FOO Callout",
-			md: `> [!FOO]
-> Disallowed Undefined FOO Callout.`,
-			html: `<blockquote>
-<p>[!FOO]
-Disallowed Undefined FOO Callout.</p>
-</blockquote>
-`,
+			desc: "Custom Alert Type - With Custom Title",
+			md: `> [!Foo] BarBaz
+> Custom alert type.`,
+			html: `<div class="callout callout-foo iconset-gfm" data-callout="foo"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">BarBaz</p>
+</div>
+<div class="callout-body"><p>Custom alert type.</p>
+</div>
+</div>`,
 		},
 		{
-			desc: "Disallowed NOICON Callout",
-			md: `> [!NoIcon]
-> This is a disallowed NOICON callout.`,
-			html: `<blockquote>
-<p>[!NoIcon]
-This is a disallowed NOICON callout.</p>
-</blockquote>
-`,
+			desc: "Custom Alert Type - With Multi-word Custom Title",
+			md: `> [!Foo] BarBaz FooBar
+> Custom alert type.`,
+			html: `<div class="callout callout-foo iconset-gfm" data-callout="foo"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">BarBaz FooBar</p>
+</div>
+<div class="callout-body"><p>Custom alert type.</p>
+</div>
+</div>`,
 		},
 		{
-			desc: "Disallowed NOICON Callout with Unrecognized Custom Title",
-			md: `> [!NoIcon] FooBar
-> Disallowed NOICON Callout with Unrecognized Custom Title`,
-			html: `<blockquote>
-<p>[!NoIcon] FooBar
-Disallowed NOICON Callout with Unrecognized Custom Title</p>
-</blockquote>
-`,
+			desc: "Custom Alert Type - With Multi-word Custom Title - With Markdown Formatting",
+			md: `> [!Foo] BarBaz **FooBar** BingBong
+> Custom alert type.`,
+			html: `<div class="callout callout-foo iconset-gfm" data-callout="foo"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">BarBaz <strong>FooBar</strong> BingBong</p>
+</div>
+<div class="callout-body"><p>Custom alert type.</p>
+</div>
+</div>`,
 		},
 		{
-			desc: "Disallowed NOICON Callout with Recognized Custom Title",
-			md: `> [!NoIcon] Warning
-> Disallowed NOICON Callout with Recognized Custom Title`,
-			html: `<blockquote>
-<p>[!NoIcon] Warning
-Disallowed NOICON Callout with Recognized Custom Title</p>
-</blockquote>
-`,
+			desc: "Custom Alert Type - With dash in name",
+			md: `> [!Bar-Baz]
+> Custom Alert Type.`,
+			html: `<div class="callout callout-bar-baz iconset-gfm" data-callout="bar-baz"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">Bar-Baz</p>
+</div>
+<div class="callout-body"><p>Custom Alert Type.</p>
+</div>
+</div>`,
+		},
+		{
+			desc: "Custom Alert Type - With underscore in name",
+			md: `> [!Bar_Baz]
+> Custom Alert Type.`,
+			html: `<div class="callout callout-bar_baz iconset-gfm" data-callout="bar_baz"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">Bar_baz</p>
+</div>
+<div class="callout-body"><p>Custom Alert Type.</p>
+</div>
+</div>`,
+		},
+		{
+			desc: "Custom Alert Type - Folding Ignored",
+			md: `> [!ZEPHYR]+
+> This custom callout is marked as open by default with the plus sign.`,
+			html: `<div class="callout callout-zephyr iconset-gfm" data-callout="zephyr"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">Zephyr</p>
+</div>
+<div class="callout-body"><p>This custom callout is marked as open by default with the plus sign.</p>
+</div>
+</div>`,
+		},
+		{
+			desc: "Custom Alert Type with Custom Title - Folding Ignored",
+			md: `> [!ZEPHYR]- Warning
+> This custom callout is marked as closed by default with the minus sign.`,
+			html: `<div class="callout callout-zephyr iconset-gfm" data-callout="zephyr"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">Warning</p>
+</div>
+<div class="callout-body"><p>This custom callout is marked as closed by default with the minus sign.</p>
+</div>
+</div>`,
+		},
+		{
+			desc: "Custom Alert Type - With Unicode in name",
+			md: `> [!你好]
+> Unicode Alert.`,
+			html: `<div class="callout callout-你好 iconset-gfm" data-callout="你好"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">你好</p>
+</div>
+<div class="callout-body"><p>Unicode Alert.</p>
+</div>
+</div>`,
+		},
+		{
+			desc: "Custom Alert Type - With Unicode in name and title",
+			md: `> [!你好] 世界
+> Unicode Alert.`,
+			html: `<div class="callout callout-你好 iconset-gfm" data-callout="你好"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">世界</p>
+</div>
+<div class="callout-body"><p>Unicode Alert.</p>
+</div>
+</div>`,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.desc, func(t *testing.T) {
-			testutil.DoTestCase(mdGFMStrict, testutil.MarkdownTestCase{
+			testutil.DoTestCase(mdGFMStrictWithCustomAlerts, testutil.MarkdownTestCase{
+				Description: tc.desc,
+				Markdown:    tc.md,
+				Expected:    tc.html,
+			}, t)
+		})
+	}
+}
+
+// TestGFMStrictWithCustomalerts using the default GFMStrict with custom alerts enabled
+// Using GFMStrict with custom alerts enabled, this should allow custom alert types
+//  but produce blockquotes for any alert with folding symbols `+` or `-`
+func TestGFMStrictWithFoldingAndCustomalerts(t *testing.T) {
+	testCases := []TestCase{
+		{
+			desc: "Custom Alert Type",
+			md: `> [!Foo]
+> Custom alert type.`,
+			html: `<div class="callout callout-foo iconset-gfm" data-callout="foo"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">Foo</p>
+</div>
+<div class="callout-body"><p>Custom alert type.</p>
+</div>
+</div>`,
+		},
+		{
+			desc: "Custom Alert Type - With Custom Title",
+			md: `> [!Foo] BarBaz
+> Custom alert type.`,
+			html: `<div class="callout callout-foo iconset-gfm" data-callout="foo"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">BarBaz</p>
+</div>
+<div class="callout-body"><p>Custom alert type.</p>
+</div>
+</div>`,
+		},
+		{
+			desc: "Custom Alert Type - With Multi-word Custom Title - Folding OPEN by default",
+			md: `> [!Foo]+ BarBaz FooBar
+> Custom alert type.`,
+			html: `<details class="callout callout-foldable callout-foo iconset-gfm" data-callout="foo" open><summary class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">BarBaz FooBar</p>
+</summary>
+<div class="callout-body"><p>Custom alert type.</p>
+</div>
+</details>`,
+		},
+		{
+			desc: "Custom Alert Type - With Multi-word Custom Title - Folding CLOSED by default",
+			md: `> [!Foo]- BarBaz BingBong
+> Custom alert type.`,
+			html: `<details class="callout callout-foldable callout-foo iconset-gfm" data-callout="foo"><summary class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">BarBaz BingBong</p>
+</summary>
+<div class="callout-body"><p>Custom alert type.</p>
+</div>
+</details>`,
+		},
+		{
+			desc: "Custom Alert Type - With Unicode in name - Folding OPEN by default",
+			md: `> [!你好]+
+> Unicode Alert.`,
+			html: `<details class="callout callout-foldable callout-你好 iconset-gfm" data-callout="你好" open><summary class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">你好</p>
+</summary>
+<div class="callout-body"><p>Unicode Alert.</p>
+</div>
+</details>`,
+		},
+		{
+			desc: "Custom Alert Type - With Unicode in name and title - Folding CLOSED by default",
+			md: `> [!你好]- 世界
+> Unicode Alert.`,
+			html: `<details class="callout callout-foldable callout-你好 iconset-gfm" data-callout="你好"><summary class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><p class="callout-title-text">世界</p>
+</summary>
+<div class="callout-body"><p>Unicode Alert.</p>
+</div>
+</details>`,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.desc, func(t *testing.T) {
+			testutil.DoTestCase(mdGFMStrictWithFoldingAndCustomAlerts, testutil.MarkdownTestCase{
 				Description: tc.desc,
 				Markdown:    tc.md,
 				Expected:    tc.html,
