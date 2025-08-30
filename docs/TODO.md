@@ -11,9 +11,9 @@ This is a list of things we may implement or improve as development continues.
 **Planned**
 
 - [ ] Add option(s) to set custom classes (and/or attributes) for HTML elements during rendering
-- [ ] Add initialation option to enable/disable `NOICON` support (*currently NOICON support is on by default and cannot be disabled*)
+- [x] Add initialation option to enable/disable `NOICON` support
 - [ ] Create example CSS style files for all three built-in Icon Sets in the `examples/assets/css` folder
-  - [ ] GFM (Github Flavored Markdown) -- for `UseGFMIcons()` and `assets/alertcallouts-gfm.icons`
+  - [ ] GFM Strict (Strict Github Flavored Markdown) -- for `UseGFMStrictIcons()` and `assets/alertcallouts-gfm-strict.icons`
   - [x] GFM Plus -- for `UseGFMPlusIcons()` and `assets/alertcallouts-gfmplus.icons`
   - [ ] Obsidian -- for `UseObsidianIcons()` and `assets/alertcallouts-obsidian.icons`
 
@@ -40,7 +40,7 @@ This is a list of things we may implement or improve as development continues.
 **Planned/In-Development**
 
 - [ ] Insert custom classes into specific HTML elements as defined during the extension initialization process.
-- [ ] Adjust parsing and rendering to enable/disable NOICON support (*NOICON handling is enabled by default and cannot currently be disabled*)
+- [x] Adjust parsing and rendering to enable/disable NOICON support
 
 **Completed**
 

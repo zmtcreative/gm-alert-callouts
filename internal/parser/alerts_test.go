@@ -12,18 +12,28 @@ import (
 )
 
 func TestNewAlertsParser(t *testing.T) {
-	p := NewAlertsParser()
+	p := NewAlertsParser(make([]string, 0), false, false)
 	if p == nil {
 		t.Fatal("NewAlertsParser() returned nil")
 	}
 
-	if p != defaultAlertsParser {
-		t.Error("NewAlertsParser() should return defaultAlertsParser")
+	// Verify it returns a properly configured alertParser
+	alertParser, ok := p.(*alertParser)
+	if !ok {
+		t.Fatal("NewAlertsParser() should return *alertParser")
+	}
+
+	if alertParser.CustomAlertsEnabled != false {
+		t.Error("Expected CustomAlertsEnabled to be false")
+	}
+
+	if len(alertParser.IconList) != 0 {
+		t.Error("Expected empty IconList")
 	}
 }
 
 func TestAlertsParserTrigger(t *testing.T) {
-	p := &alertParser{}
+	p := &alertParser{[]string{"note"}, false, false}
 	trigger := p.Trigger()
 	expected := []byte{'>'}
 
@@ -33,7 +43,7 @@ func TestAlertsParserTrigger(t *testing.T) {
 }
 
 func TestAlertsParserProcess(t *testing.T) {
-	p := &alertParser{}
+	p := &alertParser{[]string{"note"}, false, false}
 
 	testCases := []struct {
 		name     string
@@ -95,8 +105,8 @@ func TestAlertsParserProcess(t *testing.T) {
 	}
 }
 
-func TestAlertsParserOpen(t *testing.T) {
-	p := &alertParser{}
+func TestAlertsParserOpenNoCustomAlertsNoFolding(t *testing.T) {
+	p := &alertParser{[]string{"note", "warning", "info", "tip"}, true, true}
 	pc := parser.NewContext()
 
 	testCases := []struct {
@@ -236,7 +246,7 @@ func TestAlertsParserOpen(t *testing.T) {
 }
 
 func TestAlertsParserContinue(t *testing.T) {
-	p := &alertParser{}
+	p := &alertParser{[]string{"note"}, false, false}
 	pc := parser.NewContext()
 	node := ast.NewAlerts()
 
@@ -275,7 +285,7 @@ func TestAlertsParserContinue(t *testing.T) {
 }
 
 func TestAlertsParserClose(t *testing.T) {
-	p := &alertParser{}
+	p := &alertParser{[]string{"note"}, false, false}
 	pc := parser.NewContext()
 
 	// Create a mock alert node with header and body children
@@ -327,14 +337,14 @@ func TestAlertsParserClose(t *testing.T) {
 }
 
 func TestAlertsParserCanInterruptParagraph(t *testing.T) {
-	p := &alertParser{}
+	p := &alertParser{[]string{"note"}, false, false}
 	if !p.CanInterruptParagraph() {
 		t.Error("Expected CanInterruptParagraph to return true")
 	}
 }
 
 func TestAlertsParserCanAcceptIndentedLine(t *testing.T) {
-	p := &alertParser{}
+	p := &alertParser{[]string{"note"}, false, false}
 	if p.CanAcceptIndentedLine() {
 		t.Error("Expected CanAcceptIndentedLine to return false")
 	}
@@ -342,7 +352,7 @@ func TestAlertsParserCanAcceptIndentedLine(t *testing.T) {
 
 func TestAlertsParserIntegration(t *testing.T) {
 	// Test the parser with a complete alert structure
-	p := &alertParser{}
+	p := &alertParser{[]string{"warning"}, true, true}
 	pc := parser.NewContext()
 	parent := gast.NewDocument()
 

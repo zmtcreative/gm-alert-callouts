@@ -6,10 +6,13 @@ import (
 
 const (
 	ICONS_NONE = iota
-	ICONS_GFM
+	ICONS_GFM_STRICT
+	ICONS_GFM_WITH_ALIASES
 	ICONS_GFM_PLUS
 	ICONS_OBSIDIAN
 )
+
+var FALLBACK_ICON_LIST = []string{"default", "icon", "custom", "note", "info"}
 
 // Node kinds for different alert components
 var (

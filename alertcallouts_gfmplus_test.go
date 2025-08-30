@@ -13,6 +13,21 @@ var mdGFMPlus = goldmark.New(
 		NewAlertCallouts(
 			UseGFMPlusIcons(),
 			WithFolding(true),
+			WithCustomAlerts(true),
+			WithAllowNOICON(true),
+		),
+	),
+)
+
+// Test extension using GFMPlus icons and folding enabled
+var mdGFMPlusWithDefaultIcon = goldmark.New(
+	goldmark.WithExtensions(
+		NewAlertCallouts(
+			UseGFMPlusIcons(),
+			WithFolding(true),
+			WithCustomAlerts(true),
+			WithAllowNOICON(true),
+			WithIcon("default", `<svg class="default-icon"></svg>`),
 		),
 	),
 )
@@ -248,37 +263,36 @@ func TestGFMPlusCustomTitles(t *testing.T) {
 </div>`,
 		},
 		{
-			desc: "No Icon Callout with No Title",
+			desc: "NOICON Callout with No Title",
 			md: `> [!NoIcon]
-> This creates a No Icon Callout with No Title, but will be styled using default styling.`,
-			html: `<div class="callout callout-default iconset-gfmplus" data-callout="default"><div class="callout-title">
-<p class="callout-title-text">Noicon</p>
+> This creates a NOICON Callout with No Title..`,
+			html: `<div class="callout callout-noicon iconset-gfmplus" data-callout="noicon"><div class="callout-title">
+<svg></svg><p class="callout-title-text"><span class="callout-title-noicon" style="display: none;"></span></p>
 </div>
-<div class="callout-body"><p>This creates a No Icon Callout with No Title, but will be styled using default styling.</p>
+<div class="callout-body"><p>This creates a NOICON Callout with No Title..</p>
 </div>
 </div>`,
 		},
 		{
-			desc: "No Icon Callout with Unrecognized Custom Title",
+			desc: "NOICON Callout with Unrecognized Custom Title",
 			md: `> [!NoIcon] FooBar
 > This creates a No Icon Callout with a custom title, but will be styled using the default styling`,
-			html: `<div class="callout callout-foobar iconset-gfmplus" data-callout="foobar"><div class="callout-title">
-<p class="callout-title-text">FooBar</p>
+			html: `<div class="callout callout-noicon iconset-gfmplus" data-callout="noicon"><div class="callout-title">
+<svg></svg><p class="callout-title-text">FooBar</p>
 </div>
 <div class="callout-body"><p>This creates a No Icon Callout with a custom title, but will be styled using the default styling</p>
 </div>
-</div>`,
+</div>
+`,
 		},
 		{
-			desc: "No Icon Callout with Recognized Custom Title",
+			desc: "NOICON Callout with Recognized Custom Title",
 			md: `> [!NoIcon] Warning
-> This creates a Warning Callout without the Warning Icon, but will be styled using ` + "`" + `data-callout="warning"` + "`" + `
-> rather than the default styling, because 'warning' is a defined callout name.`,
-			html: `<div class="callout callout-warning iconset-gfmplus" data-callout="warning"><div class="callout-title">
-<p class="callout-title-text">Warning</p>
+> NOICON Callout with Recognized Custom Title`,
+			html: `<div class="callout callout-noicon iconset-gfmplus" data-callout="noicon"><div class="callout-title">
+<svg></svg><p class="callout-title-text">Warning</p>
 </div>
-<div class="callout-body"><p>This creates a Warning Callout without the Warning Icon, but will be styled using <code>data-callout=&quot;warning&quot;</code>
-rather than the default styling, because 'warning' is a defined callout name.</p>
+<div class="callout-body"><p>NOICON Callout with Recognized Custom Title</p>
 </div>
 </div>`,
 		},
@@ -287,6 +301,67 @@ rather than the default styling, because 'warning' is a defined callout name.</p
 	for _, tc := range testCases {
 		t.Run(tc.desc, func(t *testing.T) {
 			testutil.DoTestCase(mdGFMPlus, testutil.MarkdownTestCase{
+				Description: tc.desc,
+				Markdown:    tc.md,
+				Expected:    tc.html,
+			}, t)
+		})
+	}
+}
+
+func TestGFMPlusCustomTitlesWithDefaultIcon(t *testing.T) {
+	testCases := []TestCase{
+		{
+			desc: "Unknown Callout",
+			md: `> [!FOO]
+> You can use an unrecognized entry for the callout.`,
+			html: `<div class="callout callout-foo iconset-gfmplus" data-callout="foo"><div class="callout-title">
+<svg class="default-icon"></svg><p class="callout-title-text">Foo</p>
+</div>
+<div class="callout-body"><p>You can use an unrecognized entry for the callout.</p>
+</div>
+</div>
+`,
+		},
+		{
+			desc: "Unknown Callout with Title",
+			md: `> [!BAR] Custom Title
+> You can use an unrecognized entry for the callout.`,
+			html: `<div class="callout callout-bar iconset-gfmplus" data-callout="bar"><div class="callout-title">
+<svg class="default-icon"></svg><p class="callout-title-text">Custom Title</p>
+</div>
+<div class="callout-body"><p>You can use an unrecognized entry for the callout.</p>
+</div>
+</div>
+`,
+		},
+		{
+			desc: "Unknown Callout with Recognized Callout",
+			md: `> [!BAR] Warning
+> You can use an unrecognized entry for the callout and a recognized entry for the custome title.`,
+			html: `<div class="callout callout-bar iconset-gfmplus" data-callout="bar"><div class="callout-title">
+<svg class="default-icon"></svg><p class="callout-title-text">Warning</p>
+</div>
+<div class="callout-body"><p>You can use an unrecognized entry for the callout and a recognized entry for the custome title.</p>
+</div>
+</div>`,
+		},
+		{
+			desc: "NOICON Callout with Recognized Callout",
+			md: `> [!NOICON] Warning
+> You can use an unrecognized entry for the callout and a recognized entry for the custome title.`,
+			html: `<div class="callout callout-noicon iconset-gfmplus" data-callout="noicon"><div class="callout-title">
+<svg></svg><p class="callout-title-text">Warning</p>
+</div>
+<div class="callout-body"><p>You can use an unrecognized entry for the callout and a recognized entry for the custome title.</p>
+</div>
+</div>`,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.desc, func(t *testing.T) {
+			testutil.DoTestCase(mdGFMPlusWithDefaultIcon, testutil.MarkdownTestCase{
 				Description: tc.desc,
 				Markdown:    tc.md,
 				Expected:    tc.html,

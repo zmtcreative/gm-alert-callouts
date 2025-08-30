@@ -2,6 +2,7 @@ package parser
 
 import (
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/ast"
@@ -13,19 +14,28 @@ import (
 	"github.com/yuin/goldmark/util"
 )
 
-type alertParser struct{}
+type alertParser struct{
+	IconList []string
+	FoldingEnabled bool
+	CustomAlertsEnabled bool
+}
 
 var defaultAlertsParser = &alertParser{}
+var _ = defaultAlertsParser
 
-func NewAlertsParser() parser.BlockParser {
-	return defaultAlertsParser
+func NewAlertsParser(iconList []string, foldingEnabled bool, customAlertsEnabled bool) parser.BlockParser {
+	return &alertParser{
+		IconList:            iconList,
+		FoldingEnabled:      foldingEnabled,
+		CustomAlertsEnabled: customAlertsEnabled,
+	}
 }
 
 func (b *alertParser) Trigger() []byte {
 	return []byte{'>'}
 }
 
-var regex = regexp.MustCompile(`^\[!(?P<kind>[\w]+)\](?:(?P<closed>-{0,1})|(?P<opened>[+]{0,1}))($|\s+(?P<title>.*))`)
+var regex = regexp.MustCompile(`^\[!(?P<kind>[\w][\w-]+)\](?:(?P<closed>-{0,1})|(?P<opened>[+]{0,1}))($|\s+(?P<title>.*))`)
 
 func (b *alertParser) process(reader text.Reader) (bool, int) {
 	// This is slightly modified code from https://github.com/yuin/goldmark.git
@@ -90,6 +100,21 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 	shouldFold := 1
 	if (len(closed) == 0 && len(opened) == 0) {
 		shouldFold = 0;
+	}
+
+	lckind := strings.ToLower(string(kind))
+	if !b.CustomAlertsEnabled {
+		if !(slices.Contains(b.IconList, lckind)) {
+			return nil, parser.NoChildren
+		} else if len(title) > 0 {
+			return nil, parser.NoChildren
+		} else if !b.FoldingEnabled && (len(closed) != 0 || len(opened) != 0) {
+			return nil, parser.NoChildren
+		}
+	} else if !b.FoldingEnabled {
+		shouldFold = 0
+		closed = nil
+		opened = nil
 	}
 
 	alert := ast.NewAlerts()

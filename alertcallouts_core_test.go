@@ -12,10 +12,10 @@ import (
 func TestAlertCalloutsCore(t *testing.T) {
 	mdTest := goldmark.New(
 		goldmark.WithExtensions(
-			&alertCalloutsOptions{
-				Icons:          map[string]string{"note": "<svg></svg>", "info": "<svg></svg>", "warning": "<svg></svg>", "tip": "<svg></svg>"},
-				FoldingEnabled: true,
-			},
+			NewAlertCallouts(
+				WithIcons(map[string]string{"note": "<svg></svg>", "info": "<svg></svg>", "warning": "<svg></svg>", "tip": "<svg></svg>"}),
+				WithFolding(true),
+			),
 		),
 	)
 
@@ -74,11 +74,22 @@ func TestAlertCalloutsCore(t *testing.T) {
 </div>`,
 		},
 		{
-			desc: "Invalid alert name - names cannot contain dashes",
+			desc: "Valid alert name - names CAN contain dashes - Obsidian allows this",
 			md: `> [!tip-one]
 > Content here`,
+			html: `<div class="callout callout-tip-one" data-callout="tip-one"><div class="callout-title">
+<svg></svg><p class="callout-title-text">Tip-One</p>
+</div>
+<div class="callout-body"><p>Content here</p>
+</div>
+</div>`,
+		},
+		{
+			desc: "Invalid alert name - names CANNOT contain other punctuation or symbols",
+			md: `> [!tip.one]
+> Content here`,
 			html: `<blockquote>
-<p>[!tip-one]
+<p>[!tip.one]
 Content here</p>
 </blockquote>`,
 		},
@@ -115,10 +126,10 @@ Content here</p>
 func TestASTNodeCreationCore(t *testing.T) {
 	mdTest := goldmark.New(
 		goldmark.WithExtensions(
-			&alertCalloutsOptions{
-				Icons:          map[string]string{"note": "<svg></svg>", "warning": "<svg></svg>", "info": "<svg></svg>"},
-				FoldingEnabled: true,
-			},
+			NewAlertCallouts(
+				WithIcons(map[string]string{"note": "<svg></svg>", "warning": "<svg></svg>", "info": "<svg></svg>"}),
+				WithFolding(true),
+			),
 		),
 	)
 
@@ -149,10 +160,10 @@ func TestASTNodeCreationCore(t *testing.T) {
 
 // Test extension registration
 func TestExtensionRegistrationCore(t *testing.T) {
-	ext := &alertCalloutsOptions{
-		Icons:          map[string]string{"test": "icon"},
-		FoldingEnabled: false,
-	}
+	ext := NewAlertCallouts(
+		WithIcons(map[string]string{"test": "icon"}),
+		WithFolding(false),
+	)
 
 	md := goldmark.New(goldmark.WithExtensions(ext))
 
@@ -171,10 +182,10 @@ func TestExtensionRegistrationCore(t *testing.T) {
 func BenchmarkSimpleAlertCore(b *testing.B) {
 	mdTest := goldmark.New(
 		goldmark.WithExtensions(
-			&alertCalloutsOptions{
-				Icons:          map[string]string{"info": "<svg></svg>"},
-				FoldingEnabled: true,
-			},
+			NewAlertCallouts(
+				WithIcons(map[string]string{"info": "<svg></svg>"}),
+				WithFolding(true),
+			),
 		),
 	)
 
@@ -193,10 +204,10 @@ func BenchmarkSimpleAlertCore(b *testing.B) {
 func BenchmarkComplexAlertCore(b *testing.B) {
 	mdTest := goldmark.New(
 		goldmark.WithExtensions(
-			&alertCalloutsOptions{
-				Icons:          map[string]string{"warning": "<svg></svg>"},
-				FoldingEnabled: true,
-			},
+			NewAlertCallouts(
+				WithIcons(map[string]string{"warning": "<svg></svg>"}),
+				WithFolding(true),
+			),
 		),
 	)
 

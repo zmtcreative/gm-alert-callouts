@@ -11,7 +11,7 @@ A [Goldmark](https://github.com/yuin/goldmark) extension that provides support f
 
 - **GitHub Alerts**: Full support for GitHub's five standard alert types (`[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`)
 - **Obsidian Callouts**: Compatible with Obsidian-style callouts including folding (`+` for open, `-` for closed)
-- **Customizable Icons**: Built-in icon sets (GFM, GFM Plus, Obsidian) with support for custom icon maps
+- **Customizable Icons**: Built-in icon sets (GFM Strict, GFM + Aliases, GFM Plus, Obsidian) with support for custom icon maps
 - **Structured HTML**: Generates semantic HTML with CSS classes for easy styling
 - **Nested Content**: Supports complex content including lists, code blocks, and other Markdown elements within alerts
 
@@ -41,7 +41,7 @@ func main() {
     md := goldmark.New(
         goldmark.WithExtensions(
             alertcallouts.NewAlertCallouts(
-                alertcallouts.UseGFMIcons(),
+                alertcallouts.UseGFMStrictIcons(),
                 alertcallouts.WithFolding(true),
             ),
         ),
@@ -86,7 +86,7 @@ md := goldmark.New(
 
 This pre-configured extension includes:
 
-- GFM icon set enabled
+- GFM + Aliases icon set (adds aliases like `notes` -> `note` and `tips` -> `tip`)
 - Folding functionality enabled
 - Ready-to-use configuration
 
@@ -150,9 +150,12 @@ When folding is enabled, use `+` (default open) or `-` (default closed):
 
 The extension supports functional options for flexible configuration:
 
-- **Icon Sets**: `UseGFMIcons()`, `UseGFMPlusIcons()`, `UseObsidianIcons()`
+- **Icon Sets**: `UseGFMStrictIcons()`, `UseGFMWithAliasesIcons()`, `UseGFMPlusIcons()`, `UseObsidianIcons()`
 - **Custom Icons**: `WithIcon()`, `WithIcons()`
-- **Functionality**: `WithFolding()` (enable/disable collapsible callouts)
+- **Functionality**:
+  - `WithFolding()` (enable/disable collapsible callouts)
+  - `WithCustomAlerts()` (enable/disable custom alerts - will use the default `note` or `info` icon for the set)
+  - `WithAllowNOICON()` (enable/disable the `> [!NOICON]` callout to render callouts without an icon)
 
 For detailed configuration options and examples, see the [API Reference](docs/FEATURES.md#configuration-options).
 
@@ -160,8 +163,8 @@ For detailed configuration options and examples, see the [API Reference](docs/FE
 
 The extension generates semantic HTML with CSS classes for styling:
 
-- **Basic alerts**: Use `<div>` elements with `callout` and `callout-{type}` classes
-- **Foldable callouts**: Use `<details>` and `<summary>` elements for collapsible functionality
+- **Basic alerts**: Uses `<div>` elements with `callout` and `callout-{type}` classes
+- **Foldable callouts**: Uses `<details>` and `<summary>` elements for collapsible functionality
 - **Structured content**: Separate containers for title, icon, and content areas
 
 For complete HTML structure details and CSS class reference, see the [API Reference](docs/FEATURES.md#html-output-structure).

@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
-	utils "github.com/ZMT-Creative/gm-alert-callouts/internal/utilities"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
@@ -16,35 +15,31 @@ import (
 
 type Icons map[string]string
 type FoldingEnabled bool
+type CustomAlertsEnabled bool
 
 type AlertsHeaderHTMLRenderer struct {
 	html.Config
-	Icons
-	FoldingEnabled
-	DefaultIcons int
-	titleCaser cases.Caser
+	Icons               map[string]string
+	FoldingEnabled      bool
+	CustomAlertsEnabled bool
+	DefaultIcons        int
+	AllowNOICON         bool
+	titleCaser          cases.Caser
 }
 
-func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, foldingEnabled FoldingEnabled, defaultIcons int, opts ...html.Option) renderer.NodeRenderer {
-	r := &AlertsHeaderHTMLRenderer{
-		Config:     html.NewConfig(),
-		Icons:      icons,
-		FoldingEnabled: foldingEnabled,
-		DefaultIcons: defaultIcons,
-		titleCaser: cases.Title(language.English, cases.Compact),
-	}
-	for _, opt := range opts {
-		opt.SetHTMLOption(&r.Config)
-	}
-	return r
+func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, foldingEnabled FoldingEnabled, defaultIcons int, customAlertsEnabled CustomAlertsEnabled, opts ...html.Option) renderer.NodeRenderer {
+	return NewAlertsHeaderHTMLRenderer(icons, bool(foldingEnabled), defaultIcons, bool(customAlertsEnabled), true, opts...)
 }
 
-func NewAlertsHeaderHTMLRenderer(foldingEnabled FoldingEnabled, defaultIcons int, opts ...html.Option) renderer.NodeRenderer {
+func NewAlertsHeaderHTMLRenderer(icons map[string]string, foldingEnabled bool, defaultIcons int, customAlertsEnabled bool, allowNOICON bool, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHeaderHTMLRenderer{
-		Config:      html.NewConfig(),
-		FoldingEnabled: foldingEnabled,
-		DefaultIcons: defaultIcons,
-		titleCaser: cases.Title(language.English, cases.Compact),
+		Config:              html.NewConfig(),
+		Icons:               icons,
+		FoldingEnabled:      foldingEnabled,
+		CustomAlertsEnabled: customAlertsEnabled,
+		DefaultIcons:        defaultIcons,
+		AllowNOICON:         allowNOICON,
+		titleCaser:          cases.Title(language.English, cases.Compact),
 	}
 	for _, opt := range opts {
 		opt.SetHTMLOption(&r.Config)
@@ -58,6 +53,13 @@ func (r *AlertsHeaderHTMLRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRe
 
 func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source []byte, node gast.Node, entering bool) (gast.WalkStatus, error) {
 	shouldFold := false
+	var kind string = ""
+	var icon string = ""
+
+	if t, ok := node.AttributeString("kind"); ok {
+		kind = strings.ToLower(t.(string))
+		icon = r.Icons[kind]
+	}
 	if t, ok := node.AttributeString("shouldfold"); ok {
 		shouldFold = bool(t.(bool))
 	}
@@ -65,7 +67,7 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 	startHTML := ""
 	endHTML := ""
 
-	if bool(r.FoldingEnabled) && shouldFold {
+	if r.FoldingEnabled && shouldFold {
 		startHTML = fmt.Sprintf(`<summary class="callout-title">` + "\n")
 		endHTML = "\n</summary>\n"
 	} else {
@@ -73,33 +75,49 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 		endHTML = "\n</div>\n"
 	}
 
-	if entering {
-		w.WriteString(startHTML)
-		var kind string = ""
-
-		if t, ok := node.AttributeString("kind"); ok {
-			kind = strings.ToLower(t.(string))
-			icon, ok := r.Icons[kind]
+	// if the icon value is not empty, use the icon
+	// else if custom alerts are enabled, use a fallback icon
+	if icon != "" {
+		startHTML += icon
+	} else if r.CustomAlertsEnabled {
+		for _, v := range constants.FALLBACK_ICON_LIST {
+			deficon, ok := r.Icons[v]
 			if ok {
-				w.WriteString(icon)
-				// Check if the kind indicates no icon should be rendered.
-				// if it's not a "no icon" kind, we can try to find a default icon.
-			} else if !utils.IsNoIconKind(kind) {
-				for _, v := range []string{"note", "info", "default"} {
-					icon, ok = r.Icons[v]
-					if ok {
-						w.WriteString(icon)
-						break
-					}
-				}
-			}
-			w.WriteString(`<p class="callout-title-text">`)
-			if _, ok := node.AttributeString("title"); ok {
-				// do nothing
-			} else {
-				w.WriteString(r.titleCaser.String(kind))
+				startHTML += deficon
+				break
 			}
 		}
+	} // if we get here, don't place any icon in startHTML
+
+	startHTML += `<p class="callout-title-text">`
+
+	_, hasTitle := node.AttributeString("title")
+
+	if kind == "noicon" {
+		// If there is no title, render a hidden span
+		if !hasTitle {
+			startHTML += `<span class="callout-title-noicon" style="display: none;"></span>`
+		}
+		// If there is a title, render it as normal (it will be rendered as a text node when we 'WalkContinue' at the end)
+	} else {
+		// If there is an icon or if custom alerts are enabled, render the kind or the title
+		if icon != "" || r.CustomAlertsEnabled {
+			// If title isn't set, use kind for the title
+			// NOTE: if title IS set, it is rendered separately as a text node when we 'WalkContinue' at the end
+			if !hasTitle {
+				startHTML += r.titleCaser.String(kind)
+			}
+		} else {
+			// If we've gotten here, this is an invalid callout
+			startHTML += `[!` + strings.ToUpper(kind) + `]`
+			if hasTitle {
+				startHTML += ` `
+			}
+		}
+	}
+
+	if entering {
+		w.WriteString(startHTML)
 	} else {
 		w.WriteString(`</p>`)
 		w.WriteString(endHTML)
