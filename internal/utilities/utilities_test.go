@@ -319,6 +319,7 @@ tip|<svg>tip-icon</svg>
 warning|<svg>warning-icon</svg>
 info_2|<svg>info2-icon</svg>
 Test123|<svg>test123-icon</svg>
+你好|<svg>你好-icon</svg>
 
 # Valid aliases
 info->note
@@ -329,6 +330,9 @@ no-icon|<svg>invalid-icon</svg>
 test-case|<svg>invalid-icon</svg>
 my@icon|<svg>invalid-icon</svg>
 icon with spaces|<svg>invalid-icon</svg>
+-myicon|<svg>invalid-icon</svg>
+_myicon|<svg>invalid-icon</svg>
+_你好|<svg>invalid-icon</svg>
 
 # Invalid aliases (should be skipped)
 no-alias->note
@@ -339,7 +343,7 @@ special@alias->note
 	iconMap := CreateIconsMap(testData)
 
 	// Test that valid entries are included
-	validKeys := []string{"note", "tip", "warning", "info_2", "Test123", "info", "hints"}
+	validKeys := []string{"note", "tip", "warning", "info_2", "Test123", "info", "hints", "no-icon", "test-case", "no-alias", "你好"}
 	for _, key := range validKeys {
 		if _, exists := iconMap[key]; !exists {
 			t.Errorf("Expected valid key '%s' to exist in iconMap", key)
@@ -347,7 +351,7 @@ special@alias->note
 	}
 
 	// Test that invalid entries are excluded
-	invalidKeys := []string{"no-icon", "test-case", "my@icon", "icon with spaces", "no-alias", "special@alias"}
+	invalidKeys := []string{"my@icon", "icon with spaces", "special@alias", "-myicon", "_myicon", "_你好"}
 	for _, key := range invalidKeys {
 		if _, exists := iconMap[key]; exists {
 			t.Errorf("Expected invalid key '%s' to be excluded from iconMap", key)
@@ -360,7 +364,7 @@ special@alias->note
 	}
 
 	// Verify counts
-	expectedCount := len(validKeys) // 7 valid entries total
+	expectedCount := len(validKeys) // 10 valid entries total
 	if len(iconMap) != expectedCount {
 		t.Errorf("Expected iconMap to have %d entries, got %d. Keys: %v", expectedCount, len(iconMap), getKeys(iconMap))
 	}

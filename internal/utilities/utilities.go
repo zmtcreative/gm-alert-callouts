@@ -33,7 +33,8 @@ func FindNamedMatches(regex *regexp.Regexp, str string) map[string]string {
 // CreateIconsMap creates a map of icon names to their SVG data from the given icon data string.
 func CreateIconsMap(icondata string) map[string]string {
 	iconmap := make(map[string]string)
-	wordRegex := regexp.MustCompile(`^\w+$`)
+	// update the wordRegex to allow full Unicode support
+	wordRegex := regexp.MustCompile(`^\p{L}[\p{L}\p{N}_-]*$`)
 
 	// Parse the embedded alert callouts data
 	lines := strings.Split(icondata, "\n")
