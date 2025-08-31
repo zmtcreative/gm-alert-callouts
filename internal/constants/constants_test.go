@@ -26,11 +26,11 @@ func TestIconConstants(t *testing.T) {
 		}
 
 		if ICONS_GFM <= ICONS_NONE {
-			t.Errorf("Expected ICONS_GFM_STRICT to be greater than ICONS_NONE, got %d", ICONS_GFM)
+			t.Errorf("Expected ICONS_GFM to be greater than ICONS_NONE, got %d", ICONS_GFM)
 		}
 
 		if ICONS_HYBRID <= ICONS_GFM {
-			t.Errorf("Expected ICONS_GFM_PLUS to be greater than ICONS_GFM_WITH_ALIASES, got %d", ICONS_HYBRID)
+			t.Errorf("Expected ICONS_HYBRID to be greater than ICONS_GFM, got %d", ICONS_HYBRID)
 		}
 
 		if ICONS_OBSIDIAN <= ICONS_HYBRID {

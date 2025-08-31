@@ -34,7 +34,7 @@ func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, foldingEnabled FoldingEna
 }
 
 // NewAlertsHeaderHTMLRenderer is the constructor used during normal program operation.
-// This is the public implementation
+// It gets the user's local and then calls the internal implementation 'newAlertsHeaderHTMLRenderer' below with all the necessary parameters
 func NewAlertsHeaderHTMLRenderer(icons map[string]string, foldingEnabled bool, defaultIcons int, customAlertsEnabled bool, allowNOICON bool, opts ...html.Option) renderer.NodeRenderer {
 	// Detect the user's OS-level locale.
 	userLocale, err := locale.GetLocale()
@@ -112,7 +112,7 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 		startHTML += `<span class="callout-title-noicon" style="display: none;"></span>`
 	} else {
 		// if the icon value is not empty, use the icon
-		// else if custom alerts are enabled, use a fallback icon
+		// else if custom alerts are enabled, use a fallback icon from 'constants.FALLBACK_ICON_LIST'
 		if icon != "" {
 			startHTML += icon
 		} else if r.CustomAlertsEnabled {
@@ -128,7 +128,8 @@ func (r *AlertsHeaderHTMLRenderer) renderAlertsHeader(w util.BufWriter, source [
 			// If all else fails, generate an empty span as a placeholder for the icon
 			// Note: This should never happen with the built-in iconsets.
 			//       However, for custom iconsets provided by the user, they may not use
-			//       alert names that match the predefined set of fallbacks. To be consistent,
+			//       alert names that match the predefined set of fallbacks in '
+			//       constants.FALLBACK_ICON_LIST'. To be consistent, I think
 			//       SOMETHING should be output where the icon would go.
 			if !found {
 				startHTML += `<span class="callout-title-noicon" style="display: none;"></span>`

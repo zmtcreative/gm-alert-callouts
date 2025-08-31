@@ -37,7 +37,7 @@ func TestNewAlertsHeaderHTMLRendererWithIcons(t *testing.T) {
 		"warning": "<svg>warning-icon</svg>",
 	}
 
-	r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
+	r := NewAlertsHeaderHTMLRenderer(icons, bool(FoldingEnabled(false)), constants.ICONS_NONE, bool(CustomAlertsEnabled(false)), false)
 	if r == nil {
 		t.Fatal("NewAlertsHeaderHTMLRendererWithIcons returned nil")
 	}
@@ -188,7 +188,7 @@ func TestAlertsHeaderHTMLRendererWithIcons(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
+			r := NewAlertsHeaderHTMLRenderer(icons, bool(FoldingEnabled(false)), constants.ICONS_NONE, bool(CustomAlertsEnabled(false)), false)
 
 			node := createMockHeaderNode(tc.kind, false, "")
 
@@ -306,7 +306,7 @@ func TestAlertsHeaderHTMLRendererIconFallback(t *testing.T) {
 		"info": "<svg>info-icon</svg>", // has info but not note
 	}
 
-	r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(true))
+	r := NewAlertsHeaderHTMLRenderer(icons, bool(FoldingEnabled(false)), constants.ICONS_NONE, bool(CustomAlertsEnabled(true)), false)
 
 	// Test fallback to 'note' when specific kind not found
 	node := createMockHeaderNode("unknown", false, "")
@@ -332,7 +332,7 @@ func TestAlertsHeaderHTMLRendererIconFallbackNotInList(t *testing.T) {
 		"foo": "<svg>info-icon</svg>", // has no icon on the FALLBACK_ICON_LIST
 	}
 
-	r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(true))
+	r := NewAlertsHeaderHTMLRenderer(icons, bool(FoldingEnabled(false)), constants.ICONS_NONE, bool(CustomAlertsEnabled(true)), false)
 
 	// Test fallback to 'note' when specific kind not found
 	node := createMockHeaderNode("unknown", false, "")

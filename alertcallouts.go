@@ -101,7 +101,6 @@ func UseHybridIcons() Option {
 		opts.config.FoldingEnabled = true
 		opts.config.CustomAlertsEnabled = true
 		opts.config.AllowNOICON = true
-		// opts.config.Icons["noicon"] = `<span class="callout-title-noicon" style="display: none;"></span>`
 	}
 }
 
