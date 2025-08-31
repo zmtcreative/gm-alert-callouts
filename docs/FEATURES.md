@@ -312,6 +312,39 @@ extension := alertcallouts.NewAlertCallouts(
 )
 ```
 
+#### `WithAllowNOICON(enable bool) Option`
+
+This enables or disables the use of the `noicon-` or `noicon_` prefix to any **recognized** alert type. If Custom Alerts is enabled, this will also apply to any Custom Alerts you use. This will still set the CSS attributes
+and classes to use the alert type (*so the styling will still be as expected*), but the icon
+will not appear in the output.
+
+For example:
+
+```markdown
+> [!NOICON-NOTE]
+> This is a Note alert callout type.
+```
+
+This would render the alert with the `Note` alert title but no icon.
+
+**Parameters:**
+
+- `enable bool`: `true` to enable folding, `false` to disable
+
+**Example:**
+
+```go
+// Enable NOICON Prefix support
+extension := alertcallouts.NewAlertCallouts(
+    alertcallouts.WithAllowNOICON(true),
+)
+
+// Disable NOICON Prefix support
+extension := alertcallouts.NewAlertCallouts(
+    alertcallouts.WithAllowNOICON(false),
+)
+```
+
 ## Usage Patterns
 
 ### Basic Alert Integration
@@ -333,12 +366,13 @@ func main() {
             alertcallouts.NewAlertCallouts(
                 alertcallouts.UseGFMStrictIcons(),
                 alertcallouts.WithFolding(true),
+                alertcallouts.WithAllowNOICON(true),
             ),
         ),
     )
 
-    source := `> [!NOTE]
-> Important information here.`
+    source := `> [!noicon-note]
+> A note here.`
 
     var buf bytes.Buffer
     if err := md.Convert([]byte(source), &buf); err != nil {
@@ -355,15 +389,9 @@ func main() {
 
 ```go
 func createAdvancedExtension() goldmark.Extender {
-    // Start with GFM+ icons for broad compatibility
-    extension := alertcallouts.NewAlertCallouts(
-        alertcallouts.UseGFMPlusIcons(),
-        alertcallouts.WithFolding(true),
-    )
-
-    // Add application-specific icons
+    // Configure with Standard GFM Alerts but add folding and custom icons
     extension = alertcallouts.NewAlertCallouts(
-        alertcallouts.UseGFMPlusIcons(),
+        alertcallouts.UseGFMStrictIcons(),
         alertcallouts.WithIcon("success", successSVG),
         alertcallouts.WithIcon("error", errorSVG),
         alertcallouts.WithFolding(true),
@@ -390,7 +418,7 @@ func createFullFeaturedMarkdown() goldmark.Markdown {
             extension.GFM,                    // GitHub Flavored Markdown
             extension.Footnote,               // Footnotes
             alertcallouts.NewAlertCallouts(   // Alert callouts
-                alertcallouts.UseGFMPlusIcons(),
+                alertcallouts.UseHybridIcons(),
                 alertcallouts.WithFolding(true),
             ),
         ),
@@ -471,6 +499,16 @@ When folding is enabled:
 - `> [!TYPE]-` - Closed by default
 - `> [!TYPE]` - Not foldable (standard `<div>` output)
 
+> [!NOTE]
+>
+> If Custom Alerts are enabled, but folding is **not** enabled, the `+` and `-` symbols will
+> be ignored silently and the alerts will render normally.
+>
+> **However,** if both Custom Alerts **and** Folding are disabled, the use of `+` and `-` will be
+> disallowed completely. This is by design, since Strict GFM Alerts do not support folding and would
+> render as standard blockquotes instead of alerts.
+
+
 ### Multi-line Content
 
 ```markdown
@@ -503,17 +541,25 @@ Alerts support all standard Markdown elements:
 
 If an alert type has no configured icon:
 
-- If `WithCustomAlerts(true)`, the alert renders without an icon, otherwise the alert will be rendered with the original markdown text (e.g., if you use `[!CUSTOM]` and Custom Alerts are disabled, the text `[!CUSTOM]` will be rendered as the title).
+- If `WithCustomAlerts(true)` and the custom alert text doesn't match a defined icon, the extension will attempt to find a fallback icon from the iconset, using the fallback names `default`, `icon`, `custom`, `note` and `info` (in that order). This is configured in the `internal/constants/constants.go` file in the variable `FALLBACK_ICON_LIST`. If the iconset doesn't have any of the values in `FALLBACK_ICON_LIST`, it will output an empty `<span>` element with a class of `callout-title-noicon`.
+- If `WithCustomAlerts(false)` and you try to use alert text that doesn't match one of the icon names in the iconset, the extension will disallow the alert and pass the parsing and rendering back to Goldmark, resulting in the output being a standard `<blockquote>` instead of an alert.
 - HTML structure remains consistent
 - No errors are thrown
 
 ### Using NoIcon to Force Alert Without Icon
 
 - **This is a feature unique to this extension and is not defined in GFM or Obsidian Alerts/Callouts!**
-- Use `[!NOICON] Warning` to render a 'Warning' alert without an icon and will be styled like a
-  normal 'Warning' alert (*assuming 'Warning' is a valid alert type*)
-- Use `[!NOICON] UnknownAlertType` to render alert with title 'UnknownAlertType' and no icon
-- (*run the example code in the `examples` folder for more details*)
+- When `UseCustomAlerts(true)` and `WithAllowNOICON(true)` are used, the following becomes possible:
+  - Using `[!noicon-Warning]` to render a 'Warning' alert without an icon and will be styled like a
+    normal 'Warning' alert (*assuming 'Warning' is a valid alert type*). The class will be set to `callout-warning` and
+    the attribute `data-callout="warning"` will be set (*just like a normal Warning alert, but without the icon*).
+  - Using `[!noicon-custom-alert]` to render an alert with title 'Custom-alert' and no icon (*the dash is kept in
+    and capitalization will only apply to the first letter*). The class will be set to `callout-custom-alert` and
+    the attribute `data-callout="custom-alert"` will be set.
+  - Using `[!noicon-custom-alert] Custom Alert` to render an alert with title 'Custom Alert' and no icon -- this will
+    use the Custom Title so it will format whatever way you want. The class will still be set to `callout-custom-alert`
+    and the attribute `data-callout="custom-alert"` will be set.
+- Run the example code in the `examples` folder for more details.
 
 ### Invalid Alert Types
 
