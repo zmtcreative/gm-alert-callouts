@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
-	"github.com/jeandeaual/go-locale"
+	locale "github.com/jeandeaual/go-locale"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"
@@ -52,9 +52,8 @@ func NewAlertsHeaderHTMLRenderer(icons map[string]string, foldingEnabled bool, d
 	return newAlertsHeaderHTMLRenderer(icons, foldingEnabled, defaultIcons, customAlertsEnabled, allowNOICON, tag, opts...)
 }
 
-// FOR UNIT TESTING ##############################################################################
 // newAlertsHeaderHTMLRenderer is an unexported constructor that allows injecting a language tag.
-// This is the internal implementation used by the public constructors and is essential for writing
+// This is the internal implementation used by the public constructors above and is essential for writing
 // unit tests that can verify behavior across different languages.
 func newAlertsHeaderHTMLRenderer(icons map[string]string, foldingEnabled bool, defaultIcons int, customAlertsEnabled bool, allowNOICON bool, tag language.Tag, opts ...html.Option) renderer.NodeRenderer {
 	r := &AlertsHeaderHTMLRenderer{
