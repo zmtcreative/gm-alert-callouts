@@ -11,7 +11,8 @@ A [Goldmark](https://github.com/yuin/goldmark) extension that provides support f
 
 - **GitHub Alerts**: Full support for GitHub's five standard alert types (`[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`)
 - **Obsidian Callouts**: Compatible with Obsidian-style callouts including folding (`+` for open, `-` for closed)
-- **Customizable Icons**: Built-in icon sets (GFM Strict, GFM + Aliases, GFM Plus, Obsidian) with support for custom icon maps
+- **Customizable Icons**: Support for custom icon maps
+- **Built-in IconSets**: Built-in icon sets Strict GFM (just the five standard GFM Alerts), Hybrid (GFM, Alias and Obsidian-like Callouts) and Strict Obsidian
 - **Structured HTML**: Generates semantic HTML with CSS classes for easy styling
 - **Nested Content**: Supports complex content including lists, code blocks, and other Markdown elements within alerts
 
@@ -94,8 +95,8 @@ This pre-configured extension includes:
 >
 > When adding custom icons and icon sets in `gm-alert-callouts` you are **only** inserting the icon
 > code into the HTML output. You still need to create the necessary CSS styling to format the final
-> alert/callout style. An example of a CSS style file for the `GFM Plus` built-in icon set can be
-> found in the `examples/assets/css/alertcallouts-gfmplus.css` file. This should provide a starting point
+> alert/callout style. An example of a CSS style file for the `Hybrid` built-in icon set can be
+> found in the `examples/assets/css/alertcallouts-hybrid.css` file. This should provide a starting point
 > for customizing the styling for your project.
 
 ## Supported Markdown Syntax
@@ -150,12 +151,12 @@ When folding is enabled, use `+` (default open) or `-` (default closed):
 
 The extension supports functional options for flexible configuration:
 
-- **Icon Sets**: `UseGFMStrictIcons()`, `UseGFMWithAliasesIcons()`, `UseGFMPlusIcons()`, `UseObsidianIcons()`
+- **Icon Sets**: `UseGFMStrictIcons()`, `UseHybridIcons()`, and `UseObsidianIcons()`
 - **Custom Icons**: `WithIcon()`, `WithIcons()`
 - **Functionality**:
   - `WithFolding()` (enable/disable collapsible callouts)
   - `WithCustomAlerts()` (enable/disable custom alerts - will use the default `note` or `info` icon for the set)
-  - `WithAllowNOICON()` (enable/disable the `> [!NOICON]` callout to render callouts without an icon)
+  - `WithAllowNOICON()` (enable/disable the use of the `noicon-` and `noicon_` prefixes to tag alert names to not display the icon)
 
 For detailed configuration options and examples, see the [API Reference](docs/FEATURES.md#configuration-options).
 
@@ -173,6 +174,13 @@ For complete HTML structure details and CSS class reference, see the [API Refere
 
 - **[API Reference](docs/FEATURES.md)** - Detailed API documentation and usage examples
 - **[Icon Customization](docs/ICONMAPS.md)** - Guide to creating custom icons and icon maps
+
+> [!NOTE]
+>
+> This extension and its documentation are still under active development. We have tried to be thorough
+> about updating the documentation to reflect the changes to the codebase. However, it is certainly
+> possible possible that some of the information in the documenation is inaccurate or just out-of-date. Always
+> refer to the source code when in doubt about a feature or functionality.
 
 ## Requirements
 
