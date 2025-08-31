@@ -9,4 +9,8 @@ require (
 
 replace github.com/ZMT-Creative/gm-alert-callouts => ../
 
-require golang.org/x/text v0.27.0 // indirect
+require (
+	github.com/jeandeaual/go-locale v0.0.0-20250612000132-0ef82f21eade // indirect
+	golang.org/x/sys v0.27.0 // indirect
+	golang.org/x/text v0.27.0 // indirect
+)

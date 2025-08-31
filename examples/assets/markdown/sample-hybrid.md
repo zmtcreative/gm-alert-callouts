@@ -8,6 +8,12 @@ This document demonstrates all available callouts in the GFM Plus icon set, incl
 
 It also shows examples of callouts with custom titles and folding.
 
+The Primary and Secondary Callouts are pretty standard, and the Folding Examples are also pretty standard.
+
+However, the [Custom Titles](#custom-titles) section has a more detailed explanation of the handling
+of Custom Alert Names and the unique `noicon-` option you can enable to produce Alert/Callout boxes without
+the icon.
+
 + [Primary Callouts](#primary-callouts)
 + [Alias Callouts](#alias-callouts)
 + [Folding Examples](#folding-examples)
@@ -651,50 +657,76 @@ Styles](#css-styles) below*).
 > [!FOO]
 > You can use an unrecognized entry for the callout.
 
-### No-Icon Callout Style
+### NoIcon Callout Style
 
-If you want to create a callout with no icon, you can use the callout name 'noicon' (*or 'none', 'nil' or
-'null'*). If you don't supply a custom title, it will render the title using whichever of these
-recognized 'noicon' variants you used.
+> [!IMPORTANT]
+> If you use a dash in the alert name (e.g., `foo-bar`), the title will render with proper
+> Title Case (i.e., the title will be **Foo-Bar**).
+>
+> However, if you use an underscore in the alert name part (e.g., `Foo_Bar`), the title will only be
+> rendered with the first letter uppercased (i.e., the title will be **Foo_bar**).
+>
+> The Title Case library treats a dash as if it is a space and Title Cases appropriately, but underscores
+> are considered part of the word, so it's all considered one word and only the first letter gets upper-cased.
+
+If you want to create a callout with no icon, you can use the callout name with the `noicon-` or `noicon_`
+prefix. If you don't supply a custom title, it will use the part after the `noicon-` or `noicon_` as the title. This means a Custom Alert of `noicon-foo-bar` will have an alert title of `Foo-Bar`.
 
 ```markdown
-> [!NoIcon]
-> This is an icon-less callout.
+> [!Noicon_foo-bar]
+> This is an icon-less callout with the custom name 'Foo-Bar'. Since 'foo-bar' is not a recognized callout
+> name, it will use the default style (*in this case using blue*), but will have the `data-callout="foo-bar"`
+> which doesn't currently have a specific style.
 ```
 
-> [!NoIcon]
-> This is an icon-less callout.
+> [!Noicon_foo-bar]
+> This is an icon-less callout with the custom name 'Foo-Bar'. Since 'foo-bar' is not a recognized callout
+> name, it will use the default style (*in this case using blue*), but will have the `data-callout="foo-bar"`
+> which doesn't currently have a specific style.
 
 _**This is probably NOT what you want, so you should use a Custom Title instead:**_
 
 ```markdown
-> [!Null] FooBar
-> This is an icon-less callout with the title 'FooBar'. Since 'FooBar' is not a recognized callout
-> name, it will use the default style (*in this case using blue*).
+> [!Noicon_Foo-Bar] Foo Bar *Baz*
+> This is an icon-less callout with the custom name 'Foo-bar', but the title will now be rendered as markdown text
+> with **Baz** in italics. Since 'Foo-Bar' is not a recognized callout name, it will use the default
+> style (*in this case using blue*), but will have the `data-callout="foo-bar"`
+> which doesn't currently have a specific style (*though you can create a new CSS style in your
+> application to use this value for a style*).
 ```
 
-> [!Null] FooBar
-> This is an icon-less callout with the title 'FooBar'. Since 'FooBar' is not a recognized callout
-> name, it will use the default style (*in this case using blue*).
+> [!Noicon_Foo-Bar] Foo Bar *Baz*
+> This is an icon-less callout with the custom name 'Foo-bar', but the title will now be rendered as markdown text
+> with **Baz** in italics. Since 'Foo-Bar' is not a recognized callout name, it will use the default
+> style (*in this case using blue*), but will have the `data-callout="foo-bar"`
+> which doesn't currently have a specific style.
 
-### No Icon Callout with Recognized Custom Title
+### A NoIcon Callout with Recognized Alert
 
 ```markdown
-> [!NoIcon] Warning
+> [!NoIcon-Warning]
 > This creates a Warning Callout without the Warning Icon, but will be styled using `data-callout="warning"`
 > rather than the default styling, because 'warning' is a defined callout name.
 ```
 
-> [!NoIcon] Warning
+> [!NoIcon-Warning]
 > This creates a Warning Callout without the Warning Icon, but will be styled using
 > `data-callout="warning"` rather than the default styling, because 'warning' is a defined callout name.
+
+### A NoIcon Callout Must Have an Alert Type
+
+```markdown
+> [!noicon-] Not Valid!
+> This is not valid and will fall back to rendering as a plain blockquote.
+```
+
+> [!noicon-] Not Valid!
+> This is not valid and will fall back to rendering as a plain blockquote.
 
 -----
 [top](#)
 
 ## CSS Styles
-
-
 
 *Example CSS snippet...*
 
@@ -717,4 +749,4 @@ _**This is probably NOT what you want, so you should use a Custom Title instead:
 
 <a id="docbottom"></a>
 
-(*see the css file `assets/css/alertcallouts-gfmplus.css` in this `examples` folder for a reference on how this page was styled*)
+(*see the css file `assets/css/alertcallouts-hybrid.css` in this `examples` folder for a reference on how this page was styled*)
