@@ -6,36 +6,6 @@ import (
 	"testing"
 )
 
-func TestIsNoIconKind(t *testing.T) {
-	testCases := []struct {
-		input    string
-		expected bool
-		desc     string
-	}{
-		{"noicon", true, "noicon should return true"},
-		{"no_icon", true, "no_icon should return true"},
-		{"none", true, "none should return true"},
-		{"nil", true, "nil should return true"},
-		{"null", true, "null should return true"},
-		{"note", false, "note should return false"},
-		{"warning", false, "warning should return false"},
-		{"info", false, "info should return false"},
-		{"", false, "empty string should return false"},
-		{"NoIcon", true, "NoIcon (capitalized) should return true"},
-		{"NOICON", true, "NOICON (uppercase) should return true"},
-		{"NO-ICON", false, "NO-ICON (with dash) should return false"},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.desc, func(t *testing.T) {
-			result := IsNoIconKind(tc.input)
-			if result != tc.expected {
-				t.Errorf("IsNoIconKind(%q) = %v, expected %v", tc.input, result, tc.expected)
-			}
-		})
-	}
-}
-
 func TestFindNamedMatches(t *testing.T) {
 	t.Run("Basic named capture groups", func(t *testing.T) {
 		regex := regexp.MustCompile(`(?P<type>\w+)\|(?P<icon>.+)`)

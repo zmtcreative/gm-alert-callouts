@@ -65,7 +65,7 @@ func WithIcon(kind, icon string) Option {
 }
 
 // UseGFMIcons sets the icon map to the GFM (GitHub Flavored Markdown) icon set.
-// DEPRECATED: Use UseGFMStrictIcons() instead.
+// Deprecated: Use UseGFMStrictIcons() instead.
 func UseGFMIcons() Option {
 	return UseGFMStrictIcons()
 }
@@ -81,14 +81,14 @@ func UseGFMStrictIcons() Option {
 }
 
 // UseGFMWithAliasesIcons sets the GFM with extra aliases
-// DEPRECATED: Use UseHybridIcons() instead
+// Deprecated: Use UseHybridIcons() instead
 func UseGFMWithAliasesIcons() Option {
 	return UseHybridIcons()
 }
 
 // UseGFMPlusIcons sets the GFMPlus + Aliases that mimic some Obsidian callouts but
 //   still use the default five (5) GFM Alerts
-// DEPRECATED: Use UseHybridIcons() instead
+// Deprecated: Use UseHybridIcons() instead
 func UseGFMPlusIcons() Option {
 	return UseHybridIcons()
 }

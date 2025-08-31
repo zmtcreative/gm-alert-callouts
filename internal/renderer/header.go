@@ -30,7 +30,7 @@ type AlertsHeaderHTMLRenderer struct {
 }
 
 // NewAlertsHeaderHTMLRendererWithIcons wrapper function from earlier in development
-// DEPRECATED: The NewAlertsHeaderHTMLRenderer now directly handles the 'icons' parameter, so this function isn't needed any longer
+// Deprecated: The NewAlertsHeaderHTMLRenderer now directly handles the 'icons' parameter, so this function isn't needed any longer
 func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, foldingEnabled FoldingEnabled, defaultIcons int, customAlertsEnabled CustomAlertsEnabled, opts ...html.Option) renderer.NodeRenderer {
 	return NewAlertsHeaderHTMLRenderer(icons, bool(foldingEnabled), defaultIcons, bool(customAlertsEnabled), true, opts...)
 }

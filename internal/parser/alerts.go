@@ -93,20 +93,18 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 	opened := []uint8(match["opened"])
 
 	// Set the 'shouldFold' variable:
-	// If the markdown uses either '-' or '+' for folding we assume the user
-	//  wants the alert to be foldable. If neither '-' or '+' is used, we
-	//  assume the alert is not meant to be foldable.
-	// We only need 'opened' here to check if the alert is meant to be foldable.
-	// The 'closed' variable is legacy and is used by existing code elsewhere (we're not tinkering with it -- yet)
+	//   If the markdown uses either '-' or '+' for folding we assume the user wants the alert to be foldable.
+	//   If neither '-' or '+' are used, we assume the alert is not meant to be foldable.
+	//   We only need 'opened' here to check if the alert is meant to be foldable.
+	//   The 'closed' variable is legacy and is used by existing code elsewhere (we're not tinkering with it -- yet)
 	shouldFold := 1
 	if (len(closed) == 0 && len(opened) == 0) {
 		shouldFold = 0;
 	}
 
 	// Check for our hybrid feature of prefixing kind with 'noicon-' or 'noicon_'
-	// If we find the prefix, strip it, leaving the original kind without the prefix
-	//   and set the attribute 'noicon' on the node
-	// We need to do this first so the later logic is looking at the kind/lckind without the prefix
+	//   If we find the prefix, strip it, leaving the original kind without the prefix and set the attribute 'noicon' on the node
+	//   We need to do this first so the later logic is looking at the kind/lckind without the prefix
 	noicon := 0
 	lckind := strings.ToLower(string(kind))
 	if strings.HasPrefix(lckind, "noicon-") || strings.HasPrefix(lckind, "noicon_") {
