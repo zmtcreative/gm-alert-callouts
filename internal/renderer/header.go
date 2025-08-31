@@ -29,12 +29,14 @@ type AlertsHeaderHTMLRenderer struct {
 	titleCaser          cases.Caser
 }
 
+// NewAlertsHeaderHTMLRendererWithIcons wrapper function from earlier in development
+// DEPRECATED: The NewAlertsHeaderHTMLRenderer now directly handles the 'icons' parameter, so this function isn't needed any longer
 func NewAlertsHeaderHTMLRendererWithIcons(icons Icons, foldingEnabled FoldingEnabled, defaultIcons int, customAlertsEnabled CustomAlertsEnabled, opts ...html.Option) renderer.NodeRenderer {
 	return NewAlertsHeaderHTMLRenderer(icons, bool(foldingEnabled), defaultIcons, bool(customAlertsEnabled), true, opts...)
 }
 
-// NewAlertsHeaderHTMLRenderer is the constructor used during normal program operation.
-// It gets the user's local and then calls the internal implementation 'newAlertsHeaderHTMLRenderer' below with all the necessary parameters
+// NewAlertsHeaderHTMLRenderer is the public constructor used during normal program operation.
+// It attempts to get the user's locale and then calls the internal implementation 'newAlertsHeaderHTMLRenderer' below with all the necessary parameters
 func NewAlertsHeaderHTMLRenderer(icons map[string]string, foldingEnabled bool, defaultIcons int, customAlertsEnabled bool, allowNOICON bool, opts ...html.Option) renderer.NodeRenderer {
 	// Detect the user's OS-level locale.
 	userLocale, err := locale.GetLocale()
