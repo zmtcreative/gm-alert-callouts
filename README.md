@@ -7,14 +7,23 @@
 
 A [Goldmark](https://github.com/yuin/goldmark) extension that provides support for GitHub-style alerts and Obsidian-style callouts with customizable icons and folding functionality.
 
+## Breaking Changes
+
+> [!WARNING]
+>
+> **The changes in this release are significant.** While every attempt has been made to create wrappers
+> and helpers to keep things running smoothly over previous releases, there is a very real chance some things
+> that worked for you in previous versions might work differently or not at all. Please test thoroughly!
+
 ## Features
 
 - **GitHub Alerts**: Full support for GitHub's five standard alert types (`[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`)
 - **Obsidian Callouts**: Compatible with Obsidian-style callouts including folding (`+` for open, `-` for closed)
 - **Customizable Icons**: Support for custom icon maps
-- **Built-in IconSets**: Built-in icon sets Strict GFM (just the five standard GFM Alerts), Hybrid (GFM, Alias and Obsidian-like Callouts) and Strict Obsidian
+- **Built-in IconSets**: Built-in icon sets Strict GFM alerts (just the five standard GFM Alerts), Hybrid (GFM, Alias and Obsidian-like Callouts) and Strict Obsidian callouts
 - **Structured HTML**: Generates semantic HTML with CSS classes for easy styling
 - **Nested Content**: Supports complex content including lists, code blocks, and other Markdown elements within alerts
+- **Unicode Support**: You can name your custom alerts using Unicode characters (*experimental*) and create custom iconsets using kinds and aliases that use Unicode letters and numbers
 
 ## Installation
 
