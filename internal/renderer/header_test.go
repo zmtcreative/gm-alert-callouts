@@ -8,10 +8,11 @@ import (
 	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
+	"golang.org/x/text/language"
 )
 
 func TestNewAlertsHeaderHTMLRenderer(t *testing.T) {
-	r := NewAlertsHeaderHTMLRenderer(nil, true, constants.ICONS_GFM_STRICT, true, false)
+	r := NewAlertsHeaderHTMLRenderer(nil, true, constants.ICONS_GFM, true, false)
 	if r == nil {
 		t.Fatal("NewAlertsHeaderHTMLRenderer returned nil")
 	}
@@ -25,7 +26,7 @@ func TestNewAlertsHeaderHTMLRenderer(t *testing.T) {
 		t.Error("FoldingEnabled not set correctly")
 	}
 
-	if headerRenderer.DefaultIcons != constants.ICONS_GFM_STRICT {
+	if headerRenderer.DefaultIcons != constants.ICONS_GFM {
 		t.Error("DefaultIcons not set correctly")
 	}
 }
@@ -36,7 +37,7 @@ func TestNewAlertsHeaderHTMLRendererWithIcons(t *testing.T) {
 		"warning": "<svg>warning-icon</svg>",
 	}
 
-	r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
+	r := NewAlertsHeaderHTMLRenderer(icons, bool(FoldingEnabled(false)), constants.ICONS_NONE, bool(CustomAlertsEnabled(false)), false)
 	if r == nil {
 		t.Fatal("NewAlertsHeaderHTMLRendererWithIcons returned nil")
 	}
@@ -187,7 +188,7 @@ func TestAlertsHeaderHTMLRendererWithIcons(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
+			r := NewAlertsHeaderHTMLRenderer(icons, bool(FoldingEnabled(false)), constants.ICONS_NONE, bool(CustomAlertsEnabled(false)), false)
 
 			node := createMockHeaderNode(tc.kind, false, "")
 
@@ -206,48 +207,72 @@ func TestAlertsHeaderHTMLRendererWithIcons(t *testing.T) {
 }
 
 func TestAlertsHeaderHTMLRendererTitleCasing(t *testing.T) {
-	icons := Icons{
-		"note":    "<svg class='note-icon'>Note</svg>",
-		"warning": "<svg class='warning-icon'>Warning</svg>",
-		"info":    "<svg class='info-icon'>Info</svg>",
-		"default": "<svg class='default-icon'>Default</svg>",
-	}
-	r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(false))
-
 	testCases := []struct {
 		name         string
+		lang         language.Tag
 		kind         string
 		hasTitle     bool
 		expectedText string
 	}{
 		{
-			name:         "Note kind without title",
+			name:         "English - Single word",
+			lang:         language.English,
 			kind:         "note",
 			hasTitle:     false,
-			expectedText: "Note", // should be title cased
+			expectedText: "Note",
 		},
 		{
-			name:         "Warning kind without title",
-			kind:         "warning",
-			hasTitle:     false,
-			expectedText: "Warning",
-		},
-		{
-			name:         "Multi-word kind",
+			name:         "English - Hyphenated word",
+			lang:         language.English,
 			kind:         "important-info",
 			hasTitle:     false,
-			expectedText: "[!IMPORTANT-INFO]", // should be title cased
+			expectedText: "Important-Info",
 		},
 		{
-			name:         "With custom title",
+			name:         "Dutch - 'ij' digraph at start",
+			lang:         language.Dutch,
+			kind:         "ijsselmeer",
+			hasTitle:     false,
+			expectedText: "IJsselmeer",
+		},
+		{
+			name:         "Dutch - 'ij' digraph after hyphen",
+			lang:         language.Dutch,
+			kind:         "kijk-ij",
+			hasTitle:     false,
+			expectedText: "Kijk-IJ",
+		},
+		{
+			name:         "Turkish - 'i' to 'İ'",
+			lang:         language.Turkish,
+			kind:         "istanbul",
+			hasTitle:     false,
+			expectedText: "İstanbul",
+		},
+		{
+			name:         "Turkish - 'ı' to 'I'",
+			lang:         language.Turkish,
+			kind:         "ısparta",
+			hasTitle:     false,
+			expectedText: "Isparta",
+		},
+		{
+			name:         "With custom title - no kind casing",
+			lang:         language.English,
 			kind:         "note",
 			hasTitle:     true,
 			expectedText: "", // should not add kind text when title exists
 		},
 	}
 
+	icons := Icons{} // Empty map is fine as we enable CustomAlertsEnabled
+
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
+			// Use the new unexported constructor to inject the language for testing.
+			// CustomAlertsEnabled is true to ensure the titleCaser is always used for kinds without a custom title.
+			r := newAlertsHeaderHTMLRenderer(icons, false, constants.ICONS_NONE, true, false, tc.lang)
+
 			var title string
 			if tc.hasTitle {
 				title = "Custom Title"
@@ -281,7 +306,7 @@ func TestAlertsHeaderHTMLRendererIconFallback(t *testing.T) {
 		"info": "<svg>info-icon</svg>", // has info but not note
 	}
 
-	r := NewAlertsHeaderHTMLRendererWithIcons(icons, FoldingEnabled(false), constants.ICONS_NONE, CustomAlertsEnabled(true))
+	r := NewAlertsHeaderHTMLRenderer(icons, bool(FoldingEnabled(false)), constants.ICONS_NONE, bool(CustomAlertsEnabled(true)), false)
 
 	// Test fallback to 'note' when specific kind not found
 	node := createMockHeaderNode("unknown", false, "")
@@ -297,6 +322,32 @@ func TestAlertsHeaderHTMLRendererIconFallback(t *testing.T) {
 	// and 'info' is available, it should fall back to 'info'
 	if !strings.Contains(html, "<svg>info-icon</svg>") {
 		t.Errorf("Expected fallback to info icon, got: %s", html)
+	}
+}
+
+// TestAlertsHeaderHTMLRendererIconFallbackNotInList tests to make sure iconsets that don't contain any of the
+// defined FALLBACK_ICON_LIST names get handled correctly
+func TestAlertsHeaderHTMLRendererIconFallbackNotInList(t *testing.T) {
+	icons := Icons{
+		"foo": "<svg>info-icon</svg>", // has no icon on the FALLBACK_ICON_LIST
+	}
+
+	r := NewAlertsHeaderHTMLRenderer(icons, bool(FoldingEnabled(false)), constants.ICONS_NONE, bool(CustomAlertsEnabled(true)), false)
+
+	// Test fallback to 'note' when specific kind not found
+	node := createMockHeaderNode("unknown", false, "")
+
+	writer := newMockBufWriter()
+	_, err := r.(*AlertsHeaderHTMLRenderer).renderAlertsHeader(writer, []byte{}, node, true)
+	if err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+
+	html := writer.String()
+	// Since 'unknown' kind is not in icons, and 'note' is not available either,
+	// and 'info' is available, it should fall back to 'info'
+	if !strings.Contains(html, `<span class="callout-title-noicon" style="display: none;"></span>`) {
+		t.Errorf("Expected special emtpy span for no icon, got: %s", html)
 	}
 }
 

@@ -35,7 +35,8 @@ func (b *alertParser) Trigger() []byte {
 	return []byte{'>'}
 }
 
-var regex = regexp.MustCompile(`^\[!(?P<kind>[\w][\w-]+)\](?:(?P<closed>-{0,1})|(?P<opened>[+]{0,1}))($|\s+(?P<title>.*))`)
+// Regex updated to support Unicode in <kind> value
+var regex = regexp.MustCompile(`^\[!(?P<kind>\p{L}[\p{L}\p{N}_-]*)\](?:(?P<closed>-{0,1})|(?P<opened>[+]{0,1}))($|\s+(?P<title>.*))`)
 
 func (b *alertParser) process(reader text.Reader) (bool, int) {
 	// This is slightly modified code from https://github.com/yuin/goldmark.git
@@ -92,29 +93,52 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 	opened := []uint8(match["opened"])
 
 	// Set the 'shouldFold' variable:
-	// If the markdown uses either '-' or '+' for folding we assume the user
-	//  wants the alert to be foldable. If neither '-' or '+' is used, we
-	//  assume the alert is not meant to be foldable.
-	// We only need 'opened' here to check if the alert is meant to be foldable.
-	// The 'closed' variable is legacy and is used by existing code elsewhere (we're not tinkering with it -- yet)
+	//   If the markdown uses either '-' or '+' for folding we assume the user wants the alert to be foldable.
+	//   If neither '-' or '+' are used, we assume the alert is not meant to be foldable.
+	//   We only need 'opened' here to check if the alert is meant to be foldable.
+	//   The 'closed' variable is legacy and is used by existing code elsewhere (we're not tinkering with it -- yet)
 	shouldFold := 1
 	if (len(closed) == 0 && len(opened) == 0) {
 		shouldFold = 0;
 	}
 
+	// Check for our hybrid feature of prefixing kind with 'noicon-' or 'noicon_'
+	//   If we find the prefix, strip it, leaving the original kind without the prefix and set the attribute 'noicon' on the node
+	//   We need to do this first so the later logic is looking at the kind/lckind without the prefix
+	noicon := 0
 	lckind := strings.ToLower(string(kind))
+	if strings.HasPrefix(lckind, "noicon-") || strings.HasPrefix(lckind, "noicon_") {
+		kind = []uint8(lckind[7:])
+		lckind = lckind[7:]
+		noicon = 1
+	}
+
+	// If CustomAlerts is not in use, disallow anything like:
+	//   - kind doesn't have an icon
+	//   - custom title not allowed
+	//   - folding symbols (+ and -) not allowed
 	if !b.CustomAlertsEnabled {
 		if !(slices.Contains(b.IconList, lckind)) {
+			// We'll reject any kind that isn't in the current IconList
 			return nil, parser.NoChildren
 		} else if len(title) > 0 {
+			// GFM does not support custom titles, so including a custom title is disallowed
 			return nil, parser.NoChildren
 		} else if !b.FoldingEnabled && (len(closed) != 0 || len(opened) != 0) {
+			// GFM does not support folding, so we should disallow even recognized kind values
+			// with the folding symbols (+ and -) to conform to the way GitHub does its alerts
 			return nil, parser.NoChildren
 		}
 	} else if !b.FoldingEnabled {
+		// IF Folding is not enabled, but CustomAlerts IS enabled, modify shouldFold, closed, and opened
+		//   so the CustomAlerts still work but folding symbols are silently ignored.
+		// We don't want to prevent Custom Alert kinds just because the + or - is added.
+		//   but we need to ignore folding unless Folding is explicitly enabled (this is a design decision)
 		shouldFold = 0
 		closed = nil
 		opened = nil
+	} else if len(kind) < 1 {
+		return nil, parser.NoChildren
 	}
 
 	alert := ast.NewAlerts()
@@ -123,6 +147,7 @@ func (b *alertParser) Open(parent gast.Node, reader text.Reader, pc parser.Conte
 	alert.SetAttributeString("closed", len(closed) != 0)
 	alert.SetAttributeString("title", title)
 	alert.SetAttributeString("shouldfold", shouldFold != 0)
+	alert.SetAttributeString("noicon", noicon != 0)
 
 	i := strings.Index(string(line), "]")
 	if i >= 0 {

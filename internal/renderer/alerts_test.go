@@ -33,7 +33,7 @@ func newMockBufWriter() *mockBufWriter {
 }
 
 func TestNewAlertsHTMLRenderer(t *testing.T) {
-	r := NewAlertsHTMLRenderer(make(map[string]string), true, constants.ICONS_GFM_STRICT, true, false)
+	r := NewAlertsHTMLRenderer(make(map[string]string), true, constants.ICONS_GFM, true, false)
 	if r == nil {
 		t.Fatal("NewAlertsHTMLRenderer returned nil")
 	}
@@ -47,7 +47,7 @@ func TestNewAlertsHTMLRenderer(t *testing.T) {
 		t.Error("FoldingEnabled not set correctly")
 	}
 
-	if alertsRenderer.DefaultIcons != constants.ICONS_GFM_STRICT {
+	if alertsRenderer.DefaultIcons != constants.ICONS_GFM {
 		t.Error("DefaultIcons not set correctly")
 	}
 }
@@ -97,31 +97,21 @@ func TestAlertsHTMLRendererBasicAlert(t *testing.T) {
 			name:         "Warning alert with GFM icons",
 			folding:      false,
 			customAlerts: true,
-			defaultIcons: constants.ICONS_GFM_STRICT,
+			defaultIcons: constants.ICONS_GFM,
 			allowNOICON:  false,
 			kind:         "warning",
 			expectedDiv:  "div",
 			expectedClass: `class="callout callout-warning iconset-gfm"`,
 		},
 		{
-			name:         "Warning alert with GFM icons with Aliases",
+			name:         "Info alert with HYBRID icons",
 			folding:      false,
 			customAlerts: true,
-			defaultIcons: constants.ICONS_GFM_WITH_ALIASES,
-			allowNOICON:  false,
-			kind:         "warning",
-			expectedDiv:  "div",
-			expectedClass: `class="callout callout-warning iconset-gfm"`,
-		},
-		{
-			name:         "Info alert with GFM Plus icons",
-			folding:      false,
-			customAlerts: true,
-			defaultIcons: constants.ICONS_GFM_PLUS,
+			defaultIcons: constants.ICONS_HYBRID,
 			allowNOICON:  false,
 			kind:         "info",
 			expectedDiv:  "div",
-			expectedClass: `class="callout callout-info iconset-gfmplus"`,
+			expectedClass: `class="callout callout-info iconset-hybrid"`,
 		},
 		{
 			name:         "Tip alert with Obsidian icons",

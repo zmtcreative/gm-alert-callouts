@@ -207,7 +207,7 @@ func TestWithFoldingOption(t *testing.T) {
 
 func TestIconSetOptions(t *testing.T) {
 	t.Run("UseGFMIcons", func(t *testing.T) {
-		ext := NewAlertCallouts(UseGFMIcons())
+		ext := NewAlertCallouts(UseGFMStrictIcons())
 
 		if len(ext.GetConfig().Icons) == 0 {
 			t.Error("Expected GFM icons to be loaded")
@@ -223,7 +223,7 @@ func TestIconSetOptions(t *testing.T) {
 	})
 
 	t.Run("UseGFMPlusIcons", func(t *testing.T) {
-		ext := NewAlertCallouts(UseGFMPlusIcons())
+		ext := NewAlertCallouts(UseHybridIcons())
 
 		if len(ext.GetConfig().Icons) == 0 {
 			t.Error("Expected GFM Plus icons to be loaded")

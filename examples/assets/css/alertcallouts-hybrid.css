@@ -27,16 +27,55 @@
   --callout-success: 8, 185, 78;
   --callout-summary: 0, 191, 188;
   --callout-todo: 8, 109, 221;
+  --blockquote-border-color: 24, 24, 24;
+}
+
+blockquote {
+  border-color: rgba(var(--blockquote-border-color), 0.2);
+  border-left: 6px solid rgba(var(--blockquote-border-color), 0.125);
+  padding-left: 10px;
 }
 
 pre:has(code[class^="language"]) {
-  padding: 12px;
+  padding: 1px 12px 12px 12px;
   border: 1px solid var(--border-color);
   border-radius: 6px;
   background-color: var(--inline-code-bg);
   & code {
+    position: relative;
     background-color: transparent;
   }
+}
+
+pre:has(code[class^="language"]) {
+  & code::before {
+    display: block;
+    position: relative;
+    top: 0.05em;
+    left: -0.667em;
+    margin: 0 0 8px 0;
+    padding: 0px 0px 1px 8px;
+    color: white;
+    background: black;
+    border-radius: 4px;
+    min-width: 100px;
+    max-width: 25%;
+    font-size: 1.15em;
+    font-variant: small-caps;
+  }
+}
+
+pre:has(code[class^="language"]) code[class="language-md"]::before,
+pre:has(code[class^="language"]) code[class="language-markdown"]::before {
+    content: "markdown";
+}
+
+pre:has(code[class^="language"]) code[class="language-css"]::before {
+    content: "css";
+}
+
+pre:has(code[class^="language"]) code[class="language-html"]::before {
+    content: "html";
 }
 
 .callout {

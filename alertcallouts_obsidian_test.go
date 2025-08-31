@@ -290,8 +290,7 @@ func TestObsidianFoldingExamples(t *testing.T) {
 </summary>
 <div class="callout-body"><p>This important callout is explicitly marked as open by default with the plus sign.</p>
 </div>
-</details>
-`,
+</details>`,
 		},
 		{
 			desc: "Open by Default folding Custom Alert",
@@ -396,26 +395,57 @@ func TestObsidianCustomAlerts(t *testing.T) {
 `,
 		},
 		{
-			desc: "NOICON Callout with No Title (just another custom alert)",
-			md: `> [!NoIcon]
-> NOICON Callout with No Title`,
-			html: `<div class="callout callout-noicon iconset-obsidian" data-callout="noicon"><div class="callout-title">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg><p class="callout-title-text"><span class="callout-title-noicon" style="display: none;"></span></p>
+			desc: "NoIcon prefix on Recognized Callout - with No Title",
+			md: `> [!NoIcon-Tip]
+> NoIcon prefix on Recognized Callout with No Title`,
+			html: `<div class="callout callout-tip iconset-obsidian" data-callout="tip"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-flame"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg><p class="callout-title-text">Tip</p>
 </div>
-<div class="callout-body"><p>NOICON Callout with No Title</p>
+<div class="callout-body"><p>NoIcon prefix on Recognized Callout with No Title</p>
 </div>
 </div>`,
 		},
 		{
-			desc: "NOICON Callout with Custom Title (just another custom alert)",
+			desc: "NoIcon prefix on Recognized Callout - with Custom Title",
+			md: `> [!NoIcon-Tip] Special Tip
+> NoIcon prefix on Recognized Callout with Custom Title`,
+			html: `<div class="callout callout-tip iconset-obsidian" data-callout="tip"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-flame"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg><p class="callout-title-text">Special Tip</p>
+</div>
+<div class="callout-body"><p>NoIcon prefix on Recognized Callout with Custom Title</p>
+</div>
+</div>`,
+		},
+		{
+			desc: "NoIcon prefix on Custom Callout - with No Title",
+			md: `> [!NoIcon-Zephyr]
+> NoIcon prefix on Custom Callout with No Title`,
+			html: `<div class="callout callout-zephyr iconset-obsidian" data-callout="zephyr"><div class="callout-title">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg><p class="callout-title-text">Zephyr</p>
+</div>
+<div class="callout-body"><p>NoIcon prefix on Custom Callout with No Title</p>
+</div>
+</div>`,
+		},
+		{
+			desc: "NOICON Callout - with Custom Title (just another custom alert)",
 			md: `> [!NoIcon] Warning
-> NOICON Callout with Recognized Custom Title`,
+> NOICON Callout with Custom Title`,
 			html: `<div class="callout callout-noicon iconset-obsidian" data-callout="noicon"><div class="callout-title">
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg><p class="callout-title-text">Warning</p>
 </div>
-<div class="callout-body"><p>NOICON Callout with Recognized Custom Title</p>
+<div class="callout-body"><p>NOICON Callout with Custom Title</p>
 </div>
 </div>`,
+		},
+		{
+			desc: "NoIcon prefix with NO CALLOUT - Disallowed - generates a blockquote",
+			md: `> [!NoIcon-] Special Tip
+> NoIcon prefix with NO CALLOUT - Disallowed - generates a blockquote`,
+			html: `<blockquote>
+<p>[!NoIcon-] Special Tip
+NoIcon prefix with NO CALLOUT - Disallowed - generates a blockquote</p>
+</blockquote>`,
 		},
 	}
 
@@ -429,4 +459,3 @@ func TestObsidianCustomAlerts(t *testing.T) {
 		})
 	}
 }
-

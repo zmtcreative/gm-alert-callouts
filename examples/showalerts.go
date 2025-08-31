@@ -15,10 +15,10 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 )
 
-//go:embed assets/css/alertcallouts-gfmplus.css
+//go:embed assets/css/alertcallouts-hybrid.css
 var cssData []byte
 
-//go:embed assets/markdown/sample-gfmplus.md
+//go:embed assets/markdown/sample-hybrid.md
 var defaultSample string
 
 func main() {
@@ -94,9 +94,9 @@ func CreateGoldmarkInstance(opt createOptions) goldmark.Markdown {
 		// myIcons := InitAlertCalloutsIcons() // Initialize alert icons
 		alertCalloutsOpts := alertcallouts.NewAlertCallouts(
 			// alertcallouts.WithIcons(myIcons),
-			alertcallouts.UseGFMPlusIcons(),
+			alertcallouts.UseHybridIcons(),
 			// alertcallouts.WithIcons(alertcallouts.CreateIconsMap(iconSet)),
-			alertcallouts.WithFolding(true),
+			alertcallouts.WithFolding(true), // this should be enabled, but here as an example
 		)
 		options = append(options,
 			goldmark.WithExtensions(alertCalloutsOpts),

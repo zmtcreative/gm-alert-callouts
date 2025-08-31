@@ -19,8 +19,8 @@ The `gm-alert-callouts` extension uses SVG icons to visually distinguish differe
 >
 > When adding custom icons and icon sets in `gm-alert-callouts` you are **only** inserting the icon
 > code into the HTML output. You still need to create the necessary CSS styling to format the final
-> alert/callout style. An example of a CSS style file for the `GFM Plus` built-in icon set can be
-> found in the `examples/assets/css/alertcallouts-gfmplus.css` file. This should provide a starting point
+> alert/callout style. An example of a CSS style file for the `Hybrid` built-in icon set can be
+> found in the `examples/assets/css/alertcallouts-hybrid.css` file. This should provide a starting point
 > for customizing the styling for your project.
 
 ## CreateIconsMap Function
@@ -53,8 +53,10 @@ The icon definition format supports:
 #### Format Rules
 
 1. **Core Definitions**: Use `key|svg_content`
-   - `key`: Alert type identifier (*lowercase recommended*) <br/>(*can only contain
-     letters, numbers and underscores -- no dashes, punctuation or symbols*)
+   - `key`: Alert type identifier (*lowercase recommended -- the parser converts all keys to lowercase anyway*)
+     - Can only contain ASCII or Unicode letters, numbers, underscores and dashes -- no punctuation or symbols
+     - Must begin with an ASCII or Unicode letter -- cannot start with a dash or underscore
+     - **NOTE:** You **cannot** use the prefixes `noicon-` or `noicon_` -- these are reserved<br/>(*see [FEATURES:NoIcon](FEATURES.md#using-noicon-to-force-alert-without-icon) for more information*)
    - `svg_content`: Complete SVG markup
    - **Lines with invalid `key` values will be skipped**
 
@@ -282,33 +284,36 @@ The following are suggestions based on our research and experience creating this
 
 The extension includes three built-in icon sets that you can examine for reference:
 
-### GFM Icons (`UseGFMIcons()`)
+### GFM IconSet (`UseGFMStrictIcons()`)
 
-GitHub standard alert types with aliases:
+GitHub standard alert types:
 
 - **Core types**: `note`, `tip`, `important`, `warning`, `caution`
-- **Aliases**: `info->note`, `hint->tip`, `danger->caution`, `error->caution`
+- **Aliases**: *none*
 
-### GFM Plus Icons (`UseGFMPlusIcons()`)
+### Hybrid IconSet (`UseHybridIcons()`)
 
-Extended set with additional Obsidian-compatible types:
+Uses the five GFM Alert icons, plus a custom set of additional icons and alert/callouts:
 
-- All GFM icons plus additional callout types
-- Better compatibility with Obsidian workflows
+- All GFM icons plus additional callout types.
+- Better compatibility with Obsidian workflows since it includes many of the same callout types,
+  though the icons used will be different.
 
-### Obsidian Icons (`UseObsidianIcons()`)
+If you **need** strict Obsidian Callout support, use the **Obsidian IconSet.**
+
+### Obsidian IconSet (`UseObsidianIcons()`)
 
 Obsidian-style icons optimized for callouts:
 
-- Matches Obsidian's default callout appearance
-- Ideal for users migrating from Obsidian
+- Matches Obsidian's default callout appearance.
+- Ideal for users opening documents originally designed for Obsidian.
 
 ### Examining Built-in Icons
 
 You can find the source icon definitions in the project's `assets/` folder:
 
-- `assets/alertcallouts-gfm.icons`
-- `assets/alertcallouts-gfmplus.icons`
+- `assets/alertcallouts-gfm-strict.icons`
+- `assets/alertcallouts-hybrid.icons`
 - `assets/alertcallouts-obsidian.icons`
 
 These files serve as examples and templates for creating custom icon sets.

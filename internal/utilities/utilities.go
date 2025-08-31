@@ -5,17 +5,6 @@ import (
 	"strings"
 )
 
-// IsNoIconKind returns true if the kind string indicates that no icon should be rendered.
-func IsNoIconKind(kind string) bool {
-	kind = strings.ToLower(strings.TrimSpace(kind))
-	switch kind {
-	case "noicon", "no_icon", "none", "nil", "null":
-		return true
-	default:
-		return false
-	}
-}
-
 func FindNamedMatches(regex *regexp.Regexp, str string) map[string]string {
     match := regex.FindStringSubmatch(str)
 
@@ -33,80 +22,57 @@ func FindNamedMatches(regex *regexp.Regexp, str string) map[string]string {
 // CreateIconsMap creates a map of icon names to their SVG data from the given icon data string.
 func CreateIconsMap(icondata string) map[string]string {
 	iconmap := make(map[string]string)
-	wordRegex := regexp.MustCompile(`^\w+$`)
+	wordRegex := regexp.MustCompile(`^\p{L}[\p{L}\p{N}_-]*$`) // update the wordRegex to allow full Unicode support
 
 	// Parse the embedded alert callouts data
+
+	// First pass: load all primary icons.
 	lines := strings.Split(icondata, "\n")
 
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 
-		// Skip empty lines and comments
-		if line == "" || strings.HasPrefix(line, "#") {
+		// Skip empty lines, comments, and alias definitions.
+		if line == "" || strings.HasPrefix(line, "#") || strings.Contains(line, "->") {
 			continue
 		}
 
-		// Check if it's an alias definition (contains ->)
-		if strings.Contains(line, "->") {
-			parts := strings.SplitN(line, "->", 2)
-			if len(parts) == 2 {
-				alias := strings.TrimSpace(parts[0])
-				primary := strings.TrimSpace(parts[1])
-
-				// Validate alias and primary values match [\w]+ pattern
-				if !wordRegex.MatchString(alias) || !wordRegex.MatchString(primary) {
-					continue // Skip invalid alias entries
-				}
-
-				// Set alias to reference the primary icon (will be set after core icons are loaded)
-				if svg, exists := iconmap[primary]; exists {
-					iconmap[alias] = svg
-				} else {
-					// Store for later processing if primary doesn't exist yet
-					// This handles the case where aliases are defined before their primary keys
-					defer func(alias, primary string) {
-						if svg, exists := iconmap[primary]; exists {
-							iconmap[alias] = svg
-						}
-					}(alias, primary)
-				}
-			}
-			continue
-		}
-
-		// Parse core icon definition (key|svg)
+		// Parse core icon definition (key|svg).
 		parts := strings.SplitN(line, "|", 2)
 		if len(parts) == 2 {
-			key := strings.TrimSpace(parts[0])
+			key := strings.ToLower(strings.TrimSpace(parts[0]))
 			svg := strings.TrimSpace(parts[1])
 
-			// Validate key matches [\w]+ pattern
-			if !wordRegex.MatchString(key) {
-				continue // Skip invalid key entries
+			// Reserved prefixes, and invalid key patterns are skipped.
+			if strings.HasPrefix(key, "noicon-") || strings.HasPrefix(key, "noicon_") || !wordRegex.MatchString(key) {
+				continue
 			}
-
 			iconmap[key] = svg
 		}
 	}
 
-	// Second pass to handle any aliases that couldn't be resolved in first pass
-	lines = strings.Split(icondata, "\n")
+	// Second pass: process all aliases.
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
-		if strings.Contains(line, "->") {
-			parts := strings.SplitN(line, "->", 2)
-			if len(parts) == 2 {
-				alias := strings.TrimSpace(parts[0])
-				primary := strings.TrimSpace(parts[1])
 
-				// Validate alias and primary values match [\w]+ pattern
-				if !wordRegex.MatchString(alias) || !wordRegex.MatchString(primary) {
-					continue // Skip invalid alias entries
-				}
+		// Skip empty lines, comments, and anything that is not an alias.
+		if line == "" || strings.HasPrefix(line, "#") || !strings.Contains(line, "->") {
+			continue
+		}
 
-				if svg, exists := iconmap[primary]; exists {
-					iconmap[alias] = svg
-				}
+		parts := strings.SplitN(line, "->", 2)
+		if len(parts) == 2 {
+			alias := strings.ToLower(strings.TrimSpace(parts[0]))
+			primary := strings.ToLower(strings.TrimSpace(parts[1]))
+
+			// Reserved prefixes and invalid patterns are skipped.
+			if strings.HasPrefix(alias, "noicon-") || strings.HasPrefix(alias, "noicon_") || !wordRegex.MatchString(alias) || !wordRegex.MatchString(primary) {
+				continue
+			}
+
+			// If the primary key exists, create the alias.
+			if svg, exists := iconmap[primary]; exists {
+				iconmap[alias] = svg
 			}
 		}
 	}

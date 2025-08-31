@@ -2,38 +2,9 @@ package utilities
 
 import (
 	"regexp"
+	"strings"
 	"testing"
 )
-
-func TestIsNoIconKind(t *testing.T) {
-	testCases := []struct {
-		input    string
-		expected bool
-		desc     string
-	}{
-		{"noicon", true, "noicon should return true"},
-		{"no_icon", true, "no_icon should return true"},
-		{"none", true, "none should return true"},
-		{"nil", true, "nil should return true"},
-		{"null", true, "null should return true"},
-		{"note", false, "note should return false"},
-		{"warning", false, "warning should return false"},
-		{"info", false, "info should return false"},
-		{"", false, "empty string should return false"},
-		{"NoIcon", true, "NoIcon (capitalized) should return true"},
-		{"NOICON", true, "NOICON (uppercase) should return true"},
-		{"NO-ICON", false, "NO-ICON (with dash) should return false"},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.desc, func(t *testing.T) {
-			result := IsNoIconKind(tc.input)
-			if result != tc.expected {
-				t.Errorf("IsNoIconKind(%q) = %v, expected %v", tc.input, result, tc.expected)
-			}
-		})
-	}
-}
 
 func TestFindNamedMatches(t *testing.T) {
 	t.Run("Basic named capture groups", func(t *testing.T) {
@@ -318,36 +289,43 @@ note|<svg>note-icon</svg>
 tip|<svg>tip-icon</svg>
 warning|<svg>warning-icon</svg>
 info_2|<svg>info2-icon</svg>
+test-case|<svg>invalid-icon</svg>
 Test123|<svg>test123-icon</svg>
+你好|<svg>你好-icon</svg>
 
 # Valid aliases
 info->note
 hints->tip
 
 # Invalid entries (should be skipped)
-no-icon|<svg>invalid-icon</svg>
-test-case|<svg>invalid-icon</svg>
 my@icon|<svg>invalid-icon</svg>
 icon with spaces|<svg>invalid-icon</svg>
+-myicon|<svg>invalid-icon</svg>
+_myicon|<svg>invalid-icon</svg>
+_你好|<svg>invalid-icon</svg>
+noicon-note|<svg>invalid-icon</svg>
+noicon_note|<svg>invalid-icon</svg>
 
 # Invalid aliases (should be skipped)
-no-alias->note
 info->no-primary
 special@alias->note
+info>noicon-note
 `
 
 	iconMap := CreateIconsMap(testData)
 
 	// Test that valid entries are included
-	validKeys := []string{"note", "tip", "warning", "info_2", "Test123", "info", "hints"}
+	validKeys := []string{"note", "tip", "warning", "info_2", "Test123", "info", "hints", "test-case", "你好"}
 	for _, key := range validKeys {
+		// need to lowercase the key here for testing
+		key = strings.ToLower(key)
 		if _, exists := iconMap[key]; !exists {
 			t.Errorf("Expected valid key '%s' to exist in iconMap", key)
 		}
 	}
 
 	// Test that invalid entries are excluded
-	invalidKeys := []string{"no-icon", "test-case", "my@icon", "icon with spaces", "no-alias", "special@alias"}
+	invalidKeys := []string{"my@icon", "icon with spaces", "noicon-note", "noicon_note", "special@alias", "-myicon", "_myicon", "_你好"}
 	for _, key := range invalidKeys {
 		if _, exists := iconMap[key]; exists {
 			t.Errorf("Expected invalid key '%s' to be excluded from iconMap", key)
@@ -360,7 +338,7 @@ special@alias->note
 	}
 
 	// Verify counts
-	expectedCount := len(validKeys) // 7 valid entries total
+	expectedCount := len(validKeys)
 	if len(iconMap) != expectedCount {
 		t.Errorf("Expected iconMap to have %d entries, got %d. Keys: %v", expectedCount, len(iconMap), getKeys(iconMap))
 	}
