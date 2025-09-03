@@ -115,7 +115,7 @@ import (
     _ "embed"
 
     "github.com/yuin/goldmark"
-    alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
+    alertcallouts "github.com/zmtcreative/gm-alert-callouts"
 )
 
 //go:embed icons/custom.icons
@@ -152,7 +152,7 @@ import (
     "os"
 
     "github.com/yuin/goldmark"
-    alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
+    alertcallouts "github.com/zmtcreative/gm-alert-callouts"
 )
 
 func main() {
@@ -186,7 +186,7 @@ package main
 
 import (
     "github.com/yuin/goldmark"
-    alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
+    alertcallouts "github.com/zmtcreative/gm-alert-callouts"
 )
 
 func main() {
@@ -219,7 +219,7 @@ package main
 
 import (
     "github.com/yuin/goldmark"
-    alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
+    alertcallouts "github.com/zmtcreative/gm-alert-callouts"
 )
 
 func main() {

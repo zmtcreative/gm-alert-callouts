@@ -1,7 +1,7 @@
 package renderer
 
 import (
-	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
+	"github.com/zmtcreative/gm-alert-callouts/internal/constants"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/renderer/html"

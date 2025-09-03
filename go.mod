@@ -1,10 +1,10 @@
-module github.com/ZMT-Creative/gm-alert-callouts
+module github.com/zmtcreative/gm-alert-callouts
 
 go 1.23.0
 
 toolchain go1.24.5
 
-retract [v0.0.0, v0.6.0]
+retract [v0.0.0, v0.7.0]
 
 require github.com/yuin/goldmark v1.7.13
 

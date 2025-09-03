@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
+	alertcallouts "github.com/zmtcreative/gm-alert-callouts"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"

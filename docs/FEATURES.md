@@ -346,7 +346,7 @@ import (
     "fmt"
 
     "github.com/yuin/goldmark"
-    alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
+    alertcallouts "github.com/zmtcreative/gm-alert-callouts"
 )
 
 func main() {
@@ -399,7 +399,7 @@ func createAdvancedExtension() goldmark.Extender {
 import (
     "github.com/yuin/goldmark"
     "github.com/yuin/goldmark/extension"
-    alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
+    alertcallouts "github.com/zmtcreative/gm-alert-callouts"
 )
 
 func createFullFeaturedMarkdown() goldmark.Markdown {

@@ -1,9 +1,9 @@
 # Goldmark Alert Callouts Extension
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/ZMT-Creative/gm-alert-callouts.svg)](https://pkg.go.dev/github.com/ZMT-Creative/gm-alert-callouts)
-[![Go version](https://img.shields.io/github/go-mod/go-version/ZMT-Creative/gm-alert-callouts)](https://github.com/ZMT-Creative/gm-alert-callouts)
-[![License](https://img.shields.io/github/license/ZMT-Creative/gm-alert-callouts)](./LICENSE.md)
-[![GitHub Release](https://img.shields.io/github/v/release/ZMT-Creative/gm-alert-callouts?sort=semver&display_name=release)](https://github.com/ZMT-Creative/gm-alert-callouts/releases/latest)
+[![Go Reference](https://pkg.go.dev/badge/github.com/zmtcreative/gm-alert-callouts.svg)](https://pkg.go.dev/github.com/zmtcreative/gm-alert-callouts)
+[![Go version](https://img.shields.io/github/go-mod/go-version/zmtcreative/gm-alert-callouts)](https://github.com/zmtcreative/gm-alert-callouts)
+[![License](https://img.shields.io/github/license/zmtcreative/gm-alert-callouts)](./LICENSE.md)
+[![GitHub Release](https://img.shields.io/github/v/release/zmtcreative/gm-alert-callouts?sort=semver&display_name=release)](https://github.com/zmtcreative/gm-alert-callouts/releases/latest)
 
 A [Goldmark](https://github.com/yuin/goldmark) extension that provides support for GitHub-style alerts and Obsidian-style callouts with customizable icons and folding functionality.
 
@@ -28,7 +28,7 @@ A [Goldmark](https://github.com/yuin/goldmark) extension that provides support f
 ## Installation
 
 ```bash
-go get github.com/ZMT-Creative/gm-alert-callouts
+go get github.com/zmtcreative/gm-alert-callouts
 ```
 
 ## Quick Start
@@ -43,7 +43,7 @@ import (
     "fmt"
 
     "github.com/yuin/goldmark"
-    alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
+    alertcallouts "github.com/zmtcreative/gm-alert-callouts"
 )
 
 func main() {
@@ -81,7 +81,7 @@ For convenience, a pre-configured extension is available:
 import (
     "github.com/yuin/goldmark"
     "github.com/yuin/goldmark/extension"
-    alertcallouts "github.com/ZMT-Creative/gm-alert-callouts"
+    alertcallouts "github.com/zmtcreative/gm-alert-callouts"
 )
 
 // Combining with other extensions

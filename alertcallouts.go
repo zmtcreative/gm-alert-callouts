@@ -10,10 +10,10 @@ import (
 	"github.com/yuin/goldmark/renderer"
 	"github.com/yuin/goldmark/util"
 
-	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
-	alertParser "github.com/ZMT-Creative/gm-alert-callouts/internal/parser"
-	alertRenderer "github.com/ZMT-Creative/gm-alert-callouts/internal/renderer"
-	utils "github.com/ZMT-Creative/gm-alert-callouts/internal/utilities"
+	"github.com/zmtcreative/gm-alert-callouts/internal/constants"
+	alertParser "github.com/zmtcreative/gm-alert-callouts/internal/parser"
+	alertRenderer "github.com/zmtcreative/gm-alert-callouts/internal/renderer"
+	utils "github.com/zmtcreative/gm-alert-callouts/internal/utilities"
 )
 
 //go:embed assets/alertcallouts-gfm-strict.icons

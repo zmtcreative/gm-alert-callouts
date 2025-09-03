@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/ZMT-Creative/gm-alert-callouts/internal/constants"
+	"github.com/zmtcreative/gm-alert-callouts/internal/constants"
 	locale "github.com/jeandeaual/go-locale"
 	gast "github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/renderer"
