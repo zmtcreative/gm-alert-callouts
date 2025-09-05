@@ -311,7 +311,7 @@ Disallowed NOICON Callout with Unrecognized Custom Title</p>
 
 // TestGFMStrictWithFolding using the default GFMStrict with folding enabled
 // Using GFMStrict with folding enabled, this should allow folding on the five recognized alert types
-//  but produce blockquotes for unrecognized alerts types or any alert type with a custom title
+// but produce blockquotes for unrecognized alerts types or any alert type with a custom title
 func TestGFMStrictWithFolding(t *testing.T) {
 	testCases := []TestCase{
 		{
@@ -381,7 +381,7 @@ This danger callout is marked as open by default with the plus sign.</p>
 
 // TestGFMStrictWithCustomalerts using the default GFMStrict with custom alerts enabled
 // Using GFMStrict with custom alerts enabled, this should allow custom alert types
-//  but produce blockquotes for any alert with folding symbols `+` or `-`
+// but produce blockquotes for any alert with folding symbols `+` or `-`
 func TestGFMStrictWithCustomalerts(t *testing.T) {
 	testCases := []TestCase{
 		{
@@ -509,7 +509,7 @@ func TestGFMStrictWithCustomalerts(t *testing.T) {
 
 // TestGFMStrictWithCustomalerts using the default GFMStrict with custom alerts enabled
 // Using GFMStrict with custom alerts enabled, this should allow custom alert types
-//  but produce blockquotes for any alert with folding symbols `+` or `-`
+// but produce blockquotes for any alert with folding symbols `+` or `-`
 func TestGFMStrictWithFoldingAndCustomalerts(t *testing.T) {
 	testCases := []TestCase{
 		{

@@ -87,7 +87,7 @@ func UseGFMWithAliasesIcons() Option {
 }
 
 // UseGFMPlusIcons sets the GFMPlus + Aliases that mimic some Obsidian callouts but
-//   still use the default five (5) GFM Alerts
+// still use the default five (5) GFM Alerts
 // Deprecated: Use UseHybridIcons() instead
 func UseGFMPlusIcons() Option {
 	return UseHybridIcons()
@@ -131,8 +131,8 @@ func WithCustomAlerts(enable bool) Option {
 
 // WithAllowNOICON sets whether to allow NOICON prefix to alert types.
 // This is a rendering option -- the parser will ALWAYS strip the 'noicon-' or 'noicon_' prefix
-//   during the parsing phase and set the 'noicon' attribute on the node. It's the renderer
-//   that will use this 'AllowNOICON' option to decide how to handle icons.
+// during the parsing phase and set the 'noicon' attribute on the node. It's the renderer
+// that will use this 'AllowNOICON' option to decide how to handle icons.
 func WithAllowNOICON(enable bool) Option {
 	return func(opts *alertCalloutsOptions) {
 		opts.config.AllowNOICON = enable
